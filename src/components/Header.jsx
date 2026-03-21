@@ -6,6 +6,7 @@ import { useWishlist } from '../context/WishlistContext';
 
 const Header = () => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const { user, logout, isAuthenticated } = useAuth();
     const { cart } = useCart();
     const { wishlistCount } = useWishlist();
@@ -13,12 +14,19 @@ const Header = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        console.log('Searching for:', searchTerm);
+        if (searchTerm.trim()) {
+            navigate(`/products?search=${encodeURIComponent(searchTerm.trim())}`);
+        }
     };
 
     const handleLogout = async () => {
         await logout();
         navigate('/');
+        setMobileMenuOpen(false);
+    };
+
+    const handleMobileLinkClick = () => {
+        setMobileMenuOpen(false);
     };
 
     return (
@@ -38,22 +46,37 @@ const Header = () => {
                     </Link>
                 </div>
 
+                {/* Mobile Menu Button - Visible on small screens */}
+                <button
+                    className="lg:hidden text-white p-2 focus:outline-none"
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    aria-label="Toggle menu"
+                >
+                    {mobileMenuOpen ? (
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    ) : (
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    )}
+                </button>
+
                 {/* Navigation - Hidden on mobile, shown on lg */}
                 <nav className="hidden lg:flex items-center gap-8">
                     <Link to="/" className="text-white no-underline font-medium hover:opacity-80 transition-opacity">Home</Link>
                     <Link to="/products" className="text-white no-underline font-medium hover:opacity-80 transition-opacity">Products</Link>
                     <Link to="/support" className="text-white no-underline font-medium hover:opacity-80 transition-opacity">Support</Link>
-                    <Link to="/about" className="text-white no-underline font-medium hover:opacity-80 transition-opacity">About</Link>
-                    <Link to="/contact" className="text-white no-underline font-medium hover:opacity-80 transition-opacity">Contact</Link>
                 </nav>
 
-                {/* Search Bar - Responsive width */}
-                <div className="flex-1 max-w-[500px] order-last sm:order-none w-full sm:w-auto">
+                {/* Search Bar - Responsive width - Hidden on mobile when menu is open */}
+                <div className={`flex-1 max-w-[500px] w-full sm:w-auto ${mobileMenuOpen ? 'hidden' : ''} sm:block`}>
                     <form onSubmit={handleSearch} className="flex">
                         <input
                             type="text"
-                            placeholder="Search for products, brands and more"
-                            className="flex-1 py-2 px-4 rounded-l-full text-gray-800 outline-none text-sm placeholder:text-gray-400"
+                            placeholder="Product search"
+                            className="flex-1 py-2 px-4 rounded-l-full text-gray-800 outline-none text-sm placeholder:text-gray-400 bg-white"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -63,8 +86,8 @@ const Header = () => {
                     </form>
                 </div>
 
-                {/* Auth & Cart */}
-                <div className="flex items-center gap-4">
+                {/* Auth & Cart - Hidden on mobile when menu is open */}
+                <div className={`hidden lg:flex items-center gap-4`}>
                     {isAuthenticated ? (
                         <>
                             <Link to="/profile" className="text-white no-underline font-medium flex items-center gap-2 hover:opacity-80 transition-opacity">
@@ -103,6 +126,120 @@ const Header = () => {
                     </Link>
                 </div>
             </div>
+
+            {/* Mobile Menu Dropdown */}
+            {mobileMenuOpen && (
+                <div className="lg:hidden bg-[#005543] border-t border-white/10 mt-4 -mx-4 sm:-mx-8 px-4 sm:px-8 py-4">
+                    {/* Mobile Search */}
+                    <div className="mb-4 mx-2">
+                        <form onSubmit={handleSearch} className="flex">
+                            <input
+                                type="text"
+                                placeholder="Product search"
+                                className="flex-1 py-2.5 px-4 rounded-l-lg text-gray-800 outline-none text-sm placeholder:text-gray-400 bg-white"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <button type="submit" className="bg-amber-400 hover:bg-amber-500 py-2.5 px-5 rounded-r-lg font-bold text-[#00674F] transition-colors whitespace-nowrap text-sm">
+                                Search
+                            </button>
+                        </form>
+                    </div>
+
+                    {/* Mobile Navigation Links */}
+                    <nav className="flex flex-col gap-2 mb-4">
+                        <Link
+                            to="/"
+                            className="text-white no-underline font-medium py-2 px-5 rounded-lg hover:bg-white/10 transition-colors"
+                            onClick={handleMobileLinkClick}
+                        >
+                            Home
+                        </Link>
+                        <Link
+                            to="/products"
+                            className="text-white no-underline font-medium py-2 px-5 rounded-lg hover:bg-white/10 transition-colors"
+                            onClick={handleMobileLinkClick}
+                        >
+                            Products
+                        </Link>
+                        <Link
+                            to="/support"
+                            className="text-white no-underline font-medium py-2 px-5 rounded-lg hover:bg-white/10 transition-colors"
+                            onClick={handleMobileLinkClick}
+                        >
+                            Support
+                        </Link>
+                    </nav>
+
+                    {/* Mobile Auth & Cart Links */}
+                    <div className="flex flex-col gap-3 pt-4 border-t border-white/10">
+                        {/* Cart and Wishlist - First Row */}
+                        <div className="flex gap-4 justify-center">
+                            <Link
+                                to="/wishlist"
+                                className="text-white no-underline font-medium flex items-center gap-2 hover:opacity-80 transition-opacity bg-amber-400/20 px-4 py-2 rounded-full"
+                                onClick={handleMobileLinkClick}
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                                <span>Wishlist</span>
+                                <span className="bg-amber-400 text-[#00674F] px-2 py-0.5 rounded-full text-xs font-bold leading-none">{wishlistCount}</span>
+                            </Link>
+                            <Link
+                                to="/cart"
+                                className="text-white no-underline font-medium flex items-center gap-2 hover:opacity-80 transition-opacity bg-amber-400/20 px-4 py-2 rounded-full"
+                                onClick={handleMobileLinkClick}
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                <span>Cart</span>
+                                <span className="bg-amber-400 text-[#00674F] px-2 py-0.5 rounded-full text-xs font-bold leading-none">{cart.total_items}</span>
+                            </Link>
+                        </div>
+
+                        {/* Auth Section */}
+                        {isAuthenticated ? (
+                            <>
+                                <Link
+                                    to="/profile"
+                                    className="text-white no-underline font-medium py-2 px-5 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-2"
+                                    onClick={handleMobileLinkClick}
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    Profile
+                                </Link>
+                                <button
+                                    onClick={handleLogout}
+                                    className="bg-white text-[#00674F] px-5 py-1.5 rounded-full no-underline font-bold text-sm hover:bg-gray-100 transition-colors text-left"
+                                >
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <Link
+                                    to="/login"
+                                    className="bg-white text-[#00674F] px-4 py-1.5 rounded-full no-underline font-bold text-sm hover:bg-gray-100 transition-colors text-center mx-2"
+                                    onClick={handleMobileLinkClick}
+                                >
+                                    Login
+                                </Link>
+                                <Link
+                                    to="/register"
+                                    className="bg-amber-400 text-[#00674F] px-4 py-1.5 rounded-full no-underline font-bold text-sm hover:bg-amber-500 transition-colors text-center mx-2"
+                                    onClick={handleMobileLinkClick}
+                                >
+                                    Register
+                                </Link>
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
         </header>
     );
 };

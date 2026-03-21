@@ -29,7 +29,7 @@ const Home = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
-            <section className="bg-gradient-to-br from-[#00674F] to-[#0A3C30] md:py-40 sm:py-20 text-center px-4">
+            <section className="bg-gradient-to-br from-[#00674F] to-[#0A3C30] py-24 md:py-44 sm:py-20 text-center px-4">
                 <div className="max-w-3xl mx-auto">
                     <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6 animate-fade-in">
                         Welcome to Jahani International
@@ -37,7 +37,7 @@ const Home = () => {
                     <p className="text-lg sm:text-xl text-white/90 mb-10">
                         Your one-stop destination for quality products at unbeatable prices
                     </p>
-                    <button className="bg-amber-400 hover:bg-amber-500 text-[#00674F] px-10 py-4 rounded-full text-lg font-bold shadow-lg hover:scale-105 transition-all">
+                    <button className="bg-amber-400 hover:bg-amber-500 text-[#00674F] px-6 py-3  md:px-10 md:py-4 rounded-full text-lg font-bold shadow-lg hover:scale-105 transition-all">
                         Shop Now
                     </button>
                 </div>

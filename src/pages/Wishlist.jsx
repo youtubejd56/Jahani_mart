@@ -38,7 +38,7 @@ const Wishlist = () => {
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-[400px]">
-                <div className="text-violet-600 text-xl font-semibold">Loading...</div>
+                <div className="text-[#00674F] text-xl font-semibold">Loading...</div>
             </div>
         );
     }
@@ -53,7 +53,7 @@ const Wishlist = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
                     <p className="text-gray-500 text-lg mb-4">Your wishlist is empty</p>
-                    <Link to="/products" className="inline-block bg-violet-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-violet-700 transition-colors">
+                    <Link to="/products" className="inline-block bg-[#00674F] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0A3C30] transition-colors">
                         Browse Products
                     </Link>
                 </div>

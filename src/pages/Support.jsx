@@ -153,7 +153,7 @@ const Support = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                     <div className="bg-white p-6 rounded-xl shadow-sm text-center hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveTab('help')}>
                         <div className="w-12 h-12 bg-violet-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg className="w-6 h-6 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-6 h-6 text-[#00674F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
@@ -207,7 +207,7 @@ const Support = () => {
                                     <h2 className="text-xl font-bold text-gray-800">Frequently Asked Questions</h2>
                                     <button
                                         onClick={() => { setActiveTab('support'); setShowNewTicket(true); }}
-                                        className="bg-violet-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-violet-700"
+                                        className="bg-[#ffb343] text-black px-4 py-2 rounded-lg font-medium hover:bg-[#ffce1b]"
                                     >
                                         Need More Help?
                                     </button>
@@ -248,7 +248,7 @@ const Support = () => {
                                     <h2 className="text-xl font-bold text-gray-800">My Support Tickets</h2>
                                     <button
                                         onClick={() => setShowNewTicket(true)}
-                                        className="bg-violet-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-violet-700"
+                                        className="bg-[#ffb343] text-gray-900 px-4 py-2 rounded-lg font-medium hover:bg-[#ffce1b]"
                                     >
                                         New Ticket
                                     </button>
@@ -324,7 +324,7 @@ const Support = () => {
                                             <div className="flex gap-3">
                                                 <button
                                                     type="submit"
-                                                    className="bg-violet-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-violet-700"
+                                                    className="bg-[#ffb343] text-gray-900 px-6 py-2 rounded-lg font-medium hover:bg-[#ffce1b]"
                                                 >
                                                     Submit Ticket
                                                 </button>
@@ -416,7 +416,7 @@ const Support = () => {
                                                                 />
                                                                 <button
                                                                     onClick={() => handleReply(ticket.ticket_id)}
-                                                                    className="bg-violet-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-violet-700"
+                                                                    className="bg-[#ffb343] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#ffce1b]"
                                                                 >
                                                                     Send
                                                                 </button>
@@ -434,7 +434,7 @@ const Support = () => {
                 </div>
 
                 {/* Contact Info */}
-                <div className="mt-8 bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl p-6 text-white text-center">
+                <div className="mt-8 bg-gradient-to-r from-[#00674F] to-[#0A3C30] rounded-xl p-6 text-white text-center">
                     <h3 className="font-bold text-xl mb-2">Still Need Help?</h3>
                     <p className="mb-4">Our customer support team is available 24/7</p>
                     <div className="flex justify-center gap-6">

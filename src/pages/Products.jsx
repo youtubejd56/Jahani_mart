@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 
@@ -9,6 +10,15 @@ const Products = () => {
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState('default');
+    const [searchParams] = useSearchParams();
+
+    // Get search query from URL on mount
+    useEffect(() => {
+        const urlSearch = searchParams.get('search');
+        if (urlSearch) {
+            setSearchQuery(urlSearch);
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -92,7 +102,7 @@ const Products = () => {
                                         key={category.id}
                                         onClick={() => setSelectedCategory(category.name)}
                                         className={`text-left px-4 py-2.5 rounded-lg font-medium transition-colors flex items-center gap-3 ${selectedCategory === category.name
-                                            ? 'bg-violet-600 text-white'
+                                            ? 'bg-[#00674F] text-white'
                                             : 'text-gray-600 hover:bg-gray-100'
                                             }`}
                                     >
