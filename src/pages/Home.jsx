@@ -51,8 +51,12 @@ const Home = () => {
                 <div className="flex justify-center gap-6 sm:gap-10 flex-wrap">
                     {categories.map(category => (
                         <div key={category.id} className="flex flex-col items-center gap-3 cursor-pointer group transition-transform hover:-translate-y-1">
-                            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden shadow-md group-hover:shadow-lg transition-shadow">
-                                <img src={getImageUrl(category.image)} alt={category.name} className="w-full h-full object-cover" />
+                            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden shadow-md group-hover:shadow-lg transition-shadow bg-gray-100 flex items-center justify-center">
+                                {category.image || (category.icon && category.icon.startsWith('http')) ? (
+                                    <img src={getImageUrl(category.image || category.icon)} alt={category.name} className="w-full h-full object-cover" />
+                                ) : (
+                                    <span className="text-3xl">{category.icon || category.name[0]}</span>
+                                )}
                             </div>
                             <span className="text-sm sm:text-base font-semibold text-gray-700 group-hover:text-violet-600 transition-colors">
                                 {category.name}

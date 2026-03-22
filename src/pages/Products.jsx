@@ -106,12 +106,14 @@ const Products = () => {
                                             : 'text-gray-600 hover:bg-gray-100'
                                             }`}
                                     >
-                                        {category.image && (
+                                        {(category.image || (category.icon && category.icon.startsWith('http'))) ? (
                                             <img
-                                                src={getImageUrl(category.image)}
+                                                src={getImageUrl(category.image || category.icon)}
                                                 alt={category.name}
                                                 className="w-6 h-6 rounded-full object-cover"
                                             />
+                                        ) : category.icon && (
+                                            <span className="text-lg leading-none">{category.icon}</span>
                                         )}
                                         {category.name}
                                     </button>

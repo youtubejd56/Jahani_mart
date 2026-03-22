@@ -10,8 +10,7 @@ const getAdminAxios = () => {
     return axios.create({
         baseURL: import.meta.env.VITE_API_URL || '/api',
         headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         }
     });
 };
@@ -34,14 +33,17 @@ const AdminDashboard = () => {
     // Form states
     const [showCategoryForm, setShowCategoryForm] = useState(false);
     const [editingCategory, setEditingCategory] = useState(null);
-    const [categoryForm, setCategoryForm] = useState({ name: '', icon: '' });
+    const [categoryForm, setCategoryForm] = useState({ name: '', icon: '', image_url: '', image: null });
+    const [categoryImagePreview, setCategoryImagePreview] = useState(null);
 
     const [showProductForm, setShowProductForm] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
     const [productForm, setProductForm] = useState({
         name: '', description: '', price: '', original_price: '',
-        discount: '0', stock: '0', category: '', image_url: '', is_active: true
+        discount: '0', stock: '0', category: '', image_url: '', is_active: true,
+        image: null
     });
+    const [imagePreview, setImagePreview] = useState(null);
     const [allCategories, setAllCategories] = useState([]);
 
     // Check if admin is logged in
@@ -177,28 +179,61 @@ const AdminDashboard = () => {
             alert('Failed to update order status');
         }
     };
-
+    
     // Category functions
+    const handleCategoryFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setCategoryForm({ ...categoryForm, image: file });
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setCategoryImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
     const handleCategorySubmit = async (e) => {
         e.preventDefault();
         try {
+            const formData = new FormData();
+            formData.append('name', categoryForm.name);
+            formData.append('icon', categoryForm.icon);
+            formData.append('image_url', categoryForm.image_url);
+            
+            if (categoryForm.image) {
+                formData.append('image', categoryForm.image);
+            }
+
+            const adminAxios = getAdminAxios();
+            const config = {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            };
+
             if (editingCategory) {
-                await getAdminAxios().put(`admin/categories/${editingCategory}/`, categoryForm);
+                await adminAxios.put(`admin/categories/${editingCategory}/`, formData, config);
             } else {
-                await getAdminAxios().post('admin/categories/', categoryForm);
+                await adminAxios.post('admin/categories/', formData, config);
             }
             fetchCategories();
             setShowCategoryForm(false);
             setEditingCategory(null);
-            setCategoryForm({ name: '', icon: '' });
+            setCategoryImagePreview(null);
+            setCategoryForm({ name: '', icon: '', image_url: '', image: null });
         } catch (error) {
+            console.error('Category save error:', error.response?.data);
             alert('Failed to save category');
         }
     };
 
     const handleEditCategory = (category) => {
         setEditingCategory(category.id);
-        setCategoryForm({ name: category.name, icon: category.icon || '' });
+        setCategoryForm({ 
+            name: category.name, 
+            icon: category.icon || '', 
+            image_url: category.image_url || '',
+            image: null 
+        });
+        setCategoryImagePreview(null);
         setShowCategoryForm(true);
     };
 
@@ -213,36 +248,64 @@ const AdminDashboard = () => {
     };
 
     // Product functions
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setProductForm({ ...productForm, image: file });
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleProductSubmit = async (e) => {
         e.preventDefault();
         try {
-            const data = {
-                ...productForm,
-                price: parseFloat(productForm.price),
-                original_price: productForm.original_price ? parseFloat(productForm.original_price) : null,
-                discount: parseInt(productForm.discount),
-                stock: parseInt(productForm.stock),
-                category: parseInt(productForm.category)
+            const formData = new FormData();
+            formData.append('name', productForm.name);
+            formData.append('description', productForm.description);
+            formData.append('price', productForm.price);
+            if (productForm.original_price) formData.append('original_price', productForm.original_price);
+            formData.append('discount', productForm.discount);
+            formData.append('stock', productForm.stock);
+            if (productForm.category) formData.append('category', productForm.category);
+            formData.append('is_active', productForm.is_active);
+            formData.append('image_url', productForm.image_url);
+            
+            if (productForm.image) {
+                formData.append('image', productForm.image);
+            }
+
+            const adminAxios = getAdminAxios();
+            const config = {
+                headers: { 'Content-Type': 'multipart/form-data' }
             };
+
             if (editingProduct) {
-                await getAdminAxios().put(`admin/products/${editingProduct}/`, data);
+                await adminAxios.put(`admin/products/${editingProduct}/`, formData, config);
             } else {
-                await getAdminAxios().post('admin/products/', data);
+                await adminAxios.post('admin/products/', formData, config);
             }
             fetchProducts();
             setShowProductForm(false);
             setEditingProduct(null);
+            setImagePreview(null);
             setProductForm({
                 name: '', description: '', price: '', original_price: '',
-                discount: '0', stock: '0', category: '', image_url: '', is_active: true
+                discount: '0', stock: '0', category: '', image_url: '', is_active: true,
+                image: null
             });
         } catch (error) {
+            console.error('Save error:', error.response?.data);
             alert('Failed to save product: ' + (error.response?.data?.name || error.message));
         }
     };
 
     const handleEditProduct = (product) => {
         setEditingProduct(product.id);
+        const currentCategory = allCategories.find(c => c.name === product.category_name);
         setProductForm({
             name: product.name,
             description: product.description || '',
@@ -250,10 +313,12 @@ const AdminDashboard = () => {
             original_price: product.original_price || '',
             discount: product.discount || '0',
             stock: product.stock,
-            category: product.category,
+            category: currentCategory ? currentCategory.id : product.category,
             image_url: product.image_url || '',
-            is_active: product.is_active
+            is_active: product.is_active,
+            image: null
         });
+        setImagePreview(null);
         setShowProductForm(true);
     };
 
@@ -541,7 +606,7 @@ const AdminDashboard = () => {
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-lg font-bold text-gray-800">Categories</h2>
                                 <button
-                                    onClick={() => { setShowCategoryForm(true); setEditingCategory(null); setCategoryForm({ name: '', icon: '' }); }}
+                                    onClick={() => { setShowCategoryForm(true); setEditingCategory(null); setCategoryImagePreview(null); setCategoryForm({ name: '', icon: '', image_url: '', image: null }); }}
                                     className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-lg"
                                 >
                                     Add Category
@@ -563,17 +628,50 @@ const AdminDashboard = () => {
                                             />
                                             <input
                                                 type="text"
-                                                placeholder="Icon (emoji)"
+                                                placeholder="Icon (emoji or URL)"
                                                 value={categoryForm.icon}
                                                 onChange={(e) => setCategoryForm({ ...categoryForm, icon: e.target.value })}
                                                 className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
                                             />
                                         </div>
-                                        <div className="flex gap-2">
-                                            <button type="submit" className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg">
+                                        <div>
+                                            <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Category Image URL (External)</label>
+                                            <input
+                                                type="url"
+                                                placeholder="https://example.com/image.jpg"
+                                                value={categoryForm.image_url}
+                                                onChange={(e) => setCategoryForm({ ...categoryForm, image_url: e.target.value })}
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Or Upload Image File</label>
+                                            <div className="flex items-center gap-4">
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={handleCategoryFileChange}
+                                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-white"
+                                                />
+                                                {categoryImagePreview && (
+                                                    <div className="relative group">
+                                                        <img src={categoryImagePreview} alt="Preview" className="w-12 h-12 object-cover rounded shadow-sm border border-gray-200" />
+                                                        <button 
+                                                            type="button" 
+                                                            onClick={() => { setCategoryImagePreview(null); setCategoryForm({...categoryForm, image: null}); }}
+                                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]"
+                                                        >
+                                                            ×
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-2 text-sm">
+                                            <button type="submit" className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-lg">
                                                 {editingCategory ? 'Update' : 'Add'}
                                             </button>
-                                            <button type="button" onClick={() => setShowCategoryForm(false)} className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
+                                            <button type="button" onClick={() => setShowCategoryForm(false)} className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg">
                                                 Cancel
                                             </button>
                                         </div>
@@ -594,11 +692,22 @@ const AdminDashboard = () => {
                                     {categories.map((cat) => (
                                         <tr key={cat.id} className="hover:bg-gray-50">
                                             <td className="px-6 py-4 text-sm text-gray-600">{cat.id}</td>
-                                            <td className="px-6 py-4 text-sm font-medium text-gray-800">{cat.name}</td>
-                                            <td className="px-6 py-4 text-sm">{cat.icon}</td>
                                             <td className="px-6 py-4">
-                                                <button onClick={() => handleEditCategory(cat)} className="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
-                                                <button onClick={() => handleDeleteCategory(cat.id)} className="text-red-600 hover:text-red-800">Delete</button>
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-200">
+                                                        {cat.image || (cat.icon && cat.icon.startsWith('http')) ? (
+                                                            <img src={getImageUrl(cat.image || cat.icon)} alt={cat.name} className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            <span className="text-xl">{cat.icon || cat.name[0]}</span>
+                                                        )}
+                                                    </div>
+                                                    <span className="text-sm font-medium text-gray-800">{cat.name}</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-gray-500">{cat.icon && !cat.icon.startsWith('http') ? cat.icon : '-'}</td>
+                                            <td className="px-6 py-4">
+                                                <button onClick={() => handleEditCategory(cat)} className="text-blue-600 hover:text-blue-800 mr-3 text-sm font-medium">Edit</button>
+                                                <button onClick={() => handleDeleteCategory(cat.id)} className="text-red-600 hover:text-red-800 text-sm font-medium">Delete</button>
                                             </td>
                                         </tr>
                                     ))}
@@ -615,12 +724,14 @@ const AdminDashboard = () => {
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-lg font-bold text-gray-800">Products</h2>
                                 <button
-                                    onClick={() => { setShowProductForm(true); setEditingProduct(null); setProductForm({ name: '', description: '', price: '', original_price: '', discount: '0', stock: '0', category: '', image_url: '', is_active: true }); }}
+                                    onClick={() => { setShowProductForm(true); setEditingProduct(null); setImagePreview(null); setProductForm({ name: '', description: '', price: '', original_price: '', discount: '0', stock: '0', category: '', image_url: '', is_active: true, image: null }); }}
                                     className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-lg"
                                 >
                                     Add Product
                                 </button>
                             </div>
+
+
 
                             {showProductForm && (
                                 <div className="mb-6 p-4 bg-gray-50 rounded-lg">
@@ -686,13 +797,43 @@ const AdminDashboard = () => {
                                                 required
                                             />
                                         </div>
-                                        <input
-                                            type="url"
-                                            placeholder="Image URL (or leave empty to upload later)"
-                                            value={productForm.image_url}
-                                            onChange={(e) => setProductForm({ ...productForm, image_url: e.target.value })}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                                        />
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Image URL</label>
+                                                <input
+                                                    type="url"
+                                                    placeholder="Paste image URL here"
+                                                    value={productForm.image_url}
+                                                    onChange={(e) => setProductForm({ ...productForm, image_url: e.target.value })}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Or Upload Image File</label>
+                                                <div className="flex items-center gap-4">
+                                                    <input
+                                                        key={editingProduct ? `edit-${editingProduct}` : 'new-product'}
+                                                        type="file"
+                                                        accept="image/*"
+                                                        onChange={handleFileChange}
+                                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-white"
+                                                    />
+                                                    {imagePreview && (
+                                                        <div className="relative group">
+                                                            <img src={imagePreview} alt="Preview" className="w-12 h-12 object-cover rounded shadow-sm border border-gray-200" />
+                                                            <button 
+                                                                type="button" 
+                                                                onClick={() => { setImagePreview(null); setProductForm({...productForm, image: null}); }}
+                                                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]"
+                                                            >
+                                                                ×
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <p className="text-[10px] text-gray-400 mt-1 italic">Uploading a file will take priority over the Image URL.</p>
+                                            </div>
+                                        </div>
                                         <div className="flex items-center gap-2">
                                             <input
                                                 type="checkbox"
