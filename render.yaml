@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: jahani-frontend
+    runtime: static
+    region: oregon
+    buildCommand: npm install && npm run build
+    staticPublishDirectory: dist
+    envVars:
+      - key: VITE_API_URL
+        value: "https://your-backend.onrender.com/api"
