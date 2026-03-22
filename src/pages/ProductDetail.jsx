@@ -17,15 +17,26 @@ const ProductDetail = () => {
     const [addingToCart, setAddingToCart] = useState(false);
     const [quantity, setQuantity] = useState(1);
     const [selectedImage, setSelectedImage] = useState(0);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [suggestedProducts, setSuggestedProducts] = useState([]);
 
     useEffect(() => {
         fetchProduct();
+        window.scrollTo(0, 0);
     }, [productId]);
 
     const fetchProduct = async () => {
         try {
+            setLoading(true);
             const response = await api.get(`/products/${productId}/`);
             setProduct(response.data);
+            
+            try {
+                const suggResponse = await api.get(`/products/${productId}/suggested/`);
+                setSuggestedProducts(suggResponse.data);
+            } catch (err) {
+                console.error('Error fetching suggestions:', err);
+            }
         } catch (error) {
             console.error('Error fetching product:', error);
         } finally {
@@ -150,7 +161,27 @@ const ProductDetail = () => {
 
                     <div className="border-t border-b border-gray-200 py-4">
                         <h3 className="font-semibold text-gray-800 mb-2">Product Description</h3>
-                        <p className="text-gray-600">{description || 'No description available.'}</p>
+                        <div className="text-gray-600">
+                            {description ? (
+                                <>
+                                    <span className="whitespace-pre-line">
+                                        {isExpanded || description.length <= 150 
+                                            ? description 
+                                            : `${description.substring(0, 150)}...`}
+                                    </span>
+                                    {description.length > 150 && (
+                                        <button 
+                                            onClick={() => setIsExpanded(!isExpanded)}
+                                            className="inline-block text-[#00674F] hover:text-[#0A3C30] font-semibold mt-1 focus:outline-none transition-colors"
+                                        >
+                                            {isExpanded ? 'Read less' : 'Read more'}
+                                        </button>
+                                    )}
+                                </>
+                            ) : (
+                                'No description available.'
+                            )}
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -200,6 +231,58 @@ const ProductDetail = () => {
                     </Link>
                 </div>
             </div>
+
+            {/* Suggested Products Section */}
+            {suggestedProducts && suggestedProducts.length > 0 && (
+                <div className="mt-16 border-t border-gray-200 pt-10">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Similar Products You Might Like</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {suggestedProducts.map(item => (
+                            <Link 
+                                to={`/products/${item.id}`} 
+                                key={item.id}
+                                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group"
+                            >
+                                <div className="aspect-square bg-gray-50 overflow-hidden relative">
+                                    {(item.image_url || item.image) ? (
+                                        <img 
+                                            src={getImageUrl(item.image_url || item.image)} 
+                                            alt={item.name} 
+                                            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" 
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                            No Image
+                                        </div>
+                                    )}
+                                    {item.discount > 0 && (
+                                        <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                            {item.discount}% OFF
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="p-4">
+                                    <h3 className="font-semibold text-gray-800 line-clamp-2 min-h-[3rem] group-hover:text-[#00674F] transition-colors">
+                                        {item.name}
+                                    </h3>
+                                    <div className="mt-2 flex items-center gap-2">
+                                        <div className="flex items-center text-yellow-400 text-sm">
+                                            <span>★</span> 
+                                            <span className="text-gray-700 font-medium ml-1">{item.rating || 4.5}</span>
+                                        </div>
+                                    </div>
+                                    <div className="mt-3 flex items-baseline gap-2">
+                                        <span className="text-lg font-bold text-gray-900">₹{item.price}</span>
+                                        {item.original_price && (
+                                            <span className="text-sm text-gray-400 line-through">₹{item.original_price}</span>
+                                        )}
+                                    </div>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
