@@ -19,6 +19,7 @@ const ProductDetail = () => {
     const [selectedImage, setSelectedImage] = useState(0);
     const [isExpanded, setIsExpanded] = useState(false);
     const [suggestedProducts, setSuggestedProducts] = useState([]);
+    const [activeTab, setActiveTab] = useState('specifications');
 
     useEffect(() => {
         fetchProduct();
@@ -89,7 +90,19 @@ const ProductDetail = () => {
         );
     }
 
-    const { name, description, price, original_price, discount, rating, stock, image, image_url, category_name } = product;
+    const { 
+        name, description, price, original_price, discount, 
+        rating, stock, image, image_url, category_name,
+        additional_images, specifications, warranty, manufacturer, in_the_box
+    } = product;
+
+    // Collect all valid images (main + gallery)
+    const allImages = [
+        { id: 'main', url: image_url || image },
+        ...(additional_images || []).map(img => ({ id: `img_${img.id}`, url: img.image_url || img.image }))
+    ].filter(img => img.url);
+
+    const displayImage = allImages[selectedImage] ? allImages[selectedImage].url : null;
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8">
@@ -104,12 +117,12 @@ const ProductDetail = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Image Section */}
                 <div className="space-y-4">
-                    <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
-                        {image_url || image ? (
+                    <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center relative group">
+                        {displayImage ? (
                             <img
-                                src={getImageUrl(image_url || image)}
+                                src={getImageUrl(displayImage)}
                                 alt={name}
-                                className="w-full h-full object-contain"
+                                className="w-full h-full object-contain cursor-crosshair transform hover:scale-150 transition-transform duration-500 origin-center"
                             />
                         ) : (
                             <div className="text-gray-400">
@@ -119,6 +132,23 @@ const ProductDetail = () => {
                             </div>
                         )}
                     </div>
+                    
+                    {/* Thumbnail Gallery */}
+                    {allImages.length > 1 && (
+                        <div className="flex gap-3 overflow-x-auto py-2">
+                            {allImages.map((img, idx) => (
+                                <button
+                                    key={img.id}
+                                    onClick={() => setSelectedImage(idx)}
+                                    className={`flex-shrink-0 w-20 h-20 border-2 rounded-lg p-1 overflow-hidden transition-all ${
+                                        selectedImage === idx ? 'border-[#00674F] shadow-md' : 'border-gray-200 hover:border-gray-300'
+                                    }`}
+                                >
+                                    <img src={getImageUrl(img.url)} alt={`${name} ${idx}`} className="w-full h-full object-contain rounded" />
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Details Section */}
@@ -158,28 +188,53 @@ const ProductDetail = () => {
                             <span className="text-red-600 font-medium">✗ Out of Stock</span>
                         )}
                     </div>
+                    
+                    {/* In The Box */}
+                    {in_the_box && (
+                        <div className="text-sm">
+                            <span className="text-gray-500 font-medium mr-2">In The Box:</span>
+                            <span className="text-gray-800">{in_the_box}</span>
+                        </div>
+                    )}
 
-                    <div className="border-t border-b border-gray-200 py-4">
-                        <h3 className="font-semibold text-gray-800 mb-2">Product Description</h3>
-                        <div className="text-gray-600">
-                            {description ? (
-                                <>
-                                    <span className="whitespace-pre-line">
-                                        {isExpanded || description.length <= 150 
-                                            ? description 
-                                            : `${description.substring(0, 150)}...`}
-                                    </span>
-                                    {description.length > 150 && (
-                                        <button 
-                                            onClick={() => setIsExpanded(!isExpanded)}
-                                            className="inline-block text-[#00674F] hover:text-[#0A3C30] font-semibold mt-1 focus:outline-none transition-colors"
-                                        >
-                                            {isExpanded ? 'Read less' : 'Read more'}
-                                        </button>
-                                    )}
-                                </>
-                            ) : (
-                                'No description available.'
+                    {/* Flipkart Style Info Tabs */}
+                    <div className="border border-gray-200 rounded-lg overflow-hidden mt-6">
+                        <div className="flex border-b bg-gray-50 overflow-x-auto hide-scrollbar">
+                            {['specifications', 'description', 'warranty', 'manufacturer'].map(tab => (
+                                <button
+                                    key={tab}
+                                    onClick={() => setActiveTab(tab)}
+                                    className={`px-5 py-3 font-semibold text-sm whitespace-nowrap flex-1 transition-colors ${
+                                        activeTab === tab 
+                                            ? 'bg-white text-[#00674F] border-b-2 border-b-[#00674F]' 
+                                            : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'
+                                    }`}
+                                >
+                                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="p-5 bg-white min-h-[120px] text-sm md:text-base">
+                            {activeTab === 'description' && (
+                                <div className="text-gray-600 whitespace-pre-line leading-relaxed">
+                                    {description || 'No detailed description available.'}
+                                </div>
+                            )}
+                            {activeTab === 'specifications' && (
+                                <div className="text-gray-700 whitespace-pre-line leading-relaxed">
+                                    {specifications || 'No specifications listed for this product.'}
+                                </div>
+                            )}
+                            {activeTab === 'warranty' && (
+                                <div className="text-gray-700 font-medium">
+                                    {warranty || 'Standard Manufacturer Warranty Applies.'}
+                                </div>
+                            )}
+                            {activeTab === 'manufacturer' && (
+                                <div className="text-gray-700">
+                                    <span className="font-semibold text-gray-900 block mb-1">Manufacturer Info:</span>
+                                    {manufacturer || 'Not Specified.'}
+                                </div>
                             )}
                         </div>
                     </div>
