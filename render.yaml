@@ -5,6 +5,10 @@ services:
     region: singapore
     buildCommand: npm install && npm run build
     staticPublishDirectory: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
     envVars:
       - key: VITE_API_URL
         value: "https://jahani-mart-backend.onrender.com/api"
