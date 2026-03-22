@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import api, { getImageUrl } from '../services/api';
 import ProductCard from '../components/ProductCard';
 
 const Products = () => {
@@ -24,8 +24,8 @@ const Products = () => {
         const fetchData = async () => {
             try {
                 const [productsRes, categoriesRes] = await Promise.all([
-                    axios.get('/api/products/'),
-                    axios.get('/api/categories/')
+                    api.get('/products/'),
+                    api.get('/categories/')
                 ]);
                 setProducts(productsRes.data);
                 setCategories(categoriesRes.data);
@@ -108,7 +108,7 @@ const Products = () => {
                                     >
                                         {category.image && (
                                             <img
-                                                src={category.image}
+                                                src={getImageUrl(category.image)}
                                                 alt={category.name}
                                                 className="w-6 h-6 rounded-full object-cover"
                                             />

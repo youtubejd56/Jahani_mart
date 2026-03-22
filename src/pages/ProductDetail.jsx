@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api, { getImageUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -24,7 +24,7 @@ const ProductDetail = () => {
 
     const fetchProduct = async () => {
         try {
-            const response = await axios.get(`/api/products/${productId}/`);
+            const response = await api.get(`/products/${productId}/`);
             setProduct(response.data);
         } catch (error) {
             console.error('Error fetching product:', error);
@@ -96,7 +96,7 @@ const ProductDetail = () => {
                     <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
                         {image_url || image ? (
                             <img
-                                src={image_url || image}
+                                src={getImageUrl(image_url || image)}
                                 alt={name}
                                 className="w-full h-full object-contain"
                             />

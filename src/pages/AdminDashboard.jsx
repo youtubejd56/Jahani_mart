@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getImageUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 // Helper function to get admin axios instance with JWT token
 const getAdminAxios = () => {
     const token = localStorage.getItem('admin_access_token');
     return axios.create({
+        baseURL: import.meta.env.VITE_API_URL || '/api',
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -67,7 +69,7 @@ const AdminDashboard = () => {
 
     const fetchDashboard = async () => {
         try {
-            const response = await getAdminAxios().get('/api/admin/dashboard/');
+            const response = await getAdminAxios().get('admin/dashboard/');
             setOrders(response.data.orders);
             setStats(response.data.stats);
         } catch (error) {
@@ -82,7 +84,7 @@ const AdminDashboard = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await getAdminAxios().get('/api/admin/users/');
+            const response = await getAdminAxios().get('admin/users/');
             setUsers(response.data);
         } catch (error) {
             console.error('Error fetching users:', error);
@@ -91,7 +93,7 @@ const AdminDashboard = () => {
 
     const fetchCategories = async () => {
         try {
-            const response = await getAdminAxios().get('/api/admin/categories/');
+            const response = await getAdminAxios().get('admin/categories/');
             setCategories(response.data);
             setAllCategories(response.data);
         } catch (error) {
@@ -101,7 +103,7 @@ const AdminDashboard = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await getAdminAxios().get('/api/admin/products/');
+            const response = await getAdminAxios().get('admin/products/');
             setProducts(response.data);
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -110,7 +112,7 @@ const AdminDashboard = () => {
 
     const fetchReviews = async () => {
         try {
-            const response = await getAdminAxios().get('/api/admin/reviews/');
+            const response = await getAdminAxios().get('admin/reviews/');
             setReviews(response.data);
         } catch (error) {
             console.error('Error fetching reviews:', error);
@@ -119,7 +121,7 @@ const AdminDashboard = () => {
 
     const fetchSupportTickets = async () => {
         try {
-            const response = await getAdminAxios().get('/api/admin/support/tickets/');
+            const response = await getAdminAxios().get('admin/support/tickets/');
             setSupportTickets(response.data);
         } catch (error) {
             console.error('Error fetching support tickets:', error);
@@ -128,10 +130,10 @@ const AdminDashboard = () => {
 
     const handleTicketReply = async (ticketId, message, status) => {
         try {
-            await getAdminAxios().post(`/api/admin/support/tickets/${ticketId}/reply/`, { message, status });
+            await getAdminAxios().post(`admin/support/tickets/${ticketId}/reply/`, { message, status });
             fetchSupportTickets();
             if (selectedTicket && selectedTicket.ticket_id === ticketId) {
-                const response = await getAdminAxios().get(`/api/admin/support/tickets/${ticketId}/`);
+                const response = await getAdminAxios().get(`admin/support/tickets/${ticketId}/`);
                 setSelectedTicket(response.data);
             }
         } catch (error) {
@@ -142,7 +144,7 @@ const AdminDashboard = () => {
 
     const handleTicketStatusUpdate = async (ticketId, status) => {
         try {
-            await getAdminAxios().put(`/api/admin/support/tickets/${ticketId}/status/`, { status });
+            await getAdminAxios().put(`admin/support/tickets/${ticketId}/status/`, { status });
             fetchSupportTickets();
         } catch (error) {
             console.error('Error updating ticket status:', error);
@@ -152,7 +154,7 @@ const AdminDashboard = () => {
     const handleDeleteReview = async (id) => {
         if (!window.confirm('Are you sure you want to delete this review?')) return;
         try {
-            await getAdminAxios().delete(`/api/reviews/${id}/`);
+            await getAdminAxios().delete(`reviews/${id}/`);
             fetchReviews();
         } catch (error) {
             alert('Failed to delete review');
@@ -168,7 +170,7 @@ const AdminDashboard = () => {
 
     const updateOrderStatus = async (orderId, newStatus) => {
         try {
-            await getAdminAxios().put(`/api/admin/orders/${orderId}/`, { status: newStatus });
+            await getAdminAxios().put(`admin/orders/${orderId}/`, { status: newStatus });
             fetchDashboard();
             setSelectedOrder(null);
         } catch (error) {
@@ -181,9 +183,9 @@ const AdminDashboard = () => {
         e.preventDefault();
         try {
             if (editingCategory) {
-                await getAdminAxios().put(`/api/admin/categories/${editingCategory}/`, categoryForm);
+                await getAdminAxios().put(`admin/categories/${editingCategory}/`, categoryForm);
             } else {
-                await getAdminAxios().post('/api/admin/categories/', categoryForm);
+                await getAdminAxios().post('admin/categories/', categoryForm);
             }
             fetchCategories();
             setShowCategoryForm(false);
@@ -203,7 +205,7 @@ const AdminDashboard = () => {
     const handleDeleteCategory = async (id) => {
         if (!window.confirm('Are you sure you want to delete this category?')) return;
         try {
-            await getAdminAxios().delete(`/api/admin/categories/${id}/`);
+            await getAdminAxios().delete(`admin/categories/${id}/`);
             fetchCategories();
         } catch (error) {
             alert('Failed to delete category');
@@ -223,9 +225,9 @@ const AdminDashboard = () => {
                 category: parseInt(productForm.category)
             };
             if (editingProduct) {
-                await getAdminAxios().put(`/api/admin/products/${editingProduct}/`, data);
+                await getAdminAxios().put(`admin/products/${editingProduct}/`, data);
             } else {
-                await getAdminAxios().post('/api/admin/products/', data);
+                await getAdminAxios().post('admin/products/', data);
             }
             fetchProducts();
             setShowProductForm(false);
@@ -258,7 +260,7 @@ const AdminDashboard = () => {
     const handleDeleteProduct = async (id) => {
         if (!window.confirm('Are you sure you want to delete this product?')) return;
         try {
-            await getAdminAxios().delete(`/api/admin/products/${id}/`);
+            await getAdminAxios().delete(`admin/products/${id}/`);
             fetchProducts();
         } catch (error) {
             alert('Failed to delete product');
@@ -730,8 +732,10 @@ const AdminDashboard = () => {
                                             <td className="px-6 py-4 text-sm text-gray-600">{product.id}</td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-2">
-                                                    {product.image_url && (
-                                                        <img src={product.image_url} alt={product.name} className="w-10 h-10 object-cover rounded" />
+                                                    {product.image_url || product.image ? (
+                                                        <img src={getImageUrl(product.image_url || product.image)} alt={product.name} className="w-10 h-10 object-cover rounded" />
+                                                    ) : (
+                                                        <div className="w-10 h-10 bg-gray-100 flex items-center justify-center rounded text-[10px] text-gray-400">No Image</div>
                                                     )}
                                                     <span className="text-sm font-medium text-gray-800">{product.name}</span>
                                                 </div>

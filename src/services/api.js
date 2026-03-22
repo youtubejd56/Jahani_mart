@@ -17,4 +17,12 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+export const getImageUrl = (url) => {
+    if (!url) return null;
+    if (url.startsWith('http')) return url;
+    // Remove /api from the end of VITE_API_URL to get the root backend URL
+    const baseUrl = import.meta.env.VITE_API_URL?.replace(/\/api\/?$/, '') || '';
+    return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+};
+
 export default api;

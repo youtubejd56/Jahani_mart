@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import api from '../services/api';
+import api, { getImageUrl } from '../services/api';
 
 const MyProfile = () => {
     const { user, isAuthenticated, logout } = useAuth();
@@ -770,7 +770,7 @@ const MyProfile = () => {
                                     <Link to={`/products/${item.product}`} className="block">
                                         <div className="aspect-square bg-gray-100 relative">
                                             {item.product_image ? (
-                                                <img src={item.product_image} alt={item.product_name} className="w-full h-full object-cover" />
+                                                <img src={getImageUrl(item.product_image)} alt={item.product_name} className="w-full h-full object-cover" />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-gray-400">
                                                     <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">

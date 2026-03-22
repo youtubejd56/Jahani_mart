@@ -3,6 +3,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { getImageUrl } from '../services/api';
 
 const ProductCard = ({ product }) => {
     const { addToCart, loading } = useCart();
@@ -46,7 +47,7 @@ const ProductCard = ({ product }) => {
         <div className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group">
             <Link to={`/products/${id}`} className="relative h-44 sm:h-48 flex items-center justify-center mb-4 bg-gray-50 rounded-lg overflow-hidden">
                 <img
-                    src={image || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE2IiBmaWxsPSIjOTk5Ij5Qcm9kdWN0PC90ZXh0Pjwvc3ZnPg=='}
+                    src={getImageUrl(image) || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE2IiBmaWxsPSIjOTk5Ij5Qcm9kdWN0PC90ZXh0Pjwvc3ZnPg=='}
                     alt={name}
                     className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-500"
                 />
@@ -65,7 +66,7 @@ const ProductCard = ({ product }) => {
                 <div className="flex items-center gap-2">
                     <div className="flex items-center bg-emerald-500 text-white px-1.5 py-0.5 rounded text-[11px] font-bold">
                         <span>{rating}</span>
-                        <span className="ml-0.5 mt-[-1px]">★</span>
+                        <span className="ml-0.5 -mt-px">★</span>
                     </div>
                     <span className="text-[11px] text-gray-400 font-medium">(1.2k)</span>
                 </div>

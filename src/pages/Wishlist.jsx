@@ -1,9 +1,9 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
+import { getImageUrl } from '../services/api';
 
 const Wishlist = () => {
     const { isAuthenticated } = useAuth();
@@ -65,7 +65,7 @@ const Wishlist = () => {
                                 <div className="aspect-square bg-gray-100 relative overflow-hidden">
                                     {item.product_image ? (
                                         <img
-                                            src={item.product_image}
+                                            src={getImageUrl(item.product_image)}
                                             alt={item.product_name}
                                             className="w-full h-full object-cover"
                                         />

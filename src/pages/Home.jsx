@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api, { getImageUrl } from '../services/api';
 import ProductCard from '../components/ProductCard';
 
 const Home = () => {
@@ -11,8 +11,8 @@ const Home = () => {
         const fetchData = async () => {
             try {
                 const [productsRes, categoriesRes] = await Promise.all([
-                    axios.get('/api/products/'),
-                    axios.get('/api/categories/')
+                    api.get('/products/'),
+                    api.get('/categories/')
                 ]);
                 setProducts(productsRes.data);
                 setCategories(categoriesRes.data);
@@ -52,7 +52,7 @@ const Home = () => {
                     {categories.map(category => (
                         <div key={category.id} className="flex flex-col items-center gap-3 cursor-pointer group transition-transform hover:-translate-y-1">
                             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden shadow-md group-hover:shadow-lg transition-shadow">
-                                <img src={category.image} alt={category.name} className="w-full h-full object-cover" />
+                                <img src={getImageUrl(category.image)} alt={category.name} className="w-full h-full object-cover" />
                             </div>
                             <span className="text-sm sm:text-base font-semibold text-gray-700 group-hover:text-violet-600 transition-colors">
                                 {category.name}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 const Reviews = () => {
@@ -20,10 +20,10 @@ const Reviews = () => {
 
     const fetchProductAndReviews = async () => {
         try {
-            const productRes = await axios.get(`/api/products/${productId}/`);
+            const productRes = await api.get(`/products/${productId}/`);
             setProduct(productRes.data);
 
-            const reviewsRes = await axios.get(`/api/products/${productId}/reviews/`);
+            const reviewsRes = await api.get(`/products/${productId}/reviews/`);
             setReviews(reviewsRes.data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -38,14 +38,11 @@ const Reviews = () => {
         setError('');
 
         try {
-            const token = localStorage.getItem('token');
-            await axios.post('/api/reviews/', {
+            await api.post('/reviews/', {
                 product: productId,
                 rating: formData.rating,
                 title: formData.title,
                 comment: formData.comment
-            }, {
-                headers: { Authorization: `Bearer ${token}` }
             });
 
             setShowForm(false);

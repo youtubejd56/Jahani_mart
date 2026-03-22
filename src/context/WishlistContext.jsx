@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from './AuthContext';
 
 const WishlistContext = createContext();
@@ -23,10 +23,7 @@ export const WishlistProvider = ({ children }) => {
 
     const fetchWishlist = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get('/api/wishlist/', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const response = await api.get('/wishlist/');
             setWishlistItems(response.data);
             setWishlistCount(response.data.length);
         } catch (error) {
@@ -42,10 +39,7 @@ export const WishlistProvider = ({ children }) => {
 
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post(`/api/wishlist/${productId}/`, {}, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const response = await api.post(`/wishlist/${productId}/`);
 
             if (response.data.in_wishlist) {
                 setWishlistItems(prev => [...prev, { product: productId }]);
