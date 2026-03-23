@@ -46,6 +46,11 @@ const Header = () => {
                     </Link>
                 </div>
 
+                {/* Site Logo in Middle */}
+                {/* <div className="hidden md:flex items-center justify-center">
+                    <img src="/manu ettn logo .png" alt="Jahani Logo" className="h-12 w-auto object-contain" />
+                </div> */}
+
                 {/* Mobile Menu Button - Visible on small screens */}
                 <button
                     className="lg:hidden text-white p-2 focus:outline-none"
@@ -245,3 +250,4 @@ const Header = () => {
 };
 
 export default Header;
+
