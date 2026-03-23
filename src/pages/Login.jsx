@@ -33,17 +33,6 @@ const Login = () => {
                     <p className="text-gray-500 mt-2">Sign in to your account</p>
                 </div>
 
-                {/* JWT Explanation */}
-                <div className="bg-violet-50 border border-violet-200 rounded-lg p-4 mb-6">
-                    <h3 className="text-sm font-semibold text-violet-700 mb-2">🔐 How JWT Login Works:</h3>
-                    <div className="text-xs text-gray-600 space-y-2">
-                        <p><span className="font-semibold">1. Submit:</span> You enter mobile & password</p>
-                        <p><span className="font-semibold">2. Verify:</span> Server validates your credentials</p>
-                        <p><span className="font-semibold">3. Token:</span> Server returns a JWT token (like an ID card)</p>
-                        <p><span className="font-semibold">4. Store:</span> Token saved in your browser</p>
-                        <p><span className="font-semibold">5. Access:</span> Token sent with every request to verify identity</p>
-                    </div>
-                </div>
 
                 {error && (
                     <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-6">
@@ -82,12 +71,22 @@ const Login = () => {
                         />
                     </div>
 
+                    {/* Forgot Password */}
+                    <div className="flex justify-end -mt-2">
+                        <Link
+                            to="/forgot-password"
+                            className="text-sm text-[#00674F] hover:text-[#005040] font-medium hover:underline transition-colors"
+                        >
+                            Forgot password?
+                        </Link>
+                    </div>
+
                     <button
                         type="submit"
                         disabled={loading}
                         className="w-full bg-[#00674F] hover:bg-[#0A3C30] text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {loading ? '🔄 Verifying & Generating Token...' : '🔐 Login'}
+                        {loading ? 'Signing in...' : 'Login'}
                     </button>
                 </form>
 
@@ -99,7 +98,7 @@ const Login = () => {
                         to="/register"
                         className="block w-full text-center bg-amber-400 hover:bg-amber-500 text-black font-bold py-3 px-4 rounded-lg transition-colors"
                     >
-                        📝 Create New Account
+                        Create Account
                     </Link>
                 </div>
 

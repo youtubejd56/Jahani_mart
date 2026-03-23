@@ -59,20 +59,8 @@ const Register = () => {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-violet-600">Create Account</h1>
+                    <h1 className="text-3xl font-bold text-[#00674F]">Create Account</h1>
                     <p className="text-gray-500 mt-2">Join Jahani International</p>
-                </div>
-
-                {/* JWT Registration Flow */}
-                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-6">
-                    <h3 className="text-sm font-semibold text-emerald-700 mb-2">📝 Registration Flow:</h3>
-                    <div className="text-xs text-gray-600 space-y-2">
-                        <p><span className="font-semibold">1. Fill Form:</span> Enter your details (username, email, password)</p>
-                        <p><span className="font-semibold">2. Submit:</span> Server creates your account in database</p>
-                        <p><span className="font-semibold">3. Store:</span> Password is hashed securely (never stored as plain text)</p>
-                        <p><span className="font-semibold">4. Login:</span> Use credentials to get JWT token</p>
-                        <p><span className="font-semibold">5. Done:</span> You're ready to shop!</p>
-                    </div>
                 </div>
 
                 {error && (
@@ -179,16 +167,16 @@ const Register = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-[#00674F] hover:bg-[#005040] text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {loading ? '🔄 Creating Account...' : '📝 Register'}
+                        {loading ? 'Creating Account...' : 'Create Account'}
                     </button>
                 </form>
 
                 <div className="mt-6 pt-6 border-t border-gray-200">
                     <p className="text-center text-gray-600">
                         Already have an account?{' '}
-                        <Link to="/login" className="text-violet-600 font-semibold hover:text-violet-700">
+                        <Link to="/login" className="text-[#00674F] font-semibold hover:text-[#005040]">
                             Sign in here
                         </Link>
                     </p>

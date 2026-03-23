@@ -20,6 +20,7 @@ import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import OurStory from './pages/OurStory';
 import Blog from './pages/Blog';
+import ForgotPassword from './pages/ForgotPassword';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
@@ -43,6 +44,7 @@ const AppContent = () => {
                     <Route path="/checkout" element={<Checkout />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/orders" element={<MyProfile />} />
                     <Route path="/profile" element={<MyProfile />} />
                     <Route path="/order-tracking" element={<OrderTracking />} />
