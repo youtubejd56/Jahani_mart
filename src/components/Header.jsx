@@ -30,7 +30,7 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-[#00674F] text-white py-4 sticky top-0 z-50 shadow-lg">
+        <header className="bg-[#00674F] text-white py-4 sticky top-0 z-[9999] shadow-lg">
             <div className="max-w-[1440px] mx-auto px-4 sm:px-8 flex flex-wrap items-center justify-between gap-4 sm:gap-8">
                 {/* Logo - Prime Style */}
                 <div className="flex items-center">
@@ -71,12 +71,12 @@ const Header = () => {
                 </nav>
 
                 {/* Search Bar - Responsive width - Hidden on mobile when menu is open */}
-                <div className={`flex-1 max-w-[500px] w-full sm:w-auto ${mobileMenuOpen ? 'hidden' : ''} sm:block`}>
+                <div className={`grow max-w-[500px] w-full sm:w-auto ${mobileMenuOpen ? 'hidden' : ''} sm:block`}>
                     <form onSubmit={handleSearch} className="flex">
                         <input
                             type="text"
                             placeholder="Product search"
-                            className="flex-1 py-2 px-4 rounded-l-full text-gray-800 outline-none text-sm placeholder:text-gray-400 bg-white"
+                            className="grow py-2 px-4 rounded-l-full text-gray-800 outline-none text-sm placeholder:text-gray-400 bg-white"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />

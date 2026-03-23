@@ -16,6 +16,10 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Cart from './pages/Cart';
 import Support from './pages/Support';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import OurStory from './pages/OurStory';
+import Blog from './pages/Blog';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
@@ -45,6 +49,11 @@ const AppContent = () => {
                     <Route path="/products/:productId/reviews" element={<Reviews />} />
                     <Route path="/support" element={<Support />} />
                     <Route path="/help" element={<Support />} />
+                    <Route path="/terms" element={<TermsOfService />} />
+                    <Route path="/privacy" element={<PrivacyPolicy />} />
+                    <Route path="/our-story" element={<OurStory />} />
+                    <Route path="/about" element={<OurStory />} />
+                    <Route path="/blog" element={<Blog />} />
                     <Route path="/admin/login" element={<AdminLogin />} />
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 </Routes>

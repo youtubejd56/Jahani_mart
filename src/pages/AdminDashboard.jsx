@@ -25,6 +25,8 @@ const AdminDashboard = () => {
     const [products, setProducts] = useState([]);
     const [reviews, setReviews] = useState([]);
     const [supportTickets, setSupportTickets] = useState([]);
+    const [stories, setStories] = useState([]);
+    const [blogPosts, setBlogPosts] = useState([]);
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -45,6 +47,15 @@ const AdminDashboard = () => {
     });
     const [imagePreview, setImagePreview] = useState(null);
     const [allCategories, setAllCategories] = useState([]);
+
+    // Blog & Story Form States
+    const [showBlogForm, setShowBlogForm] = useState(false);
+    const [editingBlogPost, setEditingBlogPost] = useState(null);
+    const [blogPostForm, setBlogPostForm] = useState({ title: '', excerpt: '', date: '', category: '', image_url: '', content: '' });
+
+    const [showStoryForm, setShowStoryForm] = useState(false);
+    const [editingStory, setEditingStory] = useState(null);
+    const [storyForm, setStoryForm] = useState({ title: '', description: '', image_url: '', order: 0, is_reversed: false });
 
     // Check if admin is logged in
     const adminId = localStorage.getItem('admin_token');
@@ -67,6 +78,8 @@ const AdminDashboard = () => {
         }
         if (activeTab === 'reviews') fetchReviews();
         if (activeTab === 'support') fetchSupportTickets();
+        if (activeTab === 'stories') fetchStories();
+        if (activeTab === 'blog') fetchBlogPosts();
     }, [activeTab]);
 
     const fetchDashboard = async () => {
@@ -127,6 +140,105 @@ const AdminDashboard = () => {
             setSupportTickets(response.data);
         } catch (error) {
             console.error('Error fetching support tickets:', error);
+        }
+    };
+
+    const fetchStories = async () => {
+        try {
+            const response = await getAdminAxios().get('admin/stories/');
+            setStories(response.data);
+        } catch (error) {
+            console.error('Error fetching stories:', error);
+        }
+    };
+
+    const fetchBlogPosts = async () => {
+        try {
+            const response = await getAdminAxios().get('admin/blog/');
+            setBlogPosts(response.data);
+        } catch (error) {
+            console.error('Error fetching blog posts:', error);
+        }
+    };
+
+    // Story CRUD handlers
+    const handleStorySubmit = async () => {
+        try {
+            if (editingStory) {
+                await getAdminAxios().put(`admin/stories/${editingStory}/`, storyForm);
+            } else {
+                await getAdminAxios().post('admin/stories/', storyForm);
+            }
+            fetchStories();
+            setShowStoryForm(false);
+            setEditingStory(null);
+            setStoryForm({ title: '', description: '', image_url: '', order: 0, is_reversed: false });
+        } catch (error) {
+            console.error('Story save error:', error.response?.data);
+            alert('Failed to save story section');
+        }
+    };
+
+    const handleEditStory = (story) => {
+        setEditingStory(story.id);
+        setStoryForm({
+            title: story.title,
+            description: story.description || '',
+            image_url: story.image_url || '',
+            order: story.order,
+            is_reversed: story.is_reversed,
+        });
+        setShowStoryForm(true);
+    };
+
+    const handleDeleteStory = async (id) => {
+        if (!window.confirm('Delete this story section?')) return;
+        try {
+            await getAdminAxios().delete(`admin/stories/${id}/`);
+            fetchStories();
+        } catch (error) {
+            alert('Failed to delete story section');
+        }
+    };
+
+    // Blog CRUD handlers
+    const handleBlogSubmit = async () => {
+        try {
+            if (editingBlogPost) {
+                await getAdminAxios().put(`admin/blog/${editingBlogPost}/`, blogPostForm);
+            } else {
+                await getAdminAxios().post('admin/blog/', blogPostForm);
+            }
+            fetchBlogPosts();
+            setShowBlogForm(false);
+            setEditingBlogPost(null);
+            setBlogPostForm({ title: '', excerpt: '', date: '', category: '', image_url: '', content: '' });
+        } catch (error) {
+            console.error('Blog post save error:', error.response?.data);
+            alert('Failed to save blog post');
+        }
+    };
+
+    const handleEditBlogPost = (post) => {
+        setEditingBlogPost(post.id);
+        setBlogPostForm({
+            title: post.title,
+            excerpt: post.excerpt || '',
+            content: post.content || '',
+            category: post.category || '',
+            image_url: post.image_url || '',
+            date: post.date || '',
+        });
+        setShowBlogForm(true);
+    };
+
+    const handleDeleteBlogPost = async (id) => {
+        if (!window.confirm('Delete this blog post?')) return;
+        try {
+            await getAdminAxios().delete(`admin/blog/${id}/`);
+            fetchBlogPosts();
+        } catch (error) {
+            alert('Failed to delete blog post');
         }
     };
 
@@ -444,6 +556,28 @@ const AdminDashboard = () => {
                             </span>
                         )}
                     </button>
+
+                    <button
+                        onClick={() => setActiveTab('stories')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'stories' ? 'bg-yellow-400 text-gray-900' : 'hover:bg-gray-800'
+                            }`}
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        Story Management
+                    </button>
+
+                    <button
+                        onClick={() => setActiveTab('blog')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'blog' ? 'bg-yellow-400 text-gray-900' : 'hover:bg-gray-800'
+                            }`}
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l4 4v10a2 2 0 01-2 2z" />
+                        </svg>
+                        Blog Posts
+                    </button>
                 </nav>
 
                 {/* Logout */}
@@ -471,6 +605,8 @@ const AdminDashboard = () => {
                         {activeTab === 'products' && 'Product Management'}
                         {activeTab === 'reviews' && 'Review Management'}
                         {activeTab === 'support' && 'Customer Support Requests'}
+                        {activeTab === 'stories' && 'Story Management'}
+                        {activeTab === 'blog' && 'Blog Post Management'}
                     </h1>
                 </header>
 
@@ -1067,6 +1203,219 @@ const AdminDashboard = () => {
                                     ))}
                                 </div>
                             )}
+                        </div>
+                    </div>
+                )}
+
+                {/* Story Management */}
+                {activeTab === 'stories' && (
+                    <div className="p-6">
+                        <div className="bg-white rounded-lg shadow-sm p-6">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-xl font-bold text-gray-800">About Us Story Sections</h2>
+                                <button 
+                                         onClick={() => { 
+                                                setShowStoryForm(true); 
+                                                setEditingStory(null); 
+                                                setStoryForm({ title: '', description: '', image_url: '', order: stories.length + 1, is_reversed: false }); 
+                                            }}
+                                    className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-lg"
+                                >
+                                    Add Section
+                                </button>
+                            </div>
+                            
+                            {showStoryForm && (
+                                <div className="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                                    <h3 className="font-bold text-lg mb-4">{editingStory ? 'Edit Story Section' : 'New Story Section'}</h3>
+                                    <form className="space-y-4">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">Section Title</label>
+                                                <input 
+                                                    type="text" 
+                                                    value={storyForm.title}
+                                                    onChange={(e) => setStoryForm({...storyForm, title: e.target.value})}
+                                                    className="w-full px-4 py-2 border rounded-lg"
+                                                    placeholder="e.g., Growing"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">Display Order</label>
+                                                <input 
+                                                    type="number" 
+                                                    value={storyForm.order}
+                                                    onChange={(e) => setStoryForm({...storyForm, order: e.target.value})}
+                                                    className="w-full px-4 py-2 border rounded-lg"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Content / Description</label>
+                                            <textarea 
+                                                value={storyForm.description}
+                                                onChange={(e) => setStoryForm({...storyForm, description: e.target.value})}
+                                                className="w-full px-4 py-2 border rounded-lg"
+                                                rows={5}
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+                                                <input 
+                                                    type="text" 
+                                                    value={storyForm.image_url}
+                                                    onChange={(e) => setStoryForm({...storyForm, image_url: e.target.value})}
+                                                    className="w-full px-4 py-2 border rounded-lg"
+                                                />
+                                            </div>
+                                            <div className="flex items-center mt-6">
+                                                <input 
+                                                    type="checkbox" 
+                                                    id="reversed"
+                                                    checked={storyForm.is_reversed}
+                                                    onChange={(e) => setStoryForm({...storyForm, is_reversed: e.target.checked})}
+                                                    className="w-4 h-4 text-yellow-400 border-gray-300 rounded"
+                                                />
+                                                <label htmlFor="reversed" className="ml-2 text-sm text-gray-700">Reverse Layout (Image on Right)</label>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-3 pt-4">
+                                            <button type="button" onClick={handleStorySubmit} className="bg-[#00674F] text-white font-bold py-2 px-6 rounded-lg hover:bg-[#005040] transition-colors">Save Section</button>
+                                            <button type="button" onClick={() => { setShowStoryForm(false); setEditingStory(null); }} className="bg-gray-200 text-gray-700 font-bold py-2 px-6 rounded-lg hover:bg-gray-300 transition-colors">Cancel</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            )}
+
+                            <div className="space-y-4">
+                                {stories.map(story => (
+                                    <div key={story.id} className="flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-shadow bg-white">
+                                        <div className="flex items-center gap-4">
+                                            <span className="text-gray-400 font-bold">#{story.order}</span>
+                                            <div>
+                                                <h4 className="font-bold text-gray-800">{story.title}</h4>
+                                                <span className="text-xs text-gray-500">{story.is_reversed ? 'Right-aligned image' : 'Left-aligned image'}</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button onClick={() => handleEditStory(story)} className="text-blue-600 hover:bg-blue-50 px-3 py-1 rounded font-medium transition-colors">Edit</button>
+                                            <button onClick={() => handleDeleteStory(story.id)} className="text-red-600 hover:bg-red-50 px-3 py-1 rounded font-medium transition-colors">Delete</button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Blog Management */}
+                {activeTab === 'blog' && (
+                    <div className="p-6">
+                        <div className="bg-white rounded-lg shadow-sm p-6">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-xl font-bold text-gray-800">Blog Posts</h2>
+                                <button 
+                                     onClick={() => { 
+                                                setShowBlogForm(true); 
+                                                setEditingBlogPost(null); 
+                                                setBlogPostForm({ title: '', excerpt: '', date: new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'}), category: '', image_url: '', content: '' }); 
+                                            }}
+                                    className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-lg"
+                                >
+                                    Create Post
+                                </button>
+                            </div>
+
+                            {showBlogForm && (
+                                <div className="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                                    <h3 className="font-bold text-lg mb-4">{editingBlogPost ? 'Edit Post' : 'New Blog Post'}</h3>
+                                    <form className="space-y-4">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">Post Title</label>
+                                                <input 
+                                                    type="text" 
+                                                    value={blogPostForm.title}
+                                                    onChange={(e) => setBlogPostForm({...blogPostForm, title: e.target.value})}
+                                                    className="w-full px-4 py-2 border rounded-lg"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                                                <input 
+                                                    type="text" 
+                                                    value={blogPostForm.category}
+                                                    onChange={(e) => setBlogPostForm({...blogPostForm, category: e.target.value})}
+                                                    className="w-full px-4 py-2 border rounded-lg"
+                                                    placeholder="e.g., Guides"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Excerpt (Summary)</label>
+                                            <textarea 
+                                                value={blogPostForm.excerpt}
+                                                onChange={(e) => setBlogPostForm({...blogPostForm, excerpt: e.target.value})}
+                                                className="w-full px-4 py-2 border rounded-lg"
+                                                rows={2}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+                                            <input 
+                                                type="text" 
+                                                value={blogPostForm.image_url}
+                                                onChange={(e) => setBlogPostForm({...blogPostForm, image_url: e.target.value})}
+                                                className="w-full px-4 py-2 border rounded-lg"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Full Post Content (HTML/Markdown supported)</label>
+                                            <textarea 
+                                                value={blogPostForm.content}
+                                                onChange={(e) => setBlogPostForm({...blogPostForm, content: e.target.value})}
+                                                className="w-full px-4 py-2 border rounded-lg"
+                                                rows={10}
+                                            />
+                                        </div>
+                                        <div className="flex gap-3 pt-4">
+                                            <button type="button" onClick={handleBlogSubmit} className="bg-[#00674F] text-white font-bold py-2 px-6 rounded-lg hover:bg-[#005040] transition-colors">{editingBlogPost ? 'Update Post' : 'Publish Post'}</button>
+                                            <button type="button" onClick={() => { setShowBlogForm(false); setEditingBlogPost(null); }} className="bg-gray-200 text-gray-700 font-bold py-2 px-6 rounded-lg hover:bg-gray-300 transition-colors">Cancel</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            )}
+
+                            <div className="bg-white rounded-lg border overflow-hidden">
+                                <table className="w-full">
+                                    <thead className="bg-gray-50 border-b">
+                                        <tr>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Post Details</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-200">
+                                        {blogPosts.map(post => (
+                                            <tr key={post.id} className="hover:bg-gray-50">
+                                                <td className="px-6 py-4">
+                                                    <div className="text-sm font-bold text-gray-800">{post.title}</div>
+                                                </td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">
+                                                    <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded text-xs font-bold">{post.category}</span>
+                                                </td>
+                                                <td className="px-6 py-4 text-sm text-gray-500">{post.date}</td>
+                                                <td className="px-6 py-4 text-sm font-medium flex gap-4">
+                                                    <button onClick={() => handleEditBlogPost(post)} className="text-blue-600 hover:text-blue-900 font-semibold transition-colors">Edit</button>
+                                                    <button onClick={() => handleDeleteBlogPost(post.id)} className="text-red-600 hover:text-red-900 font-semibold transition-colors">Delete</button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 )}

@@ -5,26 +5,29 @@ const Footer = () => {
     return (
         <footer className="bg-slate-950 text-gray-300 flex flex-col font-sans mt-auto">
             {/* Main content container */}
-            <div className="max-w-[1440px] w-full mx-auto px-6 sm:px-12 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+            <div className="max-w-[1440px] w-full mx-auto px-6 sm:px-12 py-12 lg:py-16 flex flex-col lg:flex-row gap-12 lg:gap-8 justify-between">
 
                 {/* Logo & Socials Left Column */}
-                <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
-                    <div className="flex flex-col items-center sm:items-start mb-6">
+                <div className="flex flex-col items-center lg:items-start text-center lg:text-left lg:w-1/4 mb-4 lg:mb-0">
+                    <div className="flex flex-col items-center lg:items-start mb-2 lg:mb-6">
                         {/* We use the logo path from Header but slightly larger for footer */}
-                        <div className="bg-white rounded-t-full rounded-b-xl px-4 pt-6 pb-2 inline-flex shadow-lg mb-4">
+                        <div className="bg-white w-24 h-auto rounded-t-full rounded-b-xl px-4 pt-6 pb-2 flex items-center justify-center border-4 border-slate-950 shadow-sm mb-4 relative z-10 -mt-10 lg:mt-0">
                             <img
                                 src="/manu ettn logo .png"
                                 alt="Jahani Mart Logo"
-                                className="h-16 w-auto object-contain mx-auto"
+                                className="w-full object-contain mx-auto"
                             />
                         </div>
-                        <h2 className="text-4xl font-serif font-bold text-white leading-tight flex flex-col">
+                        <h2 className="text-4xl font-serif font-bold text-white leading-tight flex flex-col items-center lg:items-start">
                             <span>Jahani</span>
                             <span className="text-amber-400">Mart</span>
                         </h2>
                     </div>
 
-                    <div className="flex gap-4 mt-2 justify-center sm:justify-start">
+                    {/* Mobile divider line as requested in the design */}
+                    <div className="w-16 h-px bg-slate-700 mx-auto my-6 lg:hidden"></div>
+
+                    <div className="flex gap-4 justify-center lg:justify-start w-full">
                         <a href="#" className="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center hover:bg-[#00674F] hover:text-white transition-colors" aria-label="Facebook">
                             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" /></svg>
                         </a>
@@ -40,8 +43,10 @@ const Footer = () => {
                     </div>
                 </div>
 
-                {/* Shop Links */}
-                <div>
+                {/* Links Area - 2 columns on mobile, 3 on large */}
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 lg:w-3/4">
+                    {/* Shop Links */}
+                    <div>
                     <h3 className="text-white text-2xl font-bold mb-5 font-serif">Shop</h3>
                     <ul className="flex flex-col gap-2.5">
                         <li><Link to="/products?category=fashion" className="hover:text-amber-400 transition-colors">Fashion Collection</Link></li>
@@ -49,8 +54,6 @@ const Footer = () => {
                         <li><Link to="/products?category=home" className="hover:text-amber-400 transition-colors">Home & Kitchen</Link></li>
                         <li><Link to="/products" className="hover:text-amber-400 transition-colors">All Products</Link></li>
                         <li><Link to="#" className="hover:text-amber-400 transition-colors">Special Offers</Link></li>
-                        <li><Link to="#" className="hover:text-amber-400 transition-colors">New Arrivals</Link></li>
-                        <li><Link to="#" className="hover:text-amber-400 transition-colors">Gift Cards</Link></li>
                     </ul>
                 </div>
 
@@ -59,27 +62,25 @@ const Footer = () => {
                     <div>
                         <h3 className="text-white text-2xl font-bold mb-5 font-serif">Company</h3>
                         <ul className="flex flex-col gap-2.5">
-                            <li><Link to="#" className="hover:text-amber-400 transition-colors">Our Story</Link></li>
-                            <li><Link to="#" className="hover:text-amber-400 transition-colors">Charity & Community</Link></li>
-                            <li><Link to="#" className="hover:text-amber-400 transition-colors">Blog</Link></li>
+                            <li><Link to="/our-story" className="hover:text-amber-400 transition-colors">Our Story</Link></li>
+                            <li><Link to="/blog" className="hover:text-amber-400 transition-colors">Blog</Link></li>
                             <li><Link to="#" className="hover:text-amber-400 transition-colors">FAQ</Link></li>
                             <li><Link to="/support" className="hover:text-amber-400 transition-colors">Contact Form</Link></li>
                         </ul>
                     </div>
 
-                    <div>
-                        <h3 className="text-white text-2xl font-bold mb-5 font-serif">Information</h3>
-                        <ul className="flex flex-col gap-2.5">
-                            <li><Link to="#" className="hover:text-amber-400 transition-colors">Shipping & Returns</Link></li>
-                            <li><Link to="#" className="hover:text-amber-400 transition-colors">Terms of Service</Link></li>
-                            <li><Link to="#" className="hover:text-amber-400 transition-colors">Privacy Policy</Link></li>
-                            <li><Link to="#" className="hover:text-amber-400 transition-colors">Wholesale Application</Link></li>
-                        </ul>
-                    </div>
+                        <div>
+                            <h3 className="text-white text-2xl font-bold mb-5 font-serif">Information</h3>
+                            <ul className="flex flex-col gap-2.5">
+                                <li><Link to="/terms" className="hover:text-amber-400 transition-colors">Terms of Service</Link></li>
+                                <li><Link to="/privacy" className="hover:text-amber-400 transition-colors">Privacy Policy</Link></li>
+                                <li><Link to="#" className="hover:text-amber-400 transition-colors">Wholesale Application</Link></li>
+                            </ul>
+                        </div>
                 </div>
 
-                {/* Contact Column */}
-                <div>
+                {/* Contact Column - spans full width below on mobile, single col on desktop */}
+                <div className="col-span-2 lg:col-span-1 border-t border-slate-800 pt-8 lg:border-0 lg:pt-0">
                     <h3 className="text-white text-2xl font-bold mb-5 font-serif">Contact</h3>
                     <div className="flex flex-col gap-1.5 text-base">
                         <p className="hover:text-amber-400 transition-colors cursor-pointer">support@jahmart.com</p>
@@ -93,8 +94,10 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
+            
+        </div>
 
-            {/* Trust Badges Section - Mimicking the circular/square awards below */}
+        {/* Trust Badges Section - Mimicking the circular/square awards below */}
             <div className="max-w-[1440px] w-full mx-auto px-6 sm:px-12 py-8 flex flex-wrap justify-center gap-4 border-b border-slate-800">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border border-slate-700 flex flex-col items-center justify-center bg-black text-center p-1">
                     <span className="text-[10px] sm:text-xs text-white leading-tight">great<br /><strong className="text-xl">taste</strong><br />★ ★<br />2024</span>
