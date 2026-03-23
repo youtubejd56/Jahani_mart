@@ -12,7 +12,7 @@ const Blog = () => {
             content: "The Masala Dabba is more than just a kitchen accessory; it's a piece of Indian heritage. Traditionally passed down through generations, this circular stainless steel or brass container holds seven essential spices, often including turmeric, cumin seeds, mustard seeds, and chili powder. In this guide, we'll explore how to organize your dabba, how to choose the right materials, and how to maintain the freshness of your spices for months. Whether you're a seasoned chef or a home cook starting your Indian culinary journey, the Masala Dabba is the heart of your kitchen.",
             date: "Mar 15, 2024",
             category: "Guides",
-            image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=800"
+            image: "/img1.png"
         },
         {
             id: 2,
@@ -21,7 +21,7 @@ const Blog = () => {
             content: "Ancient wisdom meets modern science in the world of spices. Turmeric, rich in curcumin, is a potent anti-inflammatory. Ginger has been used for centuries to aid digestion and fight respiratory infections. Cinnamon helps regulate blood sugar, while Cloves are packed with antioxidants. Finally, Black Pepper enhances the absorption of all these nutrients. Discover how to incorporate these 'golden' ingredients into your daily tea, smoothies, and dishes to keep your immune system strong year-round.",
             date: "Mar 10, 2024",
             category: "Health",
-            image: "https://images.unsplash.com/photo-1615485290382-441e4d0c9cb5?auto=format&fit=crop&q=80&w=800"
+            image: "/img2.png"
         },
         {
             id: 3,
@@ -30,7 +30,7 @@ const Blog = () => {
             content: "Join us on a sensorial journey through the winding lanes of Kochi and the lush plantations of Munnar. Kerala, known as the 'Land of Spices', is where the world's finest cardamom, pepper, and nutmeg come from. We met with local farmers, witnessed the traditional drying processes, and breathed in the intoxicating scents of the world-famous spice auctions. This journey reminded us of the deep connection between people, land, and the flavors that bring us all together at the table.",
             date: "Mar 05, 2024",
             category: "Travel",
-            image: "https://images.unsplash.com/photo-1506484334402-40f299bc7744?auto=format&fit=crop&q=80&w=800"
+            image: "/img3.png"
         }
     ];
 
@@ -60,9 +60,9 @@ const Blog = () => {
             {/* Hero Section */}
             <div className="relative h-[400px] overflow-hidden flex items-center justify-center">
                 <img 
-                    src="/blog_hero_spices.png" 
+                    src="/img3.png" 
                     alt="Spices Hero" 
-                    className="absolute inset-0 w-full h-full object-cover brightness-[0.7]" 
+                    className="absolute inset-0 w-full h-full object-cover brightness-[0.55]" 
                 />
                 <div className="relative z-10 text-center">
                     <h1 className="text-5xl md:text-6xl font-serif font-bold text-white mb-4 tracking-tight drop-shadow-lg uppercase">Our Blog</h1>

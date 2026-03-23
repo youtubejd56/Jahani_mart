@@ -23,7 +23,7 @@ const OurStory = () => {
                 <div className="flex flex-col md:flex-row gap-12 items-center">
                     <div className="w-full md:w-1/2">
                         <img 
-                            src="/our_story_team_cooking.png" 
+                            src="/img3.png" 
                             alt="Our Founding Story" 
                             className="w-full h-auto object-cover shadow-xl rounded-sm"
                         />
@@ -64,7 +64,7 @@ const OurStory = () => {
                 <div className="flex flex-col md:flex-row-reverse gap-12 items-center">
                     <div className="w-full md:w-1/2">
                         <img 
-                            src="/our_story_textile_work.png" 
+                            src="/img4.png" 
                             alt="Tradition and Detail" 
                             className="w-full h-auto object-cover shadow-xl rounded-sm"
                         />
@@ -105,7 +105,7 @@ const OurStory = () => {
                 <div className="flex flex-col md:flex-row gap-12 items-center">
                     <div className="w-full md:w-1/2">
                         <img 
-                            src="/our_story_market_stall.png" 
+                            src="/img2.png" 
                             alt="Beginnings" 
                             className="w-full h-auto object-cover shadow-xl rounded-sm"
                         />
@@ -143,7 +143,7 @@ const OurStory = () => {
                 <div className="flex flex-col md:flex-row-reverse gap-12 items-center">
                     <div className="w-full md:w-1/2">
                         <img 
-                            src="/our_story_spice_mixing.png" 
+                            src="/img1.png" 
                             alt="The Vision" 
                             className="w-full h-auto object-cover shadow-xl rounded-sm"
                         />
