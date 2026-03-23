@@ -21,6 +21,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import OurStory from './pages/OurStory';
 import Blog from './pages/Blog';
 import ForgotPassword from './pages/ForgotPassword';
+import DownloadApp from './pages/DownloadApp';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
@@ -50,6 +51,7 @@ const AppContent = () => {
                     <Route path="/order-tracking" element={<OrderTracking />} />
                     <Route path="/products/:productId/reviews" element={<Reviews />} />
                     <Route path="/support" element={<Support />} />
+                    <Route path="/download-app" element={<DownloadApp />} />
                     <Route path="/help" element={<Support />} />
                     <Route path="/terms" element={<TermsOfService />} />
                     <Route path="/privacy" element={<PrivacyPolicy />} />

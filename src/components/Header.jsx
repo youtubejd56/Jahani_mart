@@ -73,6 +73,12 @@ const Header = () => {
                     <Link to="/" className="text-white no-underline font-medium hover:opacity-80 transition-opacity">Home</Link>
                     <Link to="/products" className="text-white no-underline font-medium hover:opacity-80 transition-opacity">Products</Link>
                     <Link to="/support" className="text-white no-underline font-medium hover:opacity-80 transition-opacity">Support</Link>
+                    <Link to="/download-app" className="text-white no-underline font-medium hover:opacity-80 transition-opacity flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download App
+                    </Link>
                 </nav>
 
                 {/* Search Bar - Responsive width - Hidden on mobile when menu is open */}
@@ -173,6 +179,16 @@ const Header = () => {
                             onClick={handleMobileLinkClick}
                         >
                             Support
+                        </Link>
+                        <Link
+                            to="/download-app"
+                            className="text-white no-underline font-medium py-2 px-5 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-2"
+                            onClick={handleMobileLinkClick}
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            Download App
                         </Link>
                     </nav>
 
