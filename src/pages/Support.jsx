@@ -440,11 +440,11 @@ const Support = () => {
                     <div className="flex justify-center gap-6">
                         <div>
                             <p className="font-bold">Call</p>
-                            <p className="text-violet-200">1800-XXX-XXXX</p>
+                            <p className="text-violet-200">+91 7356777557</p>
                         </div>
                         <div>
                             <p className="font-bold">Email</p>
-                            <p className="text-violet-200">support@janani.com</p>
+                            <p className="text-violet-200">jahaniinternational@gmail.com</p>
                         </div>
                     </div>
                 </div>

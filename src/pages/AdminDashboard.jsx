@@ -291,7 +291,7 @@ const AdminDashboard = () => {
             alert('Failed to update order status');
         }
     };
-    
+
     // Category functions
     const handleCategoryFileChange = (e) => {
         const file = e.target.files[0];
@@ -311,7 +311,7 @@ const AdminDashboard = () => {
             formData.append('name', categoryForm.name);
             formData.append('icon', categoryForm.icon);
             formData.append('image_url', categoryForm.image_url);
-            
+
             if (categoryForm.image) {
                 formData.append('image', categoryForm.image);
             }
@@ -339,11 +339,11 @@ const AdminDashboard = () => {
 
     const handleEditCategory = (category) => {
         setEditingCategory(category.id);
-        setCategoryForm({ 
-            name: category.name, 
-            icon: category.icon || '', 
+        setCategoryForm({
+            name: category.name,
+            icon: category.icon || '',
             image_url: category.image_url || '',
-            image: null 
+            image: null
         });
         setCategoryImagePreview(null);
         setShowCategoryForm(true);
@@ -385,7 +385,7 @@ const AdminDashboard = () => {
             if (productForm.category) formData.append('category', productForm.category);
             formData.append('is_active', productForm.is_active);
             formData.append('image_url', productForm.image_url);
-            
+
             if (productForm.image) {
                 formData.append('image', productForm.image);
             }
@@ -792,9 +792,9 @@ const AdminDashboard = () => {
                                                 {categoryImagePreview && (
                                                     <div className="relative group">
                                                         <img src={categoryImagePreview} alt="Preview" className="w-12 h-12 object-cover rounded shadow-sm border border-gray-200" />
-                                                        <button 
-                                                            type="button" 
-                                                            onClick={() => { setCategoryImagePreview(null); setCategoryForm({...categoryForm, image: null}); }}
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => { setCategoryImagePreview(null); setCategoryForm({ ...categoryForm, image: null }); }}
                                                             className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]"
                                                         >
                                                             ×
@@ -957,9 +957,9 @@ const AdminDashboard = () => {
                                                     {imagePreview && (
                                                         <div className="relative group">
                                                             <img src={imagePreview} alt="Preview" className="w-12 h-12 object-cover rounded shadow-sm border border-gray-200" />
-                                                            <button 
-                                                                type="button" 
-                                                                onClick={() => { setImagePreview(null); setProductForm({...productForm, image: null}); }}
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => { setImagePreview(null); setProductForm({ ...productForm, image: null }); }}
                                                                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]"
                                                             >
                                                                 ×
@@ -1177,7 +1177,7 @@ const AdminDashboard = () => {
                                                     <button
                                                         onClick={async () => {
                                                             try {
-                                                                const response = await getAdminAxios().get(`/api/admin/support/tickets/${ticket.ticket_id}/`);
+                                                                const response = await getAdminAxios().get(`admin/support/tickets/${ticket.ticket_id}/`);
                                                                 setSelectedTicket(response.data);
                                                             } catch (error) {
                                                                 console.error('Error fetching ticket:', error);
@@ -1213,18 +1213,18 @@ const AdminDashboard = () => {
                         <div className="bg-white rounded-lg shadow-sm p-6">
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-xl font-bold text-gray-800">About Us Story Sections</h2>
-                                <button 
-                                         onClick={() => { 
-                                                setShowStoryForm(true); 
-                                                setEditingStory(null); 
-                                                setStoryForm({ title: '', description: '', image_url: '', order: stories.length + 1, is_reversed: false }); 
-                                            }}
+                                <button
+                                    onClick={() => {
+                                        setShowStoryForm(true);
+                                        setEditingStory(null);
+                                        setStoryForm({ title: '', description: '', image_url: '', order: stories.length + 1, is_reversed: false });
+                                    }}
                                     className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-lg"
                                 >
                                     Add Section
                                 </button>
                             </div>
-                            
+
                             {showStoryForm && (
                                 <div className="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
                                     <h3 className="font-bold text-lg mb-4">{editingStory ? 'Edit Story Section' : 'New Story Section'}</h3>
@@ -1232,29 +1232,29 @@ const AdminDashboard = () => {
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">Section Title</label>
-                                                <input 
-                                                    type="text" 
+                                                <input
+                                                    type="text"
                                                     value={storyForm.title}
-                                                    onChange={(e) => setStoryForm({...storyForm, title: e.target.value})}
+                                                    onChange={(e) => setStoryForm({ ...storyForm, title: e.target.value })}
                                                     className="w-full px-4 py-2 border rounded-lg"
                                                     placeholder="e.g., Growing"
                                                 />
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">Display Order</label>
-                                                <input 
-                                                    type="number" 
+                                                <input
+                                                    type="number"
                                                     value={storyForm.order}
-                                                    onChange={(e) => setStoryForm({...storyForm, order: e.target.value})}
+                                                    onChange={(e) => setStoryForm({ ...storyForm, order: e.target.value })}
                                                     className="w-full px-4 py-2 border rounded-lg"
                                                 />
                                             </div>
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Content / Description</label>
-                                            <textarea 
+                                            <textarea
                                                 value={storyForm.description}
-                                                onChange={(e) => setStoryForm({...storyForm, description: e.target.value})}
+                                                onChange={(e) => setStoryForm({ ...storyForm, description: e.target.value })}
                                                 className="w-full px-4 py-2 border rounded-lg"
                                                 rows={5}
                                             />
@@ -1262,19 +1262,19 @@ const AdminDashboard = () => {
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-                                                <input 
-                                                    type="text" 
+                                                <input
+                                                    type="text"
                                                     value={storyForm.image_url}
-                                                    onChange={(e) => setStoryForm({...storyForm, image_url: e.target.value})}
+                                                    onChange={(e) => setStoryForm({ ...storyForm, image_url: e.target.value })}
                                                     className="w-full px-4 py-2 border rounded-lg"
                                                 />
                                             </div>
                                             <div className="flex items-center mt-6">
-                                                <input 
-                                                    type="checkbox" 
+                                                <input
+                                                    type="checkbox"
                                                     id="reversed"
                                                     checked={storyForm.is_reversed}
-                                                    onChange={(e) => setStoryForm({...storyForm, is_reversed: e.target.checked})}
+                                                    onChange={(e) => setStoryForm({ ...storyForm, is_reversed: e.target.checked })}
                                                     className="w-4 h-4 text-yellow-400 border-gray-300 rounded"
                                                 />
                                                 <label htmlFor="reversed" className="ml-2 text-sm text-gray-700">Reverse Layout (Image on Right)</label>
@@ -1315,12 +1315,12 @@ const AdminDashboard = () => {
                         <div className="bg-white rounded-lg shadow-sm p-6">
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-xl font-bold text-gray-800">Blog Posts</h2>
-                                <button 
-                                     onClick={() => { 
-                                                setShowBlogForm(true); 
-                                                setEditingBlogPost(null); 
-                                                setBlogPostForm({ title: '', excerpt: '', date: new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'}), category: '', image_url: '', content: '' }); 
-                                            }}
+                                <button
+                                    onClick={() => {
+                                        setShowBlogForm(true);
+                                        setEditingBlogPost(null);
+                                        setBlogPostForm({ title: '', excerpt: '', date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }), category: '', image_url: '', content: '' });
+                                    }}
                                     className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-lg"
                                 >
                                     Create Post
@@ -1334,19 +1334,19 @@ const AdminDashboard = () => {
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">Post Title</label>
-                                                <input 
-                                                    type="text" 
+                                                <input
+                                                    type="text"
                                                     value={blogPostForm.title}
-                                                    onChange={(e) => setBlogPostForm({...blogPostForm, title: e.target.value})}
+                                                    onChange={(e) => setBlogPostForm({ ...blogPostForm, title: e.target.value })}
                                                     className="w-full px-4 py-2 border rounded-lg"
                                                 />
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                                                <input 
-                                                    type="text" 
+                                                <input
+                                                    type="text"
                                                     value={blogPostForm.category}
-                                                    onChange={(e) => setBlogPostForm({...blogPostForm, category: e.target.value})}
+                                                    onChange={(e) => setBlogPostForm({ ...blogPostForm, category: e.target.value })}
                                                     className="w-full px-4 py-2 border rounded-lg"
                                                     placeholder="e.g., Guides"
                                                 />
@@ -1354,27 +1354,27 @@ const AdminDashboard = () => {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Excerpt (Summary)</label>
-                                            <textarea 
+                                            <textarea
                                                 value={blogPostForm.excerpt}
-                                                onChange={(e) => setBlogPostForm({...blogPostForm, excerpt: e.target.value})}
+                                                onChange={(e) => setBlogPostForm({ ...blogPostForm, excerpt: e.target.value })}
                                                 className="w-full px-4 py-2 border rounded-lg"
                                                 rows={2}
                                             />
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-                                            <input 
-                                                type="text" 
+                                            <input
+                                                type="text"
                                                 value={blogPostForm.image_url}
-                                                onChange={(e) => setBlogPostForm({...blogPostForm, image_url: e.target.value})}
+                                                onChange={(e) => setBlogPostForm({ ...blogPostForm, image_url: e.target.value })}
                                                 className="w-full px-4 py-2 border rounded-lg"
                                             />
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Full Post Content (HTML/Markdown supported)</label>
-                                            <textarea 
+                                            <textarea
                                                 value={blogPostForm.content}
-                                                onChange={(e) => setBlogPostForm({...blogPostForm, content: e.target.value})}
+                                                onChange={(e) => setBlogPostForm({ ...blogPostForm, content: e.target.value })}
                                                 className="w-full px-4 py-2 border rounded-lg"
                                                 rows={10}
                                             />
@@ -1518,8 +1518,8 @@ const AdminDashboard = () => {
                             <div className="bg-gray-50 rounded-lg p-4 mb-4">
                                 <div className="flex gap-2 mb-3">
                                     <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${selectedTicket.status === 'Open' ? 'bg-red-100 text-red-700' :
-                                            selectedTicket.status === 'In Progress' ? 'bg-yellow-100 text-yellow-700' :
-                                                'bg-green-100 text-green-700'
+                                        selectedTicket.status === 'In Progress' ? 'bg-yellow-100 text-yellow-700' :
+                                            'bg-green-100 text-green-700'
                                         }`}>
                                         {selectedTicket.status}
                                     </span>

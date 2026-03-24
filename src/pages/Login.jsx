@@ -15,6 +15,23 @@ const Login = () => {
         setError('');
         setLoading(true);
 
+        if (!mobile || !password) {
+            setError('All fields are required, please fill all the fields.');
+            setLoading(false);
+            return;
+        }
+
+        if (mobile.length !== 10) {
+            setError('Mobile number must be 10 digits, please enter a valid mobile number.');
+            setLoading(false);
+            return;
+        }
+        if (password.length < 8) {
+            setError('Password must be at least 8 characters, please enter a valid password.');
+            setLoading(false);
+            return;
+        }
+
         try {
             await login(mobile, password);
             navigate('/');
@@ -35,7 +52,7 @@ const Login = () => {
 
 
                 {error && (
-                    <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-6">
+                    <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-6 text-center">
                         {error}
                     </div>
                 )}
@@ -52,7 +69,6 @@ const Login = () => {
                             onChange={(e) => setMobile(e.target.value)}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent"
                             placeholder="Enter your mobile number"
-                            required
                         />
                     </div>
 
@@ -67,7 +83,6 @@ const Login = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent"
                             placeholder="Enter your password"
-                            required
                         />
                     </div>
 
@@ -84,7 +99,7 @@ const Login = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-[#00674F] hover:bg-[#0A3C30] text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-[#00674F] cursor-pointer hover:bg-[#0A3C30] text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {loading ? 'Signing in...' : 'Login'}
                     </button>

@@ -51,22 +51,6 @@ const Header = () => {
                     <img src="/manu ettn logo .png" alt="Jahani Logo" className="h-12 w-auto object-contain" />
                 </div> */}
 
-                {/* Mobile Menu Button - Visible on small screens */}
-                <button
-                    className="lg:hidden text-white p-2 focus:outline-none"
-                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    aria-label="Toggle menu"
-                >
-                    {mobileMenuOpen ? (
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    ) : (
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    )}
-                </button>
 
                 {/* Navigation - Hidden on mobile, shown on lg */}
                 <nav className="hidden lg:flex items-center gap-8">
@@ -96,6 +80,23 @@ const Header = () => {
                         </button>
                     </form>
                 </div>
+
+                {/* Mobile Menu Button - Visible on small screens */}
+                <button
+                    className="lg:hidden text-white p-2 focus:outline-none"
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    aria-label="Toggle menu"
+                >
+                    {mobileMenuOpen ? (
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    ) : (
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    )}
+                </button>
 
                 {/* Auth & Cart - Hidden on mobile when menu is open */}
                 <div className={`hidden lg:flex items-center gap-4`}>

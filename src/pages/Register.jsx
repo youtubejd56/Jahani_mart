@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
 const Register = () => {
     const [formData, setFormData] = useState({
         email: '',
@@ -27,19 +29,34 @@ const Register = () => {
         e.preventDefault();
         setError('');
 
+        if (formData.email === '' || formData.first_name === '' || formData.last_name === '' || formData.password === '' || formData.confirmPassword === '') {
+            setError('Please fill the required fields, all fields are required.');
+            return;
+        }
+        if (!EMAIL_REGEX.test(formData.email)) {
+            setError('Invalid email format, please enter a valid email address.');
+            return;
+        }
         if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
+            setError('Passwords do not match, please enter the same password.');
+            return;
+        }
+        if (!formData.mobile) {
+            setError('Mobile number is required, please enter your mobile number.');
+            return;
+        }
+        if (formData.mobile.length !== 10) {
+            setError('Mobile number must be 10 digits, please enter a valid mobile number.');
+            return;
+        }
+        if (formData.password.length < 8) {
+            setError('Password must be at least 8 characters, please enter a valid password.');
             return;
         }
 
         setLoading(true);
 
         try {
-            if (!formData.mobile) {
-                setError('Mobile number is required');
-                return;
-            }
-
             await register({
                 email: formData.email,
                 password: formData.password,
@@ -57,22 +74,22 @@ const Register = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
-            <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
+            <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8">
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-bold text-[#00674F]">Create Account</h1>
                     <p className="text-gray-500 mt-2">Join Jahani International</p>
                 </div>
 
                 {error && (
-                    <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-6">
+                    <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-6 text-center">
                         {error}
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} noValidate className="space-y-4">
                     <div>
                         <label htmlFor="mobile" className="block text-sm font-medium text-gray-700 mb-2">
-                            Mobile Number *
+                            Mobile Number <span className="text-red-500">*</span>
                         </label>
                         <input
                             id="mobile"
@@ -82,14 +99,13 @@ const Register = () => {
                             onChange={handleChange}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent"
                             placeholder="Enter your mobile number"
-                            required
                         />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-2">
-                                First Name
+                                First Name <span className="text-red-500">*</span>
                             </label>
                             <input
                                 id="first_name"
@@ -103,7 +119,7 @@ const Register = () => {
                         </div>
                         <div>
                             <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-2">
-                                Last Name
+                                Last Name <span className="text-red-500">*</span>
                             </label>
                             <input
                                 id="last_name"
@@ -119,7 +135,7 @@ const Register = () => {
 
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                            Email
+                            Email <span className="text-red-500">*</span>
                         </label>
                         <input
                             id="email"
@@ -134,7 +150,7 @@ const Register = () => {
 
                     <div>
                         <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                            Password *
+                            Password <span className="text-red-500">*</span>
                         </label>
                         <input
                             id="password"
@@ -144,13 +160,12 @@ const Register = () => {
                             onChange={handleChange}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent"
                             placeholder="Create a password"
-                            required
                         />
                     </div>
 
                     <div>
                         <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                            Confirm Password *
+                            Confirm Password <span className="text-red-500">*</span>
                         </label>
                         <input
                             id="confirmPassword"
@@ -160,7 +175,6 @@ const Register = () => {
                             onChange={handleChange}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent"
                             placeholder="Confirm your password"
-                            required
                         />
                     </div>
 

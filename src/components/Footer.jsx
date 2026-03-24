@@ -47,27 +47,27 @@ const Footer = () => {
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 lg:w-3/4">
                     {/* Shop Links */}
                     <div>
-                    <h3 className="text-white text-2xl font-bold mb-5 font-serif">Shop</h3>
-                    <ul className="flex flex-col gap-2.5">
-                        <li><Link to="/products?category=fashion" className="hover:text-amber-400 transition-colors">Fashion Collection</Link></li>
-                        <li><Link to="/products?category=electronics" className="hover:text-amber-400 transition-colors">Electronics Hub</Link></li>
-                        <li><Link to="/products?category=home" className="hover:text-amber-400 transition-colors">Home & Kitchen</Link></li>
-                        <li><Link to="/products" className="hover:text-amber-400 transition-colors">All Products</Link></li>
-                        <li><Link to="#" className="hover:text-amber-400 transition-colors">Special Offers</Link></li>
-                    </ul>
-                </div>
-
-                {/* Combines Company and Information in one column on large screens to mimic 4 columns, or we can use 3 link columns */}
-                <div className="flex flex-col gap-8">
-                    <div>
-                        <h3 className="text-white text-2xl font-bold mb-5 font-serif">Company</h3>
+                        <h3 className="text-white text-2xl font-bold mb-5 font-serif">Shop</h3>
                         <ul className="flex flex-col gap-2.5">
-                            <li><Link to="/our-story" className="hover:text-amber-400 transition-colors">Our Story</Link></li>
-                            <li><Link to="/blog" className="hover:text-amber-400 transition-colors">Blog</Link></li>
-                            <li><Link to="#" className="hover:text-amber-400 transition-colors">FAQ</Link></li>
-                            <li><Link to="/support" className="hover:text-amber-400 transition-colors">Contact Form</Link></li>
+                            <li><Link to="/products?category=fashion" className="hover:text-amber-400 transition-colors">Fashion Collection</Link></li>
+                            <li><Link to="/products?category=electronics" className="hover:text-amber-400 transition-colors">Electronics Hub</Link></li>
+                            <li><Link to="/products?category=home" className="hover:text-amber-400 transition-colors">Home & Kitchen</Link></li>
+                            <li><Link to="/products" className="hover:text-amber-400 transition-colors">All Products</Link></li>
+                            <li><Link to="#" className="hover:text-amber-400 transition-colors">Special Offers</Link></li>
                         </ul>
                     </div>
+
+                    {/* Combines Company and Information in one column on large screens to mimic 4 columns, or we can use 3 link columns */}
+                    <div className="flex flex-col gap-8">
+                        <div>
+                            <h3 className="text-white text-2xl font-bold mb-5 font-serif">Company</h3>
+                            <ul className="flex flex-col gap-2.5">
+                                <li><Link to="/our-story" className="hover:text-amber-400 transition-colors">Our Story</Link></li>
+                                <li><Link to="/blog" className="hover:text-amber-400 transition-colors">Blog</Link></li>
+                                <li><Link to="#" className="hover:text-amber-400 transition-colors">FAQ</Link></li>
+                                <li><Link to="/support" className="hover:text-amber-400 transition-colors">Contact Form</Link></li>
+                            </ul>
+                        </div>
 
                         <div>
                             <h3 className="text-white text-2xl font-bold mb-5 font-serif">Information</h3>
@@ -77,27 +77,27 @@ const Footer = () => {
                                 <li><Link to="#" className="hover:text-amber-400 transition-colors">Wholesale Application</Link></li>
                             </ul>
                         </div>
-                </div>
+                    </div>
 
-                {/* Contact Column - spans full width below on mobile, single col on desktop */}
-                <div className="col-span-2 lg:col-span-1 border-t border-slate-800 pt-8 lg:border-0 lg:pt-0">
-                    <h3 className="text-white text-2xl font-bold mb-5 font-serif">Contact</h3>
-                    <div className="flex flex-col gap-1.5 text-base">
-                        <p className="hover:text-amber-400 transition-colors cursor-pointer">support@jahmart.com</p>
-                        <p className="hover:text-amber-400 transition-colors cursor-pointer">+91 98765 43210 (Monday to</p>
-                        <p className="mb-4">Friday 9.00am - 5.00pm)</p>
+                    {/* Contact Column - spans full width below on mobile, single col on desktop */}
+                    <div className="col-span-2 lg:col-span-1 border-t border-slate-800 pt-8 lg:border-0 lg:pt-0">
+                        <h3 className="text-white text-2xl font-bold mb-5 font-serif">Contact</h3>
+                        <div className="flex flex-col gap-1.5 text-base">
+                            <p className="hover:text-amber-400 transition-colors cursor-pointer">jahaniinternational@gmail.com</p>
+                            <p className="hover:text-amber-400 transition-colors cursor-pointer">+91 7356777557 (Monday to</p>
+                            <p className="mb-4">Friday 9.00am - 5.00pm)</p>
 
-                        <p className="font-semibold text-white mt-2">Jahani Mart Pvt Ltd,</p>
-                        <p>Connaught Place,</p>
-                        <p>New Delhi, 110001,</p>
-                        <p>India</p>
+                            <p className="font-semibold text-white mt-2">Jahani Mart Pvt Ltd,</p>
+                            <p>Chunangad Sub Post Office 12/558, Jahani Complex Ottappalam Mannarkkad Road Chunangad Ambalapara,</p>
+                            <p>Palakkad,Kerala,679501</p>
+                            <p>India</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-        </div>
 
-        {/* Trust Badges Section - Mimicking the circular/square awards below */}
+            </div>
+
+            {/* Trust Badges Section - Mimicking the circular/square awards below */}
             <div className="max-w-[1440px] w-full mx-auto px-6 sm:px-12 py-8 flex flex-wrap justify-center gap-4 border-b border-slate-800">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border border-slate-700 flex flex-col items-center justify-center bg-black text-center p-1">
                     <span className="text-[10px] sm:text-xs text-white leading-tight">great<br /><strong className="text-xl">taste</strong><br />★ ★<br />2024</span>
