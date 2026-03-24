@@ -13,6 +13,7 @@ const Support = () => {
     const [showNewTicket, setShowNewTicket] = useState(false);
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [replyMessage, setReplyMessage] = useState('');
+    const [userOrders, setUserOrders] = useState([]);
 
     const [newTicket, setNewTicket] = useState({
         ticket_type: 'Order',
@@ -41,6 +42,7 @@ const Support = () => {
         fetchFaqs();
         if (isAuthenticated) {
             fetchTickets();
+            fetchUserOrders();
         }
     }, [isAuthenticated]);
 
@@ -70,6 +72,15 @@ const Support = () => {
             setTickets(response.data);
         } catch (error) {
             console.error('Error fetching tickets:', error);
+        }
+    };
+
+    const fetchUserOrders = async () => {
+        try {
+            const response = await api.get('/orders/');
+            setUserOrders(response.data);
+        } catch (error) {
+            console.error('Error fetching orders:', error);
         }
     };
 
@@ -300,14 +311,19 @@ const Support = () => {
                                             </div>
 
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">Order ID (Optional)</label>
-                                                <input
-                                                    type="text"
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">Select Order (Optional)</label>
+                                                <select
                                                     value={newTicket.order_id}
                                                     onChange={(e) => setNewTicket({ ...newTicket, order_id: e.target.value })}
                                                     className="w-full p-3 border border-gray-300 rounded-lg"
-                                                    placeholder="If related to a specific order"
-                                                />
+                                                >
+                                                    <option value="">Select an order (if related to a specific order)</option>
+                                                    {userOrders.map(order => (
+                                                        <option key={order.order_id} value={order.order_id}>
+                                                            {order.order_id} - {order.items?.map(item => item.product_name).join(', ') || 'Products'} - ₹{order.total_amount}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                             </div>
 
                                             <div>

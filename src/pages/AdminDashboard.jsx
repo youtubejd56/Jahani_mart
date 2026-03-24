@@ -1529,6 +1529,11 @@ const AdminDashboard = () => {
                                     <span className="px-2 py-0.5 text-xs bg-gray-200 text-gray-700 rounded-full">
                                         {selectedTicket.priority} Priority
                                     </span>
+                                    {selectedTicket.user_name && (
+                                        <span className="ml-2 px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-full">
+                                            Customer: {selectedTicket.user_name}
+                                        </span>
+                                    )}
                                 </div>
                                 <h3 className="font-bold text-gray-800 mb-2">{selectedTicket.subject}</h3>
                                 <p className="text-gray-600 whitespace-pre-wrap">{selectedTicket.description}</p>
@@ -1536,6 +1541,38 @@ const AdminDashboard = () => {
                                     Created: {new Date(selectedTicket.created_at).toLocaleString()}
                                     {selectedTicket.order_id && <span className="ml-4">Order: {selectedTicket.order_id}</span>}
                                 </div>
+
+                                {/* Order Details - Only show if order_details exists */}
+                                {selectedTicket.order_details && (
+                                    <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                                        <h4 className="font-bold text-blue-800 mb-3">📦 Order Details</h4>
+                                        <div className="grid grid-cols-2 gap-4 text-sm">
+                                            <div>
+                                                <p className="text-gray-600">Customer: <span className="font-medium text-gray-800">{selectedTicket.order_details.shipping_name}</span></p>
+                                                <p className="text-gray-600">Phone: <span className="font-medium text-gray-800">{selectedTicket.order_details.shipping_phone}</span></p>
+                                            </div>
+                                            <div>
+                                                <p className="text-gray-600">Total: <span className="font-bold text-green-600">₹{selectedTicket.order_details.total_amount}</span></p>
+                                                <p className="text-gray-600">Status: <span className="font-medium text-gray-800">{selectedTicket.order_details.status}</span></p>
+                                            </div>
+                                        </div>
+                                        <div className="mt-2 text-sm">
+                                            <p className="text-gray-600">Address: <span className="text-gray-800">{selectedTicket.order_details.shipping_address}, {selectedTicket.order_details.shipping_city}, {selectedTicket.order_details.shipping_state} - {selectedTicket.order_details.shipping_pincode}</span></p>
+                                        </div>
+                                        {selectedTicket.order_details.items && selectedTicket.order_details.items.length > 0 && (
+                                            <div className="mt-3">
+                                                <p className="text-gray-600 text-sm font-medium mb-1">Products:</p>
+                                                <div className="bg-white rounded p-2">
+                                                    {selectedTicket.order_details.items.map((item, idx) => (
+                                                        <p key={idx} className="text-sm text-gray-700">
+                                                            • {item.product_name} (x{item.quantity}) - ₹{item.price}
+                                                        </p>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
 
                             {/* Replies */}
