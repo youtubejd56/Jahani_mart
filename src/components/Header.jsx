@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { ShoppingCart } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { useWishlist } from '../context/WishlistContext';
 
 const Header = () => {
@@ -30,8 +32,8 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-[#00674F] text-white py-4 sticky top-0 z-[9999] shadow-lg">
-            <div className="max-w-[1440px] mx-auto px-4 sm:px-8 flex flex-wrap items-center justify-between gap-4 sm:gap-8">
+        <header className="bg-[#00674F] text-white py-4 sticky top-0 z-[9999] shadow-lg overflow-x-hidden">
+            <div className="max-w-full mx-auto px-4 flex items-center md:justify-evenly justify-between gap-2 sm:gap-8">
                 {/* Logo - Prime Style */}
                 <div className="flex items-center">
                     <Link to="/" className="no-underline text-white flex items-center gap-1">
@@ -66,7 +68,7 @@ const Header = () => {
                 </nav>
 
                 {/* Search Bar - Responsive width - Hidden on mobile when menu is open */}
-                <div className={`grow max-w-[500px] w-full sm:w-auto ${mobileMenuOpen ? 'hidden' : ''} sm:block`}>
+                <div className="hidden md:block flex-1 min-w-0 max-w-[400px]">
                     <form onSubmit={handleSearch} className="flex">
                         <input
                             type="text"
@@ -128,20 +130,22 @@ const Header = () => {
                     <Link to="/admin/dashboard" className="text-white no-underline text-sm font-medium hover:opacity-80 transition-opacity">
                         Admin
                     </Link>
-                    <Link to="/wishlist" className="text-white no-underline font-medium flex items-center gap-2 hover:opacity-80 transition-opacity">
+                    <Link to="/wishlist" className="text-white no-underline font-medium flex items-center gap-2 hover:opacity-80 transition-opacity relative">
                         <span>Wishlist</span>
-                        <span className="bg-amber-400 text-[#00674F] px-2 py-0.5 rounded-full text-xs font-bold leading-none">{wishlistCount}</span>
+                        <Heart />
+                        <span className="bg-amber-400 text-[#00674F] px-2 py-0.5 rounded-full text-xs font-bold leading-none absolute -top-2 -right-4">{wishlistCount}</span>
                     </Link>
-                    <Link to="/cart" className="text-white no-underline font-medium flex items-center gap-2 hover:opacity-80 transition-opacity">
+                    <Link to="/cart" className="text-white no-underline font-medium flex items-center gap-2 hover:opacity-80 transition-opacity relative">
                         <span>Cart</span>
-                        <span className="bg-amber-400 text-[#00674F] px-2 py-0.5 rounded-full text-xs font-bold leading-none">{cart.total_items}</span>
+                        <ShoppingCart />
+                        <span className="bg-amber-400 text-[#00674F] px-2 py-0.5 rounded-full text-xs font-bold leading-none absolute -top-2 -right-4">{cart.total_items}</span>
                     </Link>
                 </div>
             </div>
 
             {/* Mobile Menu Dropdown */}
             {mobileMenuOpen && (
-                <div className="lg:hidden bg-[#005543] border-t border-white/10 mt-4 -mx-4 sm:-mx-8 px-4 sm:px-8 py-4">
+                <div className="lg:hidden bg-[#005543] border-t border-white/10 mt-4 px-4 sm:px-8 py-4">
                     {/* Mobile Search */}
                     <div className="mb-4 mx-2">
                         <form onSubmit={handleSearch} className="flex">
