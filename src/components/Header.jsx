@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import { ShoppingCart } from 'lucide-react';
 import { Heart } from 'lucide-react';
 import { useWishlist } from '../context/WishlistContext';
+import { useLocale } from '../context/LocaleContext';
 
 const Header = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -12,7 +13,29 @@ const Header = () => {
     const { user, logout, isAuthenticated } = useAuth();
     const { cart } = useCart();
     const { wishlistCount } = useWishlist();
+    const { getConfig, isAutoDetected, detectionMethod, refreshDetection } = useLocale();
     const navigate = useNavigate();
+
+    const localeConfig = getConfig();
+
+    // Inline Country Display Component
+    const CountryDisplay = () => (
+        <button
+            onClick={() => refreshDetection()}
+            className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg backdrop-blur-sm hover:bg-white/20 transition-colors"
+            title="Click to detect your country (for VPN users)"
+        >
+            <span className="text-xl">{localeConfig.flag}</span>
+            <div className="flex flex-col">
+                <span className="text-white text-sm font-medium">
+                    {localeConfig.currencySymbol} {localeConfig.currency}
+                </span>
+                <span className="text-white/60 text-[10px]">
+                    {detectionMethod}
+                </span>
+            </div>
+        </button>
+    );
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -102,6 +125,8 @@ const Header = () => {
 
                 {/* Auth & Cart - Hidden on mobile when menu is open */}
                 <div className={`hidden lg:flex items-center gap-4`}>
+                    {/* Country Display - Auto Detected */}
+                    <CountryDisplay />
                     {isAuthenticated ? (
                         <>
                             <Link to="/profile" className="text-white no-underline font-medium flex items-center gap-2 hover:opacity-80 transition-opacity">

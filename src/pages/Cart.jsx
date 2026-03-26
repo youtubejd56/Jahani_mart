@@ -1,12 +1,14 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useLocale } from '../context/LocaleContext';
 import { Link } from 'react-router-dom';
 import { getImageUrl } from '../services/api';
 
 const Cart = () => {
     const { cart, removeFromCart, updateQuantity, loading } = useCart();
     const { isAuthenticated } = useAuth();
+    const { formatPrice } = useLocale();
 
     if (!isAuthenticated) {
         return (
@@ -63,7 +65,7 @@ const Cart = () => {
                                 </div>
                                 <div className="flex-1">
                                     <h3 className="font-semibold text-gray-800">{item.product_name}</h3>
-                                    <p className="text-lg font-bold text-gray-900 mt-1">₹{item.product_price}</p>
+                                    <p className="text-lg font-bold text-gray-900 mt-1">{formatPrice(item.product_price)}</p>
                                     <div className="flex items-center gap-4 mt-3">
                                         <div className="flex items-center border border-gray-200 rounded-lg">
                                             <button
@@ -92,7 +94,7 @@ const Cart = () => {
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <p className="font-bold text-gray-900">₹{(item.quantity * parseFloat(item.product_price)).toFixed(2)}</p>
+                                    <p className="font-bold text-gray-900">{formatPrice(item.quantity * parseFloat(item.product_price))}</p>
                                 </div>
                             </div>
                         ))}
@@ -105,7 +107,7 @@ const Cart = () => {
                             <div className="space-y-3 text-sm">
                                 <div className="flex justify-between">
                                     <span className="text-gray-600">Items ({cart.total_items})</span>
-                                    <span className="font-medium">₹{cart.total_price.toFixed(2)}</span>
+                                    <span className="font-medium">{formatPrice(cart.total_price)}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-600">Delivery</span>
@@ -114,7 +116,7 @@ const Cart = () => {
                                 <div className="border-t pt-3 mt-3">
                                     <div className="flex justify-between text-lg">
                                         <span className="font-bold">Total</span>
-                                        <span className="font-bold text-gray-900">₹{cart.total_price.toFixed(2)}</span>
+                                        <span className="font-bold text-gray-900">{formatPrice(cart.total_price)}</span>
                                     </div>
                                 </div>
                             </div>

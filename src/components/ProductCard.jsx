@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../context/WishlistContext';
+import { useLocale } from '../context/LocaleContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { getImageUrl } from '../services/api';
 
@@ -9,6 +10,7 @@ const ProductCard = ({ product }) => {
     const { addToCart, loading } = useCart();
     const { isAuthenticated } = useAuth();
     const { toggleWishlist, isInWishlist, loading: wishlistLoading } = useWishlist();
+    const { formatPrice, getConfig } = useLocale();
     const navigate = useNavigate();
     const [adding, setAdding] = useState(false);
 
@@ -71,10 +73,10 @@ const ProductCard = ({ product }) => {
                     <span className="text-[11px] text-gray-400 font-medium">(1.2k)</span>
                 </div>
                 <div className="flex items-baseline flex-wrap gap-2">
-                    <span className="text-lg font-extrabold text-gray-900">₹{price}</span>
+                    <span className="text-lg font-extrabold text-gray-900">{formatPrice(price)}</span>
                     {original_price && (
                         <>
-                            <span className="text-xs text-gray-400 line-through">₹{original_price}</span>
+                            <span className="text-xs text-gray-400 line-through">{formatPrice(original_price)}</span>
                             <span className="text-xs text-emerald-500 font-bold">{discount}% off</span>
                         </>
                     )}

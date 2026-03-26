@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import api, { getImageUrl } from '../services/api';
 import ProductCard from '../components/ProductCard';
+import { useLocale } from '../context/LocaleContext';
 
 const Products = () => {
+    const { formatPrice, getConfig } = useLocale();
+    const currencySymbol = getConfig().currencySymbol;
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -12,11 +15,34 @@ const Products = () => {
     const [sortBy, setSortBy] = useState('default');
     const [searchParams] = useSearchParams();
 
+    // Price filter state
+    const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+    const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
+
+    // Predefined price ranges (like Flipkart)
+    const priceRanges = [
+        { id: 'under-500', label: `Under ${currencySymbol}500`, min: 0, max: 500 },
+        { id: '500-1000', label: `${currencySymbol}500 - ${currencySymbol}1000`, min: 500, max: 1000 },
+        { id: '1000-2000', label: `${currencySymbol}1000 - ${currencySymbol}2000`, min: 1000, max: 2000 },
+        { id: '2000-5000', label: `${currencySymbol}2000 - ${currencySymbol}5000`, min: 2000, max: 5000 },
+        { id: '5000-10000', label: `${currencySymbol}5000 - ${currencySymbol}10000`, min: 5000, max: 10000 },
+        { id: 'above-10000', label: `${currencySymbol}10000 & Above`, min: 10000, max: null }
+    ];
+
     // Get search query from URL on mount
     useEffect(() => {
         const urlSearch = searchParams.get('search');
+        const urlSale = searchParams.get('sale');
+        const urlNew = searchParams.get('new');
+
         if (urlSearch) {
             setSearchQuery(urlSearch);
+        }
+        if (urlSale === 'true') {
+            setSelectedCategory('sale');
+        }
+        if (urlNew === 'true') {
+            setSelectedCategory('new');
         }
     }, [searchParams]);
 
@@ -42,7 +68,16 @@ const Products = () => {
     // Filter products by category
     const filteredByCategory = selectedCategory === 'all'
         ? products
-        : products.filter(product => product.category_name === selectedCategory);
+        : selectedCategory === 'sale'
+            ? products.filter(product => product.discount > 0)
+            : selectedCategory === 'new'
+                ? products.filter(product => {
+                    const createdDate = new Date(product.created_at);
+                    const thirtyDaysAgo = new Date();
+                    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                    return createdDate > thirtyDaysAgo;
+                })
+                : products.filter(product => product.category_name === selectedCategory);
 
     // Filter by search query
     const filteredBySearch = searchQuery
@@ -69,15 +104,60 @@ const Products = () => {
         }
     });
 
+    // Filter by price range
+    const filterByPrice = (product) => {
+        const productPrice = product.price || 0;
+
+        // Check if any predefined range is selected
+        if (selectedPriceRanges.length > 0) {
+            const inAnyRange = selectedPriceRanges.some(rangeId => {
+                const range = priceRanges.find(r => r.id === rangeId);
+                if (!range) return false;
+                if (range.max === null) {
+                    return productPrice >= range.min;
+                }
+                return productPrice >= range.min && productPrice < range.max;
+            });
+            if (!inAnyRange) return false;
+        }
+
+        // Check custom price range
+        if (priceRange.min && productPrice < parseFloat(priceRange.min)) {
+            return false;
+        }
+        if (priceRange.max && productPrice > parseFloat(priceRange.max)) {
+            return false;
+        }
+
+        return true;
+    };
+
+    const filteredByPrice = sortedProducts.filter(filterByPrice);
+
+    // Handle predefined price range selection
+    const togglePriceRange = (rangeId) => {
+        setSelectedPriceRanges(prev =>
+            prev.includes(rangeId)
+                ? prev.filter(id => id !== rangeId)
+                : [...prev, rangeId]
+        );
+    };
+
+    // Clear all price filters
+    const clearPriceFilters = () => {
+        setPriceRange({ min: '', max: '' });
+        setSelectedPriceRanges([]);
+    };
+
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header Banner */}
             <section className="bg-gradient-to-r from-[#00674F] to-[#0A3C30] py-40 text-center px-4">
                 <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
-                    All Products
+                    {selectedCategory === 'all' ? 'All Products' : selectedCategory === 'sale' ? 'On Sale' : selectedCategory === 'new' ? 'New Arrivals' : selectedCategory}
                 </h1>
                 <p className="text-white/80">
-                    Browse our complete collection
+                    {selectedCategory === 'all' ? 'Browse our complete collection' : selectedCategory === 'sale' ? 'Great deals on premium products' : selectedCategory === 'new' ? 'Check out the latest additions' : `Shop in ${selectedCategory} category`}
                 </p>
             </section>
 
@@ -96,6 +176,26 @@ const Products = () => {
                                         }`}
                                 >
                                     All Products
+                                </button>
+                                <button
+                                    onClick={() => setSelectedCategory('sale')}
+                                    className={`text-left px-4 py-2.5 rounded-lg font-medium transition-colors flex items-center gap-3 ${selectedCategory === 'sale'
+                                        ? 'bg-[#00674F] text-white'
+                                        : 'text-gray-600 hover:bg-gray-100'
+                                        }`}
+                                >
+                                    <span className="text-lg">🏷️</span>
+                                    On Sale
+                                </button>
+                                <button
+                                    onClick={() => setSelectedCategory('new')}
+                                    className={`text-left px-4 py-2.5 rounded-lg font-medium transition-colors flex items-center gap-3 ${selectedCategory === 'new'
+                                        ? 'bg-[#00674F] text-white'
+                                        : 'text-gray-600 hover:bg-gray-100'
+                                        }`}
+                                >
+                                    <span className="text-lg">✨</span>
+                                    New Arrivals
                                 </button>
                                 {categories.map(category => (
                                     <button
@@ -117,6 +217,65 @@ const Products = () => {
                                         )}
                                         {category.name}
                                     </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Price Filter - Flipkart Style */}
+                        <div className="bg-white rounded-xl p-6 shadow-sm mt-4 sticky top-4">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-lg font-bold text-gray-800">Price</h3>
+                                {(selectedPriceRanges.length > 0 || priceRange.min || priceRange.max) && (
+                                    <button
+                                        onClick={clearPriceFilters}
+                                        className="text-sm text-violet-600 hover:text-violet-700 font-medium"
+                                    >
+                                        Clear
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* Custom Price Range Input */}
+                            <div className="mb-6">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <div className="flex-1">
+                                        <input
+                                            type="number"
+                                            placeholder="Min"
+                                            value={priceRange.min}
+                                            onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
+                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+                                        />
+                                    </div>
+                                    <span className="text-gray-400">-</span>
+                                    <div className="flex-1">
+                                        <input
+                                            type="number"
+                                            placeholder="Max"
+                                            value={priceRange.max}
+                                            onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
+                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Predefined Price Ranges */}
+                            <div className="space-y-2">
+                                {priceRanges.map(range => (
+                                    <label
+                                        key={range.id}
+                                        className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-50 ${selectedPriceRanges.includes(range.id) ? 'bg-violet-50' : ''
+                                            }`}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedPriceRanges.includes(range.id)}
+                                            onChange={() => togglePriceRange(range.id)}
+                                            className="w-4 h-4 text-violet-600 rounded focus:ring-violet-500"
+                                        />
+                                        <span className="text-gray-700 font-medium">{range.label}</span>
+                                    </label>
                                 ))}
                             </div>
                         </div>
@@ -156,9 +315,10 @@ const Products = () => {
 
                         {/* Results Count */}
                         <div className="mb-4 text-gray-600 font-medium">
-                            Showing {sortedProducts.length} products
+                            Showing {filteredByPrice.length} products
                             {selectedCategory !== 'all' && ` in ${selectedCategory}`}
                             {searchQuery && ` matching "${searchQuery}"`}
+                            {(selectedPriceRanges.length > 0 || priceRange.min || priceRange.max) && ' (filtered by price)'}
                         </div>
 
                         {/* Products Grid */}
@@ -167,14 +327,14 @@ const Products = () => {
                                 <div className="inline-block w-8 h-8 border-4 border-violet-600 border-t-transparent rounded-full animate-spin mb-4"></div>
                                 <p>Loading products...</p>
                             </div>
-                        ) : sortedProducts.length === 0 ? (
+                        ) : filteredByPrice.length === 0 ? (
                             <div className="text-center py-20 bg-white rounded-xl">
                                 <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 <p className="text-gray-500 font-medium">No products found</p>
                                 <button
-                                    onClick={() => { setSelectedCategory('all'); setSearchQuery(''); }}
+                                    onClick={() => { setSelectedCategory('all'); setSearchQuery(''); clearPriceFilters(); }}
                                     className="mt-4 text-violet-600 hover:text-violet-700 font-medium"
                                 >
                                     Clear filters
@@ -182,7 +342,7 @@ const Products = () => {
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-                                {sortedProducts.map(product => (
+                                {filteredByPrice.map(product => (
                                     <ProductCard key={product.id} product={product} />
                                 ))}
                             </div>

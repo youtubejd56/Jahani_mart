@@ -25,6 +25,7 @@ import DownloadApp from './pages/DownloadApp';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
+import { LocaleProvider } from './context/LocaleContext';
 
 const AppContent = () => {
     const location = useLocation();
@@ -72,9 +73,11 @@ function App() {
         <AuthProvider>
             <WishlistProvider>
                 <CartProvider>
-                    <Router>
-                        <AppContent />
-                    </Router>
+                    <LocaleProvider>
+                        <Router>
+                            <AppContent />
+                        </Router>
+                    </LocaleProvider>
                 </CartProvider>
             </WishlistProvider>
         </AuthProvider>

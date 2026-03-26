@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useLocale } from '../context/LocaleContext';
 import { Link, useNavigate } from 'react-router-dom';
 import api, { getImageUrl } from '../services/api';
 
 const Checkout = () => {
     const { cart, fetchCart } = useCart();
     const { isAuthenticated, user } = useAuth();
+    const { formatPrice } = useLocale();
     const navigate = useNavigate();
     const [processing, setProcessing] = useState(false);
     const [addresses, setAddresses] = useState([]);
@@ -664,7 +666,7 @@ const Checkout = () => {
                                 <div className="border-b pb-3 mb-3">
                                     <div className="flex justify-between text-sm mb-1">
                                         <span className="text-gray-600">Price ({cart.total_items} items)</span>
-                                        <span>₹{cart.total_price.toFixed(2)}</span>
+                                        <span>{formatPrice(cart.total_price)}</span>
                                     </div>
                                     <div className="flex justify-between text-sm mb-1">
                                         <span className="text-gray-600">Delivery</span>
@@ -673,7 +675,7 @@ const Checkout = () => {
                                 </div>
                                 <div className="flex justify-between text-base font-bold mb-4">
                                     <span>Total Amount</span>
-                                    <span>₹{cart.total_price.toFixed(2)}</span>
+                                    <span>{formatPrice(cart.total_price)}</span>
                                 </div>
 
                                 {/* Cart Items Preview */}
@@ -690,7 +692,7 @@ const Checkout = () => {
                                             <div className="flex-1 min-w-0">
                                                 <p className="text-xs text-gray-800 line-clamp-2">{item.product_name}</p>
                                                 <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
-                                                <p className="text-sm font-bold text-gray-900">₹{(item.quantity * parseFloat(item.product_price)).toFixed(2)}</p>
+                                                <p className="text-sm font-bold text-gray-900">{formatPrice(item.quantity * parseFloat(item.product_price))}</p>
                                             </div>
                                         </div>
                                     ))}

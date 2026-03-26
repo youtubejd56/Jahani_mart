@@ -61,6 +61,8 @@ const MyProfile = () => {
             const section = searchParams.get('section');
             if (section === 'orders') {
                 setActiveSection('orders');
+            } else if (section === 'wallet') {
+                setActiveSection('wallet');
             }
         }
     }, [isAuthenticated, searchParams]);

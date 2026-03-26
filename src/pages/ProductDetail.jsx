@@ -4,12 +4,14 @@ import api, { getImageUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import { useLocale } from '../context/LocaleContext';
 
 const ProductDetail = () => {
     const { productId } = useParams();
     const { isAuthenticated } = useAuth();
     const { addToCart, loading: cartLoading } = useCart();
     const { toggleWishlist, isInWishlist } = useWishlist();
+    const { formatPrice } = useLocale();
     const navigate = useNavigate();
 
     const [product, setProduct] = useState(null);
@@ -31,7 +33,7 @@ const ProductDetail = () => {
             setLoading(true);
             const response = await api.get(`/products/${productId}/`);
             setProduct(response.data);
-            
+
             try {
                 const suggResponse = await api.get(`/products/${productId}/suggested/`);
                 setSuggestedProducts(suggResponse.data);
@@ -90,8 +92,8 @@ const ProductDetail = () => {
         );
     }
 
-    const { 
-        name, description, price, original_price, discount, 
+    const {
+        name, description, price, original_price, discount,
         rating, stock, image, image_url, category_name,
         additional_images, specifications, warranty, manufacturer, in_the_box
     } = product;
@@ -132,7 +134,7 @@ const ProductDetail = () => {
                             </div>
                         )}
                     </div>
-                    
+
                     {/* Thumbnail Gallery */}
                     {allImages.length > 1 && (
                         <div className="flex gap-3 overflow-x-auto py-2">
@@ -140,9 +142,8 @@ const ProductDetail = () => {
                                 <button
                                     key={img.id}
                                     onClick={() => setSelectedImage(idx)}
-                                    className={`flex-shrink-0 w-20 h-20 border-2 rounded-lg p-1 overflow-hidden transition-all ${
-                                        selectedImage === idx ? 'border-[#00674F] shadow-md' : 'border-gray-200 hover:border-gray-300'
-                                    }`}
+                                    className={`flex-shrink-0 w-20 h-20 border-2 rounded-lg p-1 overflow-hidden transition-all ${selectedImage === idx ? 'border-[#00674F] shadow-md' : 'border-gray-200 hover:border-gray-300'
+                                        }`}
                                 >
                                     <img src={getImageUrl(img.url)} alt={`${name} ${idx}`} className="w-full h-full object-contain rounded" />
                                 </button>
@@ -170,10 +171,10 @@ const ProductDetail = () => {
                     </div>
 
                     <div className="flex items-baseline gap-3">
-                        <span className="text-4xl font-bold text-gray-900">₹{price}</span>
+                        <span className="text-4xl font-bold text-gray-900">{formatPrice(price)}</span>
                         {original_price && (
                             <>
-                                <span className="text-xl text-gray-400 line-through">₹{original_price}</span>
+                                <span className="text-xl text-gray-400 line-through">{formatPrice(original_price)}</span>
                                 {discount > 0 && (
                                     <span className="text-lg text-green-600 font-semibold">{discount}% off</span>
                                 )}
@@ -188,7 +189,7 @@ const ProductDetail = () => {
                             <span className="text-red-600 font-medium">✗ Out of Stock</span>
                         )}
                     </div>
-                    
+
                     {/* In The Box */}
                     {in_the_box && (
                         <div className="text-sm">
@@ -204,11 +205,10 @@ const ProductDetail = () => {
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
-                                    className={`px-5 py-3 font-semibold text-sm whitespace-nowrap flex-1 transition-colors ${
-                                        activeTab === tab 
-                                            ? 'bg-white text-[#00674F] border-b-2 border-b-[#00674F]' 
-                                            : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'
-                                    }`}
+                                    className={`px-5 py-3 font-semibold text-sm whitespace-nowrap flex-1 transition-colors ${activeTab === tab
+                                        ? 'bg-white text-[#00674F] border-b-2 border-b-[#00674F]'
+                                        : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'
+                                        }`}
                                 >
                                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
                                 </button>
@@ -293,17 +293,17 @@ const ProductDetail = () => {
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">Similar Products You Might Like</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {suggestedProducts.map(item => (
-                            <Link 
-                                to={`/products/${item.id}`} 
+                            <Link
+                                to={`/products/${item.id}`}
                                 key={item.id}
                                 className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group"
                             >
                                 <div className="aspect-square bg-gray-50 overflow-hidden relative">
                                     {(item.image_url || item.image) ? (
-                                        <img 
-                                            src={getImageUrl(item.image_url || item.image)} 
-                                            alt={item.name} 
-                                            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" 
+                                        <img
+                                            src={getImageUrl(item.image_url || item.image)}
+                                            alt={item.name}
+                                            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                                         />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-gray-400">
@@ -322,14 +322,14 @@ const ProductDetail = () => {
                                     </h3>
                                     <div className="mt-2 flex items-center gap-2">
                                         <div className="flex items-center text-yellow-400 text-sm">
-                                            <span>★</span> 
+                                            <span>★</span>
                                             <span className="text-gray-700 font-medium ml-1">{item.rating || 4.5}</span>
                                         </div>
                                     </div>
                                     <div className="mt-3 flex items-baseline gap-2">
-                                        <span className="text-lg font-bold text-gray-900">₹{item.price}</span>
+                                        <span className="text-lg font-bold text-gray-900">{formatPrice(item.price)}</span>
                                         {item.original_price && (
-                                            <span className="text-sm text-gray-400 line-through">₹{item.original_price}</span>
+                                            <span className="text-sm text-gray-400 line-through">{formatPrice(item.original_price)}</span>
                                         )}
                                     </div>
                                 </div>
