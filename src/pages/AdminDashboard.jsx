@@ -24,6 +24,7 @@ const AdminDashboard = () => {
     const [returnStatusFilter, setReturnStatusFilter] = useState('all');
     const [cancellationStatusFilter, setCancellationStatusFilter] = useState('all');
     const [selectedReturn, setSelectedReturn] = useState(null);
+    const [selectedCancellation, setSelectedCancellation] = useState(null);
     const [orders, setOrders] = useState([]);
     const [users, setUsers] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -194,7 +195,12 @@ const AdminDashboard = () => {
             fetchReturns();
             setSelectedReturn(null);
         } catch (error) {
-            alert('Failed to update return status');
+            const msg = error.response?.data?.error || error.response?.data?.detail || 'Failed to update return status';
+            alert(msg);
+            if (error.response?.status === 404) {
+                fetchReturns();
+                setSelectedReturn(null);
+            }
         }
     };
 
@@ -202,9 +208,14 @@ const AdminDashboard = () => {
         try {
             await getAdminAxios().put(`admin/cancellations/${cancellationId}/`, { status: newStatus });
             fetchCancellations();
-            setSelectedReturn(null);
+            setSelectedCancellation(null);
         } catch (error) {
-            alert('Failed to update cancellation status');
+            const msg = error.response?.data?.error || error.response?.data?.detail || 'Failed to update cancellation status';
+            alert(msg);
+            if (error.response?.status === 404) {
+                fetchCancellations();
+                setSelectedCancellation(null);
+            }
         }
     };
 
@@ -1500,7 +1511,7 @@ const AdminDashboard = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {cancellations.filter(c => returnStatusFilter === 'all' || c.status === returnStatusFilter).map((cancellation) => (
+                                    {cancellations.filter(c => cancellationStatusFilter === 'all' || c.status === cancellationStatusFilter).map((cancellation) => (
                                         <tr key={cancellation.id} className="hover:bg-gray-50">
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
                                                 {cancellation.cancellation_id}
@@ -1532,7 +1543,7 @@ const AdminDashboard = () => {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <button
-                                                    onClick={() => setSelectedReturn(cancellation)}
+                                                    onClick={() => setSelectedCancellation(cancellation)}
                                                     className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                                                 >
                                                     View Details
@@ -1812,6 +1823,91 @@ const AdminDashboard = () => {
                                         onClick={() => updateReturnStatus(selectedReturn.id, 'Rejected')}
                                         disabled={selectedReturn.status === 'Rejected'}
                                         className={`px-4 py-2 rounded ${selectedReturn.status === 'Rejected' ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-red-600 text-white hover:bg-red-700'}`}
+                                    >
+                                        Reject
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Cancellation Detail Modal */}
+            {selectedCancellation && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto m-4">
+                        <div className="p-6">
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <h2 className="text-xl font-bold text-gray-800">Cancellation Request Details</h2>
+                                    <p className="text-sm text-gray-500">Cancellation #{selectedCancellation.cancellation_id}</p>
+                                </div>
+                                <button onClick={() => setSelectedCancellation(null)} className="text-gray-400 hover:text-gray-600">
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                                <div className="flex gap-2 mb-3">
+                                    <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${selectedCancellation.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
+                                        selectedCancellation.status === 'Approved' ? 'bg-green-100 text-green-700' :
+                                            selectedCancellation.status === 'Rejected' ? 'bg-red-100 text-red-700' :
+                                                'bg-gray-100 text-gray-700'
+                                        }`}>
+                                        {selectedCancellation.status}
+                                    </span>
+                                    <span className="px-2 py-0.5 text-xs bg-red-100 text-red-700 rounded-full">
+                                        Cancellation
+                                    </span>
+                                </div>
+                                <h3 className="font-bold text-gray-800 mb-2">{selectedCancellation.product_name}</h3>
+                                <p className="text-gray-600 whitespace-pre-wrap">Reason: {selectedCancellation.reason}</p>
+                                {selectedCancellation.description && (
+                                    <p className="text-gray-600 mt-2">Description: {selectedCancellation.description}</p>
+                                )}
+                                <div className="mt-3 text-xs text-gray-500">
+                                    Created: {new Date(selectedCancellation.created_at).toLocaleString()}
+                                    {selectedCancellation.order_id && <span className="ml-4">Order: {selectedCancellation.order_id}</span>}
+                                </div>
+
+                                <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                                    <h4 className="font-bold text-blue-800 mb-3">Customer Details</h4>
+                                    <div className="grid grid-cols-2 gap-4 text-sm">
+                                        <div>
+                                            <p className="text-gray-600">Name: <span className="font-medium text-gray-800">{selectedCancellation.customer_name}</span></p>
+                                            <p className="text-gray-600">Email: <span className="font-medium text-gray-800">{selectedCancellation.customer_email}</span></p>
+                                        </div>
+                                        <div>
+                                            <p className="text-gray-600">Order ID: <span className="font-medium text-gray-800">{selectedCancellation.order_id}</span></p>
+                                            <p className="text-gray-600">Cancellation ID: <span className="font-medium text-gray-800">{selectedCancellation.cancellation_id}</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="border-t pt-4">
+                                <h4 className="font-bold text-gray-800 mb-2">Update Status</h4>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => setSelectedCancellation(null)}
+                                        className="px-4 py-2 border rounded hover:bg-gray-50"
+                                    >
+                                        Close
+                                    </button>
+                                    <button
+                                        onClick={() => updateCancellationStatus(selectedCancellation.id, 'Approved')}
+                                        disabled={selectedCancellation.status === 'Approved'}
+                                        className={`px-4 py-2 rounded ${selectedCancellation.status === 'Approved' ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700'}`}
+                                    >
+                                        Approve
+                                    </button>
+                                    <button
+                                        onClick={() => updateCancellationStatus(selectedCancellation.id, 'Rejected')}
+                                        disabled={selectedCancellation.status === 'Rejected'}
+                                        className={`px-4 py-2 rounded ${selectedCancellation.status === 'Rejected' ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-red-600 text-white hover:bg-red-700'}`}
                                     >
                                         Reject
                                     </button>
