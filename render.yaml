@@ -3,7 +3,7 @@ services:
     name: jahani-frontend
     runtime: static
     region: singapore
-    buildCommand: npm install --legacy-peer-deps && npm run build
+    buildCommand: rm -rf node_modules package-lock.json && npm install && npm run build
     staticPublishDirectory: dist
     routes:
       - type: rewrite

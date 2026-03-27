@@ -23,8 +23,7 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-helmet-async": "^3.0.0",
-        "react-router-dom": "^7.13.1",
-        "react-scripts": "^0.0.0"
+        "react-router-dom": "^7.13.1"
     },
     "browserslist": {
         "production": [
@@ -41,9 +40,7 @@
     "devDependencies": {
         "@vitejs/plugin-react": "^6.0.1",
         "autoprefixer": "^10.4.27",
-        "customize-cra": "^1.0.0",
         "postcss": "^8.5.8",
-        "react-app-rewired": "^2.2.1",
         "tailwindcss": "^4.2.2",
         "vite": "^8.0.1"
     }
