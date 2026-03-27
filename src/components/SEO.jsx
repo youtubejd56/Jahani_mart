@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 const SITE_URL = 'https://jahani-mart.onrender.com';
 const SITE_NAME = 'Jahani Mart';
 const DEFAULT_DESC = 'Shop premium quality products at unbeatable prices. Free delivery across India. 10,000+ products, easy returns, secure payments.';
-const OG_IMAGE = `${SITE_URL}/manu%20ettn%20logo%20.png`;
+const OG_IMAGE = `${SITE_URL}/Screenshot%202026-03-26%20144234.png`;
 
 const SEO = ({
     title,
