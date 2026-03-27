@@ -194,9 +194,24 @@ const OrderTracking = () => {
                     </div>
                 </div>
 
-                {/* Order Status Timeline */}
-                <div className="bg-white rounded-lg shadow-sm p-6 mb-4">
-                    <h2 className="text-lg font-bold text-gray-800 mb-6">Order Status</h2>
+                {order.status === 'Cancelled' ? (
+                    /* Cancelled Order Banner */
+                    <div className="bg-white rounded-lg shadow-sm p-6 mb-4">
+                        <div className="flex items-start gap-4">
+                            <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <XCircle className="w-8 h-8 text-red-600" />
+                            </div>
+                            <div>
+                                <h2 className="text-lg font-bold text-red-700">Order Cancelled</h2>
+                                <p className="text-gray-600 mt-1">Your order has been cancelled. If any payment was made, the refund will be processed shortly.</p>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                    {/* Order Status Timeline */}
+                    <div className="bg-white rounded-lg shadow-sm p-6 mb-4">
+                        <h2 className="text-lg font-bold text-gray-800 mb-6">Order Status</h2>
 
                     <div className="relative">
                         {/* Progress Line */}
@@ -350,6 +365,8 @@ const OrderTracking = () => {
                         </div>
                     </div>
                 </div>
+                    </>
+                )}
             </div>
 
             {/* Return Modal */}
