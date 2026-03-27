@@ -31,6 +31,13 @@ const ProductCard = ({ product }) => {
     const inWishlist = isInWishlist(id);
     const currencySymbol = getConfig().currencySymbol;
 
+    // Get rating color based on rating value (Flipkart style)
+    const getRatingColor = (rating) => {
+        if (rating >= 4) return 'bg-green-600';
+        if (rating >= 3) return 'bg-orange-500';
+        return 'bg-red-500';
+    };
+
     const handleAddToCart = async (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -71,8 +78,8 @@ const ProductCard = ({ product }) => {
                 }}
                 disabled={wishlistLoading}
                 className={`absolute top-3 right-3 z-20 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg ${inWishlist
-                        ? 'bg-red-500 text-white hover:bg-red-600'
-                        : 'bg-white text-gray-400 hover:text-red-500 hover:bg-red-50'
+                    ? 'bg-red-500 text-white hover:bg-red-600'
+                    : 'bg-white text-gray-400 hover:text-red-500 hover:bg-red-50'
                     }`}
                 title={inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
             >
@@ -124,7 +131,7 @@ const ProductCard = ({ product }) => {
 
                 {/* Rating */}
                 <div className="flex items-center gap-2 mb-3">
-                    <div className="flex items-center gap-0.5 bg-amber-400 px-2 py-0.5 rounded-md">
+                    <div className={`flex items-center gap-0.5 ${getRatingColor(rating)} px-2 py-0.5 rounded-md`}>
                         <Star className="w-3 h-3 text-white fill-current" />
                         <span className="text-white text-xs font-bold">{rating}</span>
                     </div>
@@ -203,8 +210,8 @@ const ProductCard = ({ product }) => {
 
             {/* Stock Status Indicator */}
             <div className={`absolute bottom-20 right-3 px-2 py-1 rounded text-xs font-medium ${in_stock !== false
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-red-100 text-red-700'
+                ? 'bg-green-100 text-green-700'
+                : 'bg-red-100 text-red-700'
                 }`}>
                 {in_stock !== false ? 'In Stock' : 'Out of Stock'}
             </div>

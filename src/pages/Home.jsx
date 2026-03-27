@@ -47,38 +47,38 @@ const Home = () => {
                     // Animate Products (10K+)
                     let productCount = 0;
                     const productInterval = setInterval(() => {
-                        productCount += 200;
+                        productCount += 8;
                         if (productCount >= 10000) {
                             productCount = 10000;
                             clearInterval(productInterval);
                         }
                         setCounters(prev => ({ ...prev, products: productCount }));
-                    }, 20);
+                    }, 12);
 
                     // Animate Customers (50K+)
                     let customerCount = 0;
                     const customerInterval = setInterval(() => {
-                        customerCount += 1000;
+                        customerCount += 40;
                         if (customerCount >= 50000) {
                             customerCount = 50000;
                             clearInterval(customerInterval);
                         }
                         setCounters(prev => ({ ...prev, customers: customerCount }));
-                    }, 20);
+                    }, 12);
 
                     // Animate Rating (4.8)
                     let ratingCount = 0;
                     const ratingInterval = setInterval(() => {
-                        ratingCount += 0.1;
+                        ratingCount += 0.003;
                         if (ratingCount >= 4.8) {
                             ratingCount = 4.8;
                             clearInterval(ratingInterval);
                         }
                         setCounters(prev => ({ ...prev, rating: ratingCount }));
-                    }, 40);
+                    }, 20);
                 }
             });
-        }, { threshold: 0.5 });
+        }, { threshold: 0.02 });
 
         if (statsRef.current) {
             observer.observe(statsRef.current);
@@ -97,7 +97,7 @@ const Home = () => {
             description: "Discover amazing deals on premium products",
             bgGradient: "from-orange-500 via-red-500 to-pink-500",
             icon: (
-                <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
                 </svg>
             )
@@ -109,7 +109,7 @@ const Home = () => {
             description: "Fast and reliable shipping across India",
             bgGradient: "from-emerald-500 via-teal-600 to-cyan-500",
             icon: (
-                <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             )
@@ -121,7 +121,7 @@ const Home = () => {
             description: "Check out the latest collection",
             bgGradient: "from-violet-500 via-purple-600 to-indigo-500",
             icon: (
-                <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                 </svg>
             )
@@ -209,10 +209,10 @@ const Home = () => {
             </section>
 
             {/* Advertisement Banners Section - Carousel */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="relative overflow-hidden rounded-3xl">
+            <section className="max-w-7xl mx-auto px-1 sm:px-2 md:px-4 lg:px-6 xl:px-8 py-3 sm:py-4 md:py-6 lg:py-8 xl:py-12">
+                <div className="relative overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-3xl">
                     {/* Banner Slides */}
-                    <div className="relative h-64 sm:h-72 md:h-80 lg:h-96">
+                    <div className="relative h-48 sm:h-48 md:h-56 lg:h-64 xl:h-72 2xl:h-80 3xl:h-96">
                         {advertisements.map((ad, index) => (
                             <div
                                 key={ad.id}
@@ -222,24 +222,24 @@ const Home = () => {
                                     } bg-gradient-to-br ${ad.bgGradient}`}
                             >
                                 {/* Decorative circles */}
-                                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-                                <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
-                                <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-2xl"></div>
+                                <div className="absolute top-0 right-0 w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-48 lg:h-48 xl:w-64 xl:h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                                <div className="absolute bottom-0 left-0 w-12 h-12 sm:w-16 sm:h-16 md:w-24 md:h-24 lg:w-36 lg:h-36 xl:w-48 xl:h-48 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+                                <div className="absolute top-1/2 left-1/2 w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 lg:w-72 lg:h-72 xl:w-96 xl:h-96 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-2xl"></div>
 
                                 {/* Content */}
-                                <div className="relative z-10 h-full flex items-center justify-center px-4 sm:px-8 md:px-16">
-                                    <div className="text-center text-white max-w-2xl">
-                                        <div className="text-5xl sm:text-6xl md:text-7xl mb-4 animate-bounce text-white/80">{ad.icon}</div>
-                                        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 drop-shadow-lg">{ad.title}</h3>
-                                        <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-3 drop-shadow-lg">{ad.subtitle}</p>
-                                        <p className="text-white/90 mb-6 text-base sm:text-lg md:text-xl">{ad.description}</p>
+                                <div className="relative z-10 h-full flex items-center justify-center px-1 sm:px-2 md:px-4 lg:px-8 xl:px-12 2xl:px-16">
+                                    <div className="text-center text-white max-w-[240px] sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-2xl">
+                                        <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl mb-1 sm:mb-2 md:mb-4 animate-bounce text-white/80">{ad.icon}</div>
+                                        <h3 className="text-lg sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-bold mb-0.5 sm:mb-1 md:mb-2 drop-shadow-lg">{ad.title}</h3>
+                                        <p className="text-xl sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-extrabold mb-1 sm:mb-2 md:mb-3 drop-shadow-lg">{ad.subtitle}</p>
+                                        <p className="text-white/90 mb-2 sm:mb-3 md:mb-4 lg:mb-6 text-[12px] sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl">{ad.description}</p>
                                         <button
                                             onClick={() => {
                                                 if (ad.id === 1) navigate('/products?sale=true');
                                                 else if (ad.id === 2) navigate('/products');
                                                 else if (ad.id === 3) navigate('/products?new=true');
                                             }}
-                                            className="bg-white/25 hover:bg-white/35 backdrop-blur-md px-8 py-3 rounded-full text-base sm:text-lg font-semibold transition-all hover:scale-105 hover:shadow-lg border border-white/20"
+                                            className="bg-white/25 hover:bg-white/35 backdrop-blur-md px-2 sm:px-3 md:px-4 lg:px-6 xl:px-8 py-1 sm:py-1.5 md:py-2 lg:py-3 rounded-full text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg font-semibold transition-all hover:scale-105 hover:shadow-lg border border-white/20"
                                         >
                                             {ad.id === 1 ? 'Shop Now' : ad.id === 2 ? 'Explore' : 'View All'}
                                         </button>
@@ -252,29 +252,29 @@ const Home = () => {
                     {/* Navigation Arrows */}
                     <button
                         onClick={prevAd}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all hover:scale-110 z-20"
+                        className="absolute left-1 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all hover:scale-110 z-20"
                     >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
                     <button
                         onClick={nextAd}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all hover:scale-110 z-20"
+                        className="absolute right-1 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all hover:scale-110 z-20"
                     >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                     </button>
 
                     {/* Dots Indicator */}
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                    <div className="absolute bottom-1 sm:bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 flex gap-1 sm:gap-1.5 md:gap-2 z-20">
                         {advertisements.map((_, index) => (
                             <button
                                 key={index}
                                 onClick={() => setCurrentAd(index)}
-                                className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentAd
-                                    ? 'bg-white w-8'
+                                className={`w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 lg:w-3 lg:h-3 rounded-full transition-all duration-300 ${index === currentAd
+                                    ? 'bg-white w-4 sm:w-5 md:w-6 lg:w-8'
                                     : 'bg-white/40 hover:bg-white/60'
                                     }`}
                             />

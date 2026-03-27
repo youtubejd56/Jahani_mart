@@ -326,12 +326,39 @@ const MyProfile = () => {
     const menuItems = [
         { id: 'profile', label: 'My Profile', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
         { id: 'orders', label: 'My Orders', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01' },
+        { id: 'returns', label: 'Returns & Cancellations', icon: 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15' },
         { id: 'addresses', label: 'My Addresses', icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z' },
         { id: 'wishlist', label: 'My Wishlist', icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
         { id: 'wallet', label: 'My Wallet', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' },
         { id: 'support', label: 'Customer Support', icon: 'M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
         { id: 'settings', label: 'Account Settings', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' }
     ];
+
+    const [returns, setReturns] = useState([]);
+    const [cancellations, setCancellations] = useState([]);
+    const [returnsLoading, setReturnsLoading] = useState(false);
+
+    const fetchReturns = async () => {
+        setReturnsLoading(true);
+        try {
+            const [returnsRes, cancellationsRes] = await Promise.all([
+                api.get('/returns/'),
+                api.get('/cancellations/')
+            ]);
+            setReturns(returnsRes.data);
+            setCancellations(cancellationsRes.data);
+        } catch (error) {
+            console.error('Error fetching returns:', error);
+        } finally {
+            setReturnsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (activeSection === 'returns') {
+            fetchReturns();
+        }
+    }, [activeSection]);
 
     const renderContent = () => {
         switch (activeSection) {
@@ -1073,6 +1100,106 @@ const MyProfile = () => {
                     </div>
                 );
 
+            case 'returns':
+                return (
+                    <div className="space-y-6">
+                        <div className="bg-white rounded-lg shadow-sm p-6">
+                            <h2 className="text-lg font-bold text-gray-800 mb-4">Returns & Cancellations</h2>
+
+                            {returnsLoading ? (
+                                <div className="text-center py-8">
+                                    <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                                    <p className="mt-2 text-gray-500">Loading...</p>
+                                </div>
+                            ) : (returns.length === 0 && cancellations.length === 0) ? (
+                                <div className="text-center py-8">
+                                    <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <p className="text-gray-500">No returns or cancellations yet</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-6">
+                                    {/* Returns Section */}
+                                    {returns.length > 0 && (
+                                        <div>
+                                            <h3 className="font-medium text-gray-800 mb-3 flex items-center gap-2">
+                                                <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                                Return Requests ({returns.length})
+                                            </h3>
+                                            <div className="space-y-3">
+                                                {returns.map((item) => (
+                                                    <div key={item.id} className="border border-gray-200 rounded-lg p-4">
+                                                        <div className="flex justify-between items-start mb-2">
+                                                            <div>
+                                                                <p className="font-medium text-gray-800">{item.product_name}</p>
+                                                                <p className="text-sm text-gray-500">Return ID: {item.return_id}</p>
+                                                            </div>
+                                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${item.status === 'Requested' ? 'bg-yellow-100 text-yellow-800' :
+                                                                    item.status === 'Approved' ? 'bg-blue-100 text-blue-800' :
+                                                                        item.status === 'Rejected' ? 'bg-red-100 text-red-800' :
+                                                                            item.status === 'Pickup Scheduled' ? 'bg-purple-100 text-purple-800' :
+                                                                                item.status === 'Picked Up' ? 'bg-indigo-100 text-indigo-800' :
+                                                                                    item.status === 'Refunded' ? 'bg-green-100 text-green-800' :
+                                                                                        'bg-gray-100 text-gray-800'
+                                                                }`}>
+                                                                {item.status}
+                                                            </span>
+                                                        </div>
+                                                        <div className="text-sm text-gray-600">
+                                                            <p>Reason: {item.reason}</p>
+                                                            <p>Refund Amount: ₹{item.refund_amount}</p>
+                                                            <p>Requested: {new Date(item.created_at).toLocaleDateString()}</p>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Cancellations Section */}
+                                    {cancellations.length > 0 && (
+                                        <div>
+                                            <h3 className="font-medium text-gray-800 mb-3 flex items-center gap-2">
+                                                <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                                Cancellation Requests ({cancellations.length})
+                                            </h3>
+                                            <div className="space-y-3">
+                                                {cancellations.map((item) => (
+                                                    <div key={item.id} className="border border-gray-200 rounded-lg p-4">
+                                                        <div className="flex justify-between items-start mb-2">
+                                                            <div>
+                                                                <p className="font-medium text-gray-800">{item.product_name}</p>
+                                                                <p className="text-sm text-gray-500">Cancellation ID: {item.cancellation_id}</p>
+                                                            </div>
+                                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${item.status === 'Requested' ? 'bg-yellow-100 text-yellow-800' :
+                                                                    item.status === 'Approved' ? 'bg-blue-100 text-blue-800' :
+                                                                        item.status === 'Rejected' ? 'bg-red-100 text-red-800' :
+                                                                            item.status === 'Refunded' ? 'bg-green-100 text-green-800' :
+                                                                                'bg-gray-100 text-gray-800'
+                                                                }`}>
+                                                                {item.status}
+                                                            </span>
+                                                        </div>
+                                                        <div className="text-sm text-gray-600">
+                                                            <p>Reason: {item.reason}</p>
+                                                            <p>Refund Amount: ₹{item.refund_amount}</p>
+                                                            <p>Requested: {new Date(item.created_at).toLocaleDateString()}</p>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                );
             default:
                 return null;
         }

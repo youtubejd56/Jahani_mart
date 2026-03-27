@@ -55,7 +55,7 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-[#00674F] text-white py-4 sticky top-0 z-[9999] shadow-lg overflow-x-hidden">
+        <header className="bg-[#074637] text-white py-4 sticky top-0 z-[9999] shadow-lg overflow-x-hidden">
             <div className="max-w-full mx-auto px-4 flex items-center md:justify-evenly justify-between gap-2 sm:gap-8">
                 {/* Logo - Prime Style */}
                 <div className="flex items-center">

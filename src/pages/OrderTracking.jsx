@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import api, { getImageUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { RotateCcw, XCircle, AlertCircle } from 'lucide-react';
 
 const OrderTracking = () => {
     const [searchParams] = useSearchParams();
@@ -11,6 +12,14 @@ const OrderTracking = () => {
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showReturnModal, setShowReturnModal] = useState(false);
+    const [showCancelModal, setShowCancelModal] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [returnReason, setReturnReason] = useState('');
+    const [returnDescription, setReturnDescription] = useState('');
+    const [cancelReason, setCancelReason] = useState('');
+    const [cancelDescription, setCancelDescription] = useState('');
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -32,6 +41,84 @@ const OrderTracking = () => {
             console.error('Error fetching order:', err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleReturnRequest = async () => {
+        if (!returnReason) {
+            alert('Please select a reason for return');
+            return;
+        }
+
+        // Verify order status before attempting to return
+        if (order.status !== 'Delivered') {
+            alert('Returns can only be requested for delivered orders. Current status: ' + order.status);
+            setShowReturnModal(false);
+            fetchOrderDetails();
+            return;
+        }
+
+        setSubmitting(true);
+        try {
+            await api.post('/returns/', {
+                order_item: selectedItem.id,
+                reason: returnReason,
+                description: returnDescription
+            });
+            alert('Return request submitted successfully!');
+            setShowReturnModal(false);
+            setReturnReason('');
+            setReturnDescription('');
+            setSelectedItem(null);
+            fetchOrderDetails();
+        } catch (err) {
+            const errorMessage = err.response?.data?.error || 'Failed to submit return request';
+            alert(errorMessage);
+            // If the error is about order status, refresh the order details
+            if (errorMessage.includes('delivered') || errorMessage.includes('Delivered')) {
+                fetchOrderDetails();
+            }
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handleCancelRequest = async () => {
+        if (!cancelReason) {
+            alert('Please select a reason for cancellation');
+            return;
+        }
+
+        // Verify order status before attempting to cancel
+        if (!['Pending', 'Processing'].includes(order.status)) {
+            alert('This order cannot be cancelled. Current status: ' + order.status);
+            setShowCancelModal(false);
+            fetchOrderDetails();
+            return;
+        }
+
+        setSubmitting(true);
+        try {
+            await api.post('/cancellations/', {
+                order_item: selectedItem.id,
+                reason: cancelReason,
+                description: cancelDescription
+            });
+            alert('Cancellation request submitted successfully!');
+            setShowCancelModal(false);
+            setCancelReason('');
+            setCancelDescription('');
+            setSelectedItem(null);
+            fetchOrderDetails();
+        } catch (err) {
+            const errorMessage = err.response?.data?.error || 'Failed to submit cancellation request';
+            alert(errorMessage);
+            // If the error is about order status, refresh the order details
+            if (errorMessage.includes('cannot be cancelled') || errorMessage.includes('Delivered') || errorMessage.includes('Cancelled')) {
+                fetchOrderDetails();
+            }
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -194,6 +281,32 @@ const OrderTracking = () => {
                                     <p className="font-medium text-gray-800">{item.product_name}</p>
                                     <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
                                     <p className="font-bold text-gray-800 mt-1">₹{item.price}</p>
+
+                                    {/* Return/Cancel Buttons */}
+                                    {order.status === 'Delivered' && (
+                                        <button
+                                            onClick={() => {
+                                                setSelectedItem(item);
+                                                setShowReturnModal(true);
+                                            }}
+                                            className="mt-2 flex items-center gap-1 text-sm text-orange-600 hover:text-orange-700 font-medium"
+                                        >
+                                            <RotateCcw className="w-4 h-4" />
+                                            Return Item
+                                        </button>
+                                    )}
+                                    {['Pending', 'Processing'].includes(order.status) && (
+                                        <button
+                                            onClick={() => {
+                                                setSelectedItem(item);
+                                                setShowCancelModal(true);
+                                            }}
+                                            className="mt-2 flex items-center gap-1 text-sm text-red-600 hover:text-red-700 font-medium"
+                                        >
+                                            <XCircle className="w-4 h-4" />
+                                            Cancel Item
+                                        </button>
+                                    )}
                                 </div>
                                 <div className="text-right">
                                     <p className="font-bold text-gray-800">₹{item.price * item.quantity}</p>
@@ -238,6 +351,131 @@ const OrderTracking = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Return Modal */}
+            {showReturnModal && selectedItem && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-2xl max-w-md w-full p-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-xl font-bold text-gray-800">Request Return</h3>
+                            <button onClick={() => setShowReturnModal(false)} className="text-gray-400 hover:text-gray-600">
+                                <XCircle className="w-6 h-6" />
+                            </button>
+                        </div>
+
+                        <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                            <p className="font-medium text-gray-800">{selectedItem.product_name}</p>
+                            <p className="text-sm text-gray-500">Qty: {selectedItem.quantity} | ₹{selectedItem.price * selectedItem.quantity}</p>
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Reason for Return *</label>
+                            <select
+                                value={returnReason}
+                                onChange={(e) => setReturnReason(e.target.value)}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                            >
+                                <option value="">Select a reason</option>
+                                <option value="Defective">Defective/Damaged Product</option>
+                                <option value="Wrong Item">Wrong Item Received</option>
+                                <option value="Not As Described">Not As Described</option>
+                                <option value="Size Issue">Size/Fit Issue</option>
+                                <option value="Changed Mind">Changed Mind</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Additional Details (Optional)</label>
+                            <textarea
+                                value={returnDescription}
+                                onChange={(e) => setReturnDescription(e.target.value)}
+                                rows={3}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                placeholder="Please provide more details about your return..."
+                            />
+                        </div>
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowReturnModal(false)}
+                                className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleReturnRequest}
+                                disabled={submitting}
+                                className="flex-1 py-3 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {submitting ? 'Submitting...' : 'Submit Return Request'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Cancel Modal */}
+            {showCancelModal && selectedItem && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-2xl max-w-md w-full p-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-xl font-bold text-gray-800">Request Cancellation</h3>
+                            <button onClick={() => setShowCancelModal(false)} className="text-gray-400 hover:text-gray-600">
+                                <XCircle className="w-6 h-6" />
+                            </button>
+                        </div>
+
+                        <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                            <p className="font-medium text-gray-800">{selectedItem.product_name}</p>
+                            <p className="text-sm text-gray-500">Qty: {selectedItem.quantity} | ₹{selectedItem.price * selectedItem.quantity}</p>
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Reason for Cancellation *</label>
+                            <select
+                                value={cancelReason}
+                                onChange={(e) => setCancelReason(e.target.value)}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                            >
+                                <option value="">Select a reason</option>
+                                <option value="Changed Mind">Changed Mind</option>
+                                <option value="Found Better Price">Found Better Price Elsewhere</option>
+                                <option value="Delivery Delay">Delivery Taking Too Long</option>
+                                <option value="Ordered By Mistake">Ordered By Mistake</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Additional Details (Optional)</label>
+                            <textarea
+                                value={cancelDescription}
+                                onChange={(e) => setCancelDescription(e.target.value)}
+                                rows={3}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                placeholder="Please provide more details about your cancellation..."
+                            />
+                        </div>
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowCancelModal(false)}
+                                className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleCancelRequest}
+                                disabled={submitting}
+                                className="flex-1 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {submitting ? 'Submitting...' : 'Submit Cancellation Request'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
