@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getImageUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import SEO from '../components/SEO';
 
 // Helper function to get admin axios instance with JWT token
 const getAdminAxios = () => {
@@ -530,6 +531,7 @@ const AdminDashboard = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex">
+            <SEO noindex title="Admin Dashboard" />
             {/* Sidebar */}
             <aside className="w-64 bg-gray-900 text-white flex flex-col">
                 {/* Logo */}

@@ -1,8 +1,10 @@
 import React from 'react';
+import SEO from '../components/SEO';
 
 const DownloadApp = () => {
     return (
         <div className="min-h-screen bg-gray-50 py-16 px-4">
+            <SEO title="Download Our App" description="Download the Jahani Mart app for the best shopping experience. Available on Android and iOS." url="https://jahani-mart.onrender.com/download-app" />
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12">

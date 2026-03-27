@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import api, { getImageUrl } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import { useLocale } from '../context/LocaleContext';
+import SEO from '../components/SEO';
 
 const Products = () => {
     const { formatPrice, getConfig } = useLocale();
@@ -151,6 +152,11 @@ const Products = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
+            <SEO
+                title="All Products - Browse Our Collection"
+                description="Browse our complete collection of premium products. Filter by category, price range. Free delivery available. Best prices guaranteed."
+                url="https://jahani-mart.onrender.com/products"
+            />
             {/* Header Banner */}
             <section className="bg-gradient-to-r from-[#00674F] to-[#0A3C30] py-40 text-center px-4">
                 <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">

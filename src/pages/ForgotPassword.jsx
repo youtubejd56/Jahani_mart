@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import SEO from '../components/SEO';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/';
 
@@ -47,6 +48,7 @@ const ForgotPassword = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
+            <SEO noindex title="Forgot Password" />
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
 
                 {step === 1 ? (

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLocale } from '../context/LocaleContext';
 import { Link, useNavigate } from 'react-router-dom';
 import api, { getImageUrl } from '../services/api';
+import SEO from '../components/SEO';
 
 const Checkout = () => {
     const { cart, fetchCart } = useCart();
@@ -287,6 +288,7 @@ const Checkout = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 py-4">
+            <SEO noindex title="Checkout" />
             {/* Header */}
             <div className="bg-white border-b border-gray-200 py-3 px-4">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">

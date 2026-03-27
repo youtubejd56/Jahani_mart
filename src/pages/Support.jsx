@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import SEO from '../components/SEO';
 
 const Support = () => {
     const { isAuthenticated } = useAuth();
@@ -153,6 +154,7 @@ const Support = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 py-8">
+            <SEO title="Help & Support" description="Need help? Contact Jahani Mart support. Find answers to FAQs, submit tickets, and get assistance with your orders." url="https://jahani-mart.onrender.com/support" />
             <div className="max-w-4xl mx-auto px-4">
                 {/* Header */}
                 <div className="text-center mb-8">

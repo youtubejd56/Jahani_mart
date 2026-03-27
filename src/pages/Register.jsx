@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
@@ -74,6 +75,7 @@ const Register = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
+            <SEO noindex title="Register" />
             <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8">
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-bold text-[#00674F]">Create Account</h1>

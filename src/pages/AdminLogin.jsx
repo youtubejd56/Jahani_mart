@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import SEO from '../components/SEO';
 
 const AdminLogin = () => {
     const [formData, setFormData] = useState({ username: '', password: '' });
@@ -33,6 +34,7 @@ const AdminLogin = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
+            <SEO noindex title="Admin Login" />
             <div className="max-w-md w-full">
                 {/* Logo */}
                 <div className="text-center mb-8">

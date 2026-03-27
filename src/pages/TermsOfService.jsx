@@ -1,8 +1,10 @@
 import React from 'react';
+import SEO from '../components/SEO';
 
 const TermsOfService = () => {
     return (
         <div className="max-w-4xl mx-auto px-6 py-16 text-gray-800">
+            <SEO title="Terms of Service" description="Read the Terms of Service for Jahani Mart. Understand our policies for using our website and purchasing products." url="https://jahani-mart.onrender.com/terms" />
             <h1 className="text-4xl font-serif font-bold mb-8 text-[#00674F]">Terms of Service</h1>
             <section className="space-y-6">
                 <p>Welcome to Jahani Mart. By using our website, you agree to comply with and be bound by the following terms and conditions.</p>

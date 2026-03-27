@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+Allow: /products
+Allow: /products/*
+Allow: /our-story
+Allow: /about
+Allow: /blog
+Allow: /support
+Allow: /help
+Allow: /terms
+Allow: /privacy
+Allow: /download-app
+
+Disallow: /admin/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /login
+Disallow: /register
+Disallow: /profile
+Disallow: /orders
+Disallow: /order-tracking
+Disallow: /wishlist
+Disallow: /forgot-password
+
+Sitemap: https://jahani-mart.onrender.com/sitemap.xml

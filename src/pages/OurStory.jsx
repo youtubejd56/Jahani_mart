@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SEO from '../components/SEO';
 
 const OurStory = () => {
     const [expandedSections, setExpandedSections] = useState({});
@@ -12,6 +13,7 @@ const OurStory = () => {
 
     return (
         <div className="bg-[#fdf9f0] min-h-screen text-[#2c1d12] font-sans pb-20">
+            <SEO title="Our Story" description="Learn about Jahani Mart - Our mission to deliver premium quality products at the best prices across India." url="https://jahani-mart.onrender.com/our-story" />
             {/* Header / Title Section */}
             <div className="py-16 text-center">
                 <h1 className="text-4xl md:text-5xl font-serif font-bold tracking-tight uppercase text-[#013528]">ABOUT US</h1>

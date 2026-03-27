@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import SEO from '../components/SEO';
 
 const Reviews = () => {
     const { productId } = useParams();
@@ -91,6 +92,7 @@ const Reviews = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 py-8">
+            <SEO noindex title="Reviews" />
             <div className="max-w-4xl mx-auto px-4">
                 {/* Product Summary */}
                 {product && (

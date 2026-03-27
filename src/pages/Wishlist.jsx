@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 import { getImageUrl } from '../services/api';
+import SEO from '../components/SEO';
 
 const Wishlist = () => {
     const { isAuthenticated } = useAuth();
@@ -57,6 +58,7 @@ const Wishlist = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+            <SEO noindex title="My Wishlist" />
             {/* Header Section */}
             <div className="bg-white shadow-sm border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

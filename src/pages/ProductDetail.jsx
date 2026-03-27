@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useLocale } from '../context/LocaleContext';
 import { ShoppingCart, Heart, Star, Truck, Shield, ChevronLeft, ChevronRight, ZoomIn, Check, Package, Award, RefreshCw } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const ProductDetail = () => {
     const { productId } = useParams();
@@ -136,6 +137,17 @@ const ProductDetail = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+            {product && (
+                <SEO
+                    title={product.name}
+                    description={(product.description || `Buy ${product.name} at best price with free delivery`).substring(0, 160)}
+                    keywords={`${product.name}, ${product.category_name || ''}, buy online, best price, free delivery`}
+                    image={product.image_url ? getImageUrl(product.image_url) : undefined}
+                    url={`https://jahani-mart.onrender.com/products/${product.id}`}
+                    type="product"
+                    product={product}
+                />
+            )}
             {/* Breadcrumb */}
             <div className="bg-white border-b border-gray-100 shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLocale } from '../context/LocaleContext';
 import { Link } from 'react-router-dom';
 import { getImageUrl } from '../services/api';
+import SEO from '../components/SEO';
 
 const Cart = () => {
     const { cart, removeFromCart, updateQuantity, loading } = useCart();
@@ -48,6 +49,7 @@ const Cart = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 py-8">
+            <SEO noindex title="Shopping Cart" />
             <div className="max-w-6xl mx-auto px-4">
                 <h1 className="text-2xl font-bold text-gray-800 mb-8">Shopping Cart</h1>
 

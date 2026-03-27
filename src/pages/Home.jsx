@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api, { getImageUrl } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import { useLocale } from '../context/LocaleContext';
+import SEO from '../components/SEO';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -141,6 +142,12 @@ const Home = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
+            <SEO
+                title="Premium Products at Best Prices"
+                description="Jahani Mart - Shop 10,000+ premium products at unbeatable prices. Free delivery across India. Summer sale up to 50% off."
+                keywords="jahani mart, online shopping, best prices, free delivery india, summer sale, premium products"
+                url="https://jahani-mart.onrender.com"
+            />
             {/* Hero Section - Redesigned */}
             <section className="relative overflow-hidden bg-gradient-to-br from-[#00674F] via-[#0A3C30] to-[#062820]">
                 {/* Decorative elements */}

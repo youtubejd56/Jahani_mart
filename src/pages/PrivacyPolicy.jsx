@@ -1,8 +1,10 @@
 import React from 'react';
+import SEO from '../components/SEO';
 
 const PrivacyPolicy = () => {
     return (
         <div className="max-w-4xl mx-auto px-6 py-16 text-gray-800">
+            <SEO title="Privacy Policy" description="Jahani Mart Privacy Policy - Learn how we collect, use, and protect your personal information." url="https://jahani-mart.onrender.com/privacy" />
             <h1 className="text-4xl font-serif font-bold mb-8 text-[#00674F]">Privacy Policy</h1>
             <section className="space-y-6">
                 <p>At Jahani Mart, your privacy is our top priority. This policy outlines how we collect, use, and protect your personal information.</p>

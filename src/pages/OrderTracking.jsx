@@ -3,6 +3,7 @@ import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import api, { getImageUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { RotateCcw, XCircle, AlertCircle } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const OrderTracking = () => {
     const [searchParams] = useSearchParams();
@@ -171,6 +172,7 @@ const OrderTracking = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 py-4">
+            <SEO noindex title="Order Tracking" />
             <div className="max-w-4xl mx-auto px-4">
                 {/* Back Link */}
                 <Link to="/orders" className="inline-flex items-center gap-2 text-blue-600 font-medium mb-4 hover:underline">

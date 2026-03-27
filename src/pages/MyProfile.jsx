@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import api, { getImageUrl } from '../services/api';
+import SEO from '../components/SEO';
 
 const MyProfile = () => {
     const { user, isAuthenticated, logout } = useAuth();
@@ -1213,6 +1214,7 @@ const MyProfile = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 py-4">
+            <SEO noindex title="My Profile" />
             <div className="max-w-7xl mx-auto px-2 sm:px-4">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                     {/* Sidebar */}

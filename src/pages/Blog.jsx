@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const Blog = () => {
     const [expandedPost, setExpandedPost] = useState(null);
@@ -57,6 +58,7 @@ const Blog = () => {
 
     return (
         <div className="bg-[#fdf9f0] min-h-screen text-[#2c1d12] font-sans pb-20">
+            <SEO title="Blog - Tips, Guides & Product Reviews" description="Read our latest blog posts about product guides, tips, reviews, and shopping advice from Jahani Mart." url="https://jahani-mart.onrender.com/blog" />
             {/* Hero Section */}
             <div className="relative h-[400px] overflow-hidden flex items-center justify-center">
                 <img 
