@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 
-const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -29,176 +29,176 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-
-        if (formData.email === '' || formData.first_name === '' || formData.last_name === '' || formData.password === '' || formData.confirmPassword === '') {
-            setError('Please fill the required fields, all fields are required.');
-            return;
-        }
-        if (!EMAIL_REGEX.test(formData.email)) {
-            setError('Invalid email format, please enter a valid email address.');
-            return;
-        }
-        if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match, please enter the same password.');
-            return;
-        }
-        if (!formData.mobile) {
-            setError('Mobile number is required, please enter your mobile number.');
-            return;
-        }
-        if (formData.mobile.length !== 10) {
-            setError('Mobile number must be 10 digits, please enter a valid mobile number.');
-            return;
-        }
-        if (formData.password.length < 8) {
-            setError('Password must be at least 8 characters, please enter a valid password.');
-            return;
-        }
-
         setLoading(true);
 
+        if (!formData.email || !formData.password || !formData.confirmPassword || !formData.first_name || !formData.last_name || !formData.mobile) {
+            setError('All fields are required. Please fill all the fields.');
+            setLoading(false);
+            return;
+        }
+
+        if (!EMAIL_REGEX.test(formData.email)) {
+            setError('Please enter a valid email address.');
+            setLoading(false);
+            return;
+        }
+
+        if (formData.mobile.length !== 10) {
+            setError('Mobile number must be 10 digits.');
+            setLoading(false);
+            return;
+        }
+
+        if (formData.password.length < 8) {
+            setError('Password must be at least 8 characters long.');
+            setLoading(false);
+            return;
+        }
+
+        if (formData.password !== formData.confirmPassword) {
+            setError('Passwords do not match.');
+            setLoading(false);
+            return;
+        }
+
         try {
-            await register({
-                email: formData.email,
-                password: formData.password,
+            await register(formData.email, formData.password, {
                 first_name: formData.first_name,
                 last_name: formData.last_name,
                 mobile: formData.mobile
             });
-            navigate('/login');
+            navigate('/');
         } catch (err) {
-            setError(err.response?.data?.error || 'Registration failed. Please try again.');
-        } finally {
+            setError(err.message || 'Registration failed. Please try again.');
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
-            <SEO noindex title="Register" />
-            <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8">
-                <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-[#00674F]">Create Account</h1>
-                    <p className="text-gray-500 mt-2">Join Jahani International</p>
-                </div>
+        <>
+            <SEO
+                title="Register - Jahani Mart"
+                description="Create your Jahani Mart account for a personalized shopping experience. Access your orders, wishlist, and exclusive offers."
+                keywords="register, sign up, create account, jahani mart, online shopping india"
+                url="https://jahani-mart.onrender.com/register"
+                type="website"
+            />
+            
+            <div className="min-h-screen bg-gradient-to-br from-purple-500 to-blue-600 text-white flex items-center justify-center py-12 px-4">
+                <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+                    <div className="text-6xl mb-4">🛒</div>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Create Account</h2>
+                    <p className="text-gray-500 mb-6">Join Jahani Mart for amazing deals and offers</p>
+                    
+                    {error && (
+                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+                            {error}
+                        </div>
+                    )}
 
-                {error && (
-                    <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-6 text-center">
-                        {error}
-                    </div>
-                )}
-
-                <form onSubmit={handleSubmit} noValidate className="space-y-4">
-                    <div>
-                        <label htmlFor="mobile" className="block text-sm font-medium text-gray-700 mb-2">
-                            Mobile Number <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            id="mobile"
-                            name="mobile"
-                            type="tel"
-                            value={formData.mobile}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                            placeholder="Enter your mobile number"
-                        />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <input
+                                    type="text"
+                                    name="first_name"
+                                    value={formData.first_name}
+                                    onChange={handleChange}
+                                    placeholder="First Name"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <input
+                                    type="text"
+                                    name="last_name"
+                                    value={formData.last_name}
+                                    onChange={handleChange}
+                                    placeholder="Last Name"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        
                         <div>
-                            <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-2">
-                                First Name <span className="text-red-500">*</span>
-                            </label>
                             <input
-                                id="first_name"
-                                name="first_name"
-                                type="text"
-                                value={formData.first_name}
+                                type="email"
+                                name="email"
+                                value={formData.email}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                                placeholder="First name"
+                                placeholder="Email Address"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                required
                             />
                         </div>
+                        
                         <div>
-                            <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-2">
-                                Last Name <span className="text-red-500">*</span>
-                            </label>
                             <input
-                                id="last_name"
-                                name="last_name"
-                                type="text"
-                                value={formData.last_name}
+                                type="tel"
+                                name="mobile"
+                                value={formData.mobile}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                                placeholder="Last name"
+                                placeholder="Mobile Number"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                maxLength={10}
+                                required
                             />
                         </div>
+                        
+                        <div>
+                            <input
+                                type="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                placeholder="Password"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <input
+                                type="password"
+                                name="confirmPassword"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                                placeholder="Confirm Password"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                required
+                            />
+                        </div>
+                        
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors disabled:opacity-50"
+                        >
+                            {loading ? 'Creating Account...' : 'Create Account'}
+                        </button>
+                    </form>
+
+                    <div className="mt-6 pt-6 border-t border-gray-200">
+                        <p className="text-sm text-gray-500">
+                            Already have an account?{' '}
+                            <Link to="/login" className="text-purple-600 hover:text-purple-700 font-medium">
+                                Login here
+                            </Link>
+                        </p>
                     </div>
 
-                    <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                            Email <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            id="email"
-                            name="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                            placeholder="Enter your email"
-                        />
+                    <div className="mt-6 pt-6 border-t border-gray-200">
+                        <p className="text-sm text-gray-500">
+                            By creating an account, you agree to our{' '}
+                            <Link to="/terms" className="text-purple-600 hover:text-purple-700">Terms of Service</Link> and{' '}
+                            <Link to="/privacy" className="text-purple-600 hover:text-purple-700">Privacy Policy</Link>
+                        </p>
                     </div>
-
-                    <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                            Password <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            id="password"
-                            name="password"
-                            type="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                            placeholder="Create a password"
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                            Confirm Password <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            type="password"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                            placeholder="Confirm your password"
-                        />
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-[#00674F] hover:bg-[#005040] text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {loading ? 'Creating Account...' : 'Create Account'}
-                    </button>
-                </form>
-
-                <div className="mt-6 pt-6 border-t border-gray-200">
-                    <p className="text-center text-gray-600">
-                        Already have an account?{' '}
-                        <Link to="/login" className="text-[#00674F] font-semibold hover:text-[#005040]">
-                            Sign in here
-                        </Link>
-                    </p>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
