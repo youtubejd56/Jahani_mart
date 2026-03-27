@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 const SITE_URL = 'https://jahani-mart.onrender.com';
 const SITE_NAME = 'Jahani Mart';
 const DEFAULT_DESC = 'Shop premium quality products at unbeatable prices. Free delivery across India. 10,000+ products, easy returns, secure payments.';
-const OG_IMAGE = `${SITE_URL}/og-image.png`;
+const OG_IMAGE = `${SITE_URL}/manu%20ettn%20logo%20.png`;
 
 const SEO = ({
     title,
@@ -16,6 +16,49 @@ const SEO = ({
     noindex = false,
 }) => {
     const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
+
+    let productJsonLd = null;
+    if (product && product.name) {
+        try {
+            const ldData = {
+                "@context": "https://schema.org",
+                "@type": "Product",
+                "name": String(product.name).replace(/[<>&"']/g, ''),
+                "description": String(product.description || `${product.name} - Buy online at best price`).substring(0, 5000).replace(/[<>&"']/g, ''),
+                "image": product.all_image_urls || [image],
+                "sku": String(product.id),
+                "brand": {
+                    "@type": "Brand",
+                    "name": String(product.manufacturer || SITE_NAME).replace(/[<>&"']/g, '')
+                },
+                "offers": {
+                    "@type": "Offer",
+                    "url": `${SITE_URL}/products/${product.id}`,
+                    "priceCurrency": "INR",
+                    "price": product.discount_price || product.price,
+                    "availability": product.stock > 0
+                        ? "https://schema.org/InStock"
+                        : "https://schema.org/OutOfStock",
+                    "seller": {
+                        "@type": "Organization",
+                        "name": SITE_NAME
+                    }
+                },
+                ...(product.rating && {
+                    "aggregateRating": {
+                        "@type": "AggregateRating",
+                        "ratingValue": product.rating,
+                        "bestRating": "5",
+                        "worstRating": "1",
+                        "reviewCount": product.review_count || 1
+                    }
+                })
+            };
+            productJsonLd = JSON.stringify(ldData);
+        } catch (e) {
+            productJsonLd = null;
+        }
+    }
 
     return (
         <Helmet>
@@ -42,43 +85,8 @@ const SEO = ({
             <meta name="twitter:image" content={image} />
 
             {/* Product JSON-LD */}
-            {product && product.name && (
-                <script type="application/ld+json">
-                    {JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "Product",
-                        "name": product.name,
-                        "description": (product.description || `${product.name} - Buy online at best price`).substring(0, 5000),
-                        "image": product.all_image_urls || [image],
-                        "sku": String(product.id),
-                        "brand": {
-                            "@type": "Brand",
-                            "name": product.manufacturer || SITE_NAME
-                        },
-                        "offers": {
-                            "@type": "Offer",
-                            "url": `${SITE_URL}/products/${product.id}`,
-                            "priceCurrency": "INR",
-                            "price": product.discount_price || product.price,
-                            "availability": product.stock > 0
-                                ? "https://schema.org/InStock"
-                                : "https://schema.org/OutOfStock",
-                            "seller": {
-                                "@type": "Organization",
-                                "name": SITE_NAME
-                            }
-                        },
-                        ...(product.rating && {
-                            "aggregateRating": {
-                                "@type": "AggregateRating",
-                                "ratingValue": product.rating,
-                                "bestRating": "5",
-                                "worstRating": "1",
-                                "reviewCount": product.review_count || 1
-                            }
-                        })
-                    })}
-                </script>
+            {productJsonLd && (
+                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: productJsonLd }} />
             )}
         </Helmet>
     );
