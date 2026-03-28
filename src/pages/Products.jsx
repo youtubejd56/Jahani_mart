@@ -35,15 +35,17 @@ const Products = () => {
         const urlSearch = searchParams.get('search');
         const urlSale = searchParams.get('sale');
         const urlNew = searchParams.get('new');
+        const urlCategory = searchParams.get('category');
 
         if (urlSearch) {
             setSearchQuery(urlSearch);
         }
         if (urlSale === 'true') {
             setSelectedCategory('sale');
-        }
-        if (urlNew === 'true') {
+        } else if (urlNew === 'true') {
             setSelectedCategory('new');
+        } else if (urlCategory) {
+            setSelectedCategory(urlCategory);
         }
     }, [searchParams]);
 
@@ -167,7 +169,7 @@ const Products = () => {
                 </p>
             </section>
 
-            <div className="max-w-[1240px] mx-auto py-8 px-4 sm:px-8">
+            <div className="max-w-full mx-auto py-8 px-4 sm:px-8">
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Sidebar - Categories */}
                     <aside className="lg:w-64 flex-shrink-0">

@@ -27,8 +27,15 @@ const Home = () => {
                     api.get('/products/'),
                     api.get('/categories/')
                 ]);
-                setProducts(productsRes.data);
-                setCategories(categoriesRes.data);
+                const sortedProducts = productsRes.data
+                    .sort((a, b) => {
+                        const dateA = new Date(a.created_at || a.id);
+                        const dateB = new Date(b.created_at || b.id);
+                        return dateB - dateA; // Newest first
+                    })
+                    .slice(0, 10);
+                setProducts(sortedProducts);
+                setCategories(categoriesRes.data.slice(0, 5));
             } catch (error) {
                 console.error('Error fetching data:', error);
             } finally {
@@ -290,57 +297,91 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Categories Section - Enhanced */}
-            <section className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between mb-10">
-                    <div>
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 font-heading">
-                            Shop by Category
-                        </h2>
-                        <p className="text-gray-500 mt-2">Browse our wide range of products</p>
-                    </div>
-                    <button className="text-[#00674F] font-semibold hover:text-[#005440] transition-colors flex items-center gap-1">
-                        View All
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
-                    {categories.map((category) => (
-                        <div
-                            key={category.id}
-                            className="flex flex-col items-center gap-3 cursor-pointer group transition-all hover:-translate-y-2"
-                        >
-                            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden shadow-md group-hover:shadow-xl transition-all bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center border-2 border-transparent group-hover:border-[#00674F]">
-                                {category.image || (category.icon && category.icon.startsWith('http')) ? (
-                                    <img src={getImageUrl(category.image || category.icon)} alt={category.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
-                                ) : (
-                                    <span className="text-3xl sm:text-4xl">{category.icon || category.name[0]}</span>
-                                )}
-                            </div>
-                            <span className="text-sm sm:text-base font-semibold text-gray-700 group-hover:text-[#00674F] transition-colors text-center">
-                                {category.name}
-                            </span>
+            <section className="bg-white py-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {/* Shelf Header */}
+                    <div className="flex items-end justify-between mb-8 border-b border-gray-100 pb-4">
+                        <div>
+                            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 font-heading">
+                                Shop by <span className="text-[#00674F]">Category</span>
+                            </h2>
+                            <p className="text-sm text-gray-500 mt-1">Discover what's trending now</p>
                         </div>
-                    ))}
+                        <button
+                            onClick={() => navigate('/products')}
+                            className="text-sm font-bold text-[#00674F] hover:text-amber-500 transition-colors flex items-center gap-1 group"
+                        >
+                            View All
+                            <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    {/* Flipkart Style Shelf Background */}
+                    <div className="bg-[#BBD087]/20 rounded-3xl p-6 sm:p-10 relative overflow-hidden">
+                        {/* Decorative background shape */}
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#BBD087]/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+
+                        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 relative z-10">
+                            {categories.map((category) => (
+                                <div
+                                    key={category.id}
+                                    className="flex flex-col items-center cursor-pointer group w-32 sm:w-36 md:w-44 lg:w-48 bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                                    onClick={() => navigate(`/products?category=${encodeURIComponent(category.name)}`)}
+                                >
+                                    {/* Image Wrapper */}
+                                    <div className="w-full aspect-4/5 relative overflow-hidden bg-gray-50">
+                                        {category.image || (category.icon && category.icon.startsWith('http')) ? (
+                                            <img
+                                                src={getImageUrl(category.image || category.icon)}
+                                                alt={category.name}
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                                                <span className="text-4xl sm:text-5xl group-hover:scale-110 transition-transform duration-300">
+                                                    {category.icon || category.name[0]}
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        {/* Flipkart Style Offer Tag Overlay */}
+                                        <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm py-2 px-1 text-center shadow-[0_-2px_10px_rgba(0,0,0,0.05)] border-t border-gray-100">
+                                            <p className="text-xs sm:text-sm font-bold text-gray-900 group-hover:text-[#00674F] transition-colors">
+                                                Under ₹599
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Category Title below card */}
+                                    <div className="py-3 px-2 w-full text-center">
+                                        <span className="text-xs sm:text-sm font-bold text-gray-700 group-hover:text-[#00674F] transition-colors line-clamp-1">
+                                            {category.name}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </section>
 
             {/* Small Promo Banner */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#00674F] to-[#0A3C30] p-8 sm:p-12 text-center">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl"></div>
+                <div className="relative overflow-hidden rounded-3xl bg-linear-to-r from-[#00674F] to-[#0A3C30] p-8 sm:p-14 text-center shadow-2xl">
+                    <div className="absolute top-0 right-0 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-400/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
                     <div className="relative z-10">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 font-heading">
-                            Join Our Loyalty Program
+                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-6 font-heading tracking-tight">
+                            Join Our <span className="text-amber-400">Loyalty</span> Program
                         </h2>
-                        <p className="text-white/80 max-w-2xl mx-auto mb-8">
-                            Earn points on every purchase and unlock exclusive deals and discounts
+                        <p className="text-lg text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
+                            Earn points on every purchase and unlock exclusive deals, early access, and premium rewards.
                         </p>
                         <button
                             onClick={() => navigate('/profile?section=wallet')}
-                            className="bg-amber-400 hover:bg-amber-500 text-[#00674F] px-8 py-3 rounded-full font-bold transition-all hover:scale-105"
+                            className="bg-amber-400 hover:bg-white text-[#00674F] px-10 py-4 rounded-full font-black text-lg transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(251,191,36,0.4)] uppercase tracking-wider"
                         >
                             Join Now - It's Free!
                         </button>
@@ -350,16 +391,19 @@ const Home = () => {
 
             {/* Products Section - Enhanced */}
             <section className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 pb-20">
-                <div className="flex items-center justify-between mb-10">
+                <div className="flex items-end justify-between mb-8 border-b border-gray-100 pb-4">
                     <div>
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 font-heading">
-                            Featured Products
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 font-heading">
+                            Featured <span className="text-[#00674F]">Products</span>
                         </h2>
-                        <p className="text-gray-500 mt-2">Handpicked just for you</p>
+                        <p className="text-sm text-gray-500 mt-1">Top picks from our curated collection</p>
                     </div>
-                    <button className="text-[#00674F] font-semibold hover:text-[#005440] transition-colors flex items-center gap-1">
+                    <button
+                        onClick={() => navigate('/products')}
+                        className="text-sm font-bold text-[#00674F] hover:text-amber-500 transition-colors flex items-center gap-1 group"
+                    >
                         View All
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                     </button>
@@ -370,7 +414,7 @@ const Home = () => {
                         <p>Loading products...</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
                         {products.map(product => (
                             <ProductCard key={product.id} product={product} />
                         ))}
@@ -381,11 +425,16 @@ const Home = () => {
             {/* Customer Reviews Section */}
             <section className="bg-gray-100 py-16">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 text-center mb-10 font-heading">
-                        What Our Customers Say
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 text-center mb-20 font-heading relative group cursor-default">
+                        <span className="relative inline-block px-4">
+                            What Our <span className="text-[#00674F]">Customers</span> Say
+                            <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 w-32 h-1 bg-linear-to-r from-amber-400 via-amber-200 to-amber-400 rounded-full transition-all duration-700 group-hover:w-48"></div>
+                            <div className="absolute -bottom-5 left-[calc(50%+64px)] -translate-x-1/2 w-2 h-2 bg-amber-400 rounded-full group-hover:left-[calc(50%+96px)] transition-all duration-700 shadow-sm"></div>
+                            <div className="absolute -bottom-5 left-[calc(50%-64px)] -translate-x-1/2 w-2 h-2 bg-amber-400 rounded-full group-hover:left-[calc(50%-96px)] transition-all duration-700 shadow-sm"></div>
+                        </span>
                     </h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div className="bg-white rounded-2xl p-6 shadow-md">
+                    <div className="flex flex-wrap justify-center gap-6">
+                        <div className="bg-white rounded-2xl p-6 shadow-md w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] max-w-sm">
                             <div className="flex items-center gap-1 mb-4">
                                 {[...Array(5)].map((_, i) => (
                                     <svg key={i} className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
@@ -402,7 +451,7 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-2xl p-6 shadow-md">
+                        <div className="bg-white rounded-2xl p-6 shadow-md w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] max-w-sm">
                             <div className="flex items-center gap-1 mb-4">
                                 {[...Array(5)].map((_, i) => (
                                     <svg key={i} className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
@@ -419,7 +468,7 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-2xl p-6 shadow-md">
+                        <div className="bg-white rounded-2xl p-6 shadow-md w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] max-w-sm">
                             <div className="flex items-center gap-1 mb-4">
                                 {[...Array(5)].map((_, i) => (
                                     <svg key={i} className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
@@ -436,7 +485,7 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white rounded-2xl p-6 shadow-md">
+                        <div className="bg-white rounded-2xl p-6 shadow-md w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] max-w-sm">
                             <div className="flex items-center gap-1 mb-4">
                                 {[...Array(5)].map((_, i) => (
                                     <svg key={i} className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">

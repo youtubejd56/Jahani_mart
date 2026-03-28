@@ -23,6 +23,7 @@ import OurStory from './pages/OurStory';
 import Blog from './pages/Blog';
 import ForgotPassword from './pages/ForgotPassword';
 import DownloadApp from './pages/DownloadApp';
+import Wholesale from './pages/Wholesale';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
@@ -60,6 +61,7 @@ const AppContent = () => {
                     <Route path="/our-story" element={<OurStory />} />
                     <Route path="/about" element={<OurStory />} />
                     <Route path="/blog" element={<Blog />} />
+                    <Route path="/wholesale" element={<Wholesale />} />
                     <Route path="/admin/login" element={<AdminLogin />} />
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 </Routes>
