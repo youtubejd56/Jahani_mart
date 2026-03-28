@@ -381,7 +381,7 @@ const Home = () => {
                         </p>
                         <button
                             onClick={() => navigate('/profile?section=wallet')}
-                            className="bg-amber-400 hover:bg-white text-[#00674F] px-10 py-4 rounded-full font-black text-lg transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(251,191,36,0.4)] uppercase tracking-wider"
+                            className="bg-amber-400 hover:bg-white text-[#00674F] px-6 py-3 sm:px-10 sm:py-4 rounded-full font-black text-sm sm:text-lg transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(251,191,36,0.4)] uppercase tracking-wider"
                         >
                             Join Now - It's Free!
                         </button>
