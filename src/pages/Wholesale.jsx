@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SEO from '../components/SEO';
+import api from '../services/api';
 
 const Wholesale = () => {
     const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ const Wholesale = () => {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [error, setError] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,15 +37,32 @@ const Wholesale = () => {
             deliveryAddress: '',
             notes: ''
         });
+        setError('');
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        setTimeout(() => {
-            setIsSubmitting(false);
+        setError('');
+        
+        try {
+            await api.post('/wholesale/apply/', {
+                first_name: formData.firstName,
+                last_name: formData.lastName,
+                email: formData.email,
+                business_name: formData.businessName,
+                phone_number: formData.phoneNumber,
+                invoicing_address: formData.invoicingAddress,
+                delivery_address: formData.deliveryAddress,
+                notes: formData.notes
+            });
             setIsSubmitted(true);
-        }, 1500);
+        } catch (err) {
+            console.error('Submission error:', err);
+            setError(err.response?.data?.error || 'Failed to submit application. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     if (isSubmitted) {
@@ -97,7 +116,7 @@ const Wholesale = () => {
                 </div>
 
                 {/* Modern Wave bottom divider */}
-                <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]">
+                <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-0">
                     <svg className="relative block w-full h-12 md:h-20 fill-[#FDFCFB] leading-0" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
                         <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.43,147.3,126,211.52,111.59,269.83,98.53,279.19,64.28,321.39,56.44Z"></path>
                     </svg>
@@ -109,8 +128,13 @@ const Wholesale = () => {
                     onSubmit={handleSubmit}
                     className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_40px_100px_rgba(0,0,0,0.08)] p-8 md:p-14 border border-white overflow-hidden"
                 >
-                    {/* Interior decorative gradient */}
-                    <div className="absolute top-0 right-0 w-full h-1 bg-linear-to-r from-transparent via-[#00674F]/20 to-transparent"></div>
+                    {/* Error Display */}
+                    {error && (
+                        <div className="mb-8 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 animate-shake">
+                            <span className="text-red-500 text-xl font-bold">!</span>
+                            <p className="text-red-700 text-sm font-bold">{error}</p>
+                        </div>
+                    )}
 
                     <div className="mb-12 border-b border-gray-50 pb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
@@ -125,7 +149,7 @@ const Wholesale = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 mb-12">
                         {/* First Name */}
                         <div className="group">
-                            <label className="block text-[11px] font-black uppercase tracking-[0.1em] text-black mb-2 transition-colors group-focus-within:text-[#00674F]">
+                            <label className="block text-[11px] font-black uppercase tracking-widest text-black mb-2 transition-colors group-focus-within:text-[#00674F]">
                                 First Name <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -141,7 +165,7 @@ const Wholesale = () => {
 
                         {/* Last Name */}
                         <div className="group">
-                            <label className="block text-[11px] font-black uppercase tracking-[0.1em] text-black mb-2 transition-colors group-focus-within:text-[#00674F]">
+                            <label className="block text-[11px] font-black uppercase tracking-widest text-black mb-2 transition-colors group-focus-within:text-[#00674F]">
                                 Last Name <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -157,7 +181,7 @@ const Wholesale = () => {
 
                         {/* Email */}
                         <div className="group">
-                            <label className="block text-[11px] font-black uppercase tracking-[0.1em] text-black mb-2 transition-colors group-focus-within:text-[#00674F]">
+                            <label className="block text-[11px] font-black uppercase tracking-widest text-black mb-2 transition-colors group-focus-within:text-[#00674F]">
                                 Business Email <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -173,7 +197,7 @@ const Wholesale = () => {
 
                         {/* Business Name */}
                         <div className="group">
-                            <label className="block text-[11px] font-black uppercase tracking-[0.1em] text-black mb-2 transition-colors group-focus-within:text-[#00674F]">Company Legal Name</label>
+                            <label className="block text-[11px] font-black uppercase tracking-widest text-black mb-2 transition-colors group-focus-within:text-[#00674F]">Company Legal Name</label>
                             <input
                                 type="text"
                                 name="businessName"
@@ -186,7 +210,7 @@ const Wholesale = () => {
 
                         {/* Phone Number */}
                         <div className="group">
-                            <label className="block text-[11px] font-black uppercase tracking-[0.1em] text-black mb-2 transition-colors group-focus-within:text-[#00674F]">Direct Phone Line</label>
+                            <label className="block text-[11px] font-black uppercase tracking-widest text-black mb-2 transition-colors group-focus-within:text-[#00674F]">Direct Phone Line</label>
                             <input
                                 type="tel"
                                 name="phoneNumber"
@@ -210,7 +234,7 @@ const Wholesale = () => {
 
                     {/* Invoicing Address */}
                     <div className="mb-10 group">
-                        <label className="block text-[11px] font-black uppercase tracking-[0.1em] text-black mb-2 transition-colors group-focus-within:text-[#00674F]">
+                        <label className="block text-[11px] font-black uppercase tracking-widest text-black mb-2 transition-colors group-focus-within:text-[#00674F]">
                             Registered Invoicing Address <span className="text-red-500">*</span>
                         </label>
                         <textarea
@@ -226,7 +250,7 @@ const Wholesale = () => {
 
                     {/* Delivery Address */}
                     <div className="mb-12 group">
-                        <label className="block text-[11px] font-black uppercase tracking-[0.1em] text-black mb-2 transition-colors group-focus-within:text-[#00674F]">
+                        <label className="block text-[11px] font-black uppercase tracking-widest text-black mb-2 transition-colors group-focus-within:text-[#00674F]">
                             Primary Warehouse/Delivery Address <span className="text-red-500">*</span>
                         </label>
                         <textarea
@@ -252,7 +276,7 @@ const Wholesale = () => {
 
                     {/* Application Notes */}
                     <div className="mb-14 group">
-                        <label className="block text-[11px] font-black uppercase tracking-[0.1em] text-black mb-2 transition-colors group-focus-within:text-[#00674F]">Strategic Notes</label>
+                        <label className="block text-[11px] font-black uppercase tracking-widest text-black mb-2 transition-colors group-focus-within:text-[#00674F]">Strategic Notes</label>
                         <textarea
                             name="notes"
                             value={formData.notes}

@@ -34,6 +34,9 @@ const AdminDashboard = () => {
     const [supportTickets, setSupportTickets] = useState([]);
     const [stories, setStories] = useState([]);
     const [blogPosts, setBlogPosts] = useState([]);
+    const [wholesaleApplications, setWholesaleApplications] = useState([]);
+    const [selectedBlogPost, setSelectedBlogPost] = useState(null);
+    const [selectedWholesaleApp, setSelectedWholesaleApp] = useState(null);
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -87,6 +90,7 @@ const AdminDashboard = () => {
         if (activeTab === 'support') fetchSupportTickets();
         if (activeTab === 'stories') fetchStories();
         if (activeTab === 'blog') fetchBlogPosts();
+        if (activeTab === 'wholesale') fetchWholesaleApplications();
         if (activeTab === 'returns') {
             fetchReturns();
             fetchCancellations();
@@ -187,6 +191,15 @@ const AdminDashboard = () => {
             setCancellations(response.data);
         } catch (error) {
             console.error('Error fetching cancellations:', error);
+        }
+    };
+
+    const fetchWholesaleApplications = async () => {
+        try {
+            const response = await getAdminAxios().get('admin/wholesale/');
+            setWholesaleApplications(response.data);
+        } catch (error) {
+            console.error('Error fetching wholesale applications:', error);
         }
     };
 
@@ -648,6 +661,17 @@ const AdminDashboard = () => {
                         </svg>
                         Returns & Cancellations
                     </button>
+
+                    <button
+                        onClick={() => setActiveTab('wholesale')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'wholesale' ? 'bg-yellow-400 text-gray-900' : 'hover:bg-gray-800'
+                            }`}
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        Wholesale Requests
+                    </button>
                 </nav>
 
                 {/* Logout */}
@@ -678,6 +702,7 @@ const AdminDashboard = () => {
                         {activeTab === 'stories' && 'Story Management'}
                         {activeTab === 'blog' && 'Blog Post Management'}
                         {activeTab === 'returns' && 'Returns & Cancellations Management'}
+                        {activeTab === 'wholesale' && 'Wholesale Partnership Applications'}
                     </h1>
                 </header>
 
@@ -1669,7 +1694,90 @@ const AdminDashboard = () => {
                         </div>
                     </div>
                 )}
+                {/* Wholesale Applications */}
+                {activeTab === 'wholesale' && (
+                    <div className="p-6">
+                        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                            <table className="w-full">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Applicant</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Business Details</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200">
+                                    {wholesaleApplications.length === 0 ? (
+                                        <tr>
+                                            <td colSpan="6" className="px-6 py-12 text-center text-gray-500">
+                                                No wholesale applications received yet.
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        wholesaleApplications.map((app) => (
+                                            <tr key={app.id} className="hover:bg-gray-50">
+                                                <td className="px-6 py-4">
+                                                    <div className="text-sm font-bold text-gray-900">{app.first_name} {app.last_name}</div>
+                                                    <div className="text-xs text-gray-500">{app.email}</div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="text-sm font-medium text-gray-800">{app.business_name || 'N/A'}</div>
+                                                    <div className="text-[10px] text-gray-400 mt-1 max-w-[200px] truncate">{app.delivery_address}</div>
+                                                </td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">
+                                                    {app.phone_number || 'N/A'}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                                                        app.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
+                                                        app.status === 'Approved' ? 'bg-green-100 text-green-700' :
+                                                        'bg-gray-100 text-gray-700'
+                                                    }`}>
+                                                        {app.status}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 text-sm text-gray-500">
+                                                    {new Date(app.created_at).toLocaleDateString()}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-4">
+                                                        <select
+                                                            value={app.status}
+                                                            onChange={async (e) => {
+                                                                try {
+                                                                    await getAdminAxios().put(`admin/wholesale/${app.id}/update/`, { status: e.target.value });
+                                                                    fetchWholesaleApplications();
+                                                                } catch (error) {
+                                                                    alert('Failed to update status');
+                                                                }
+                                                            }}
+                                                            className="text-xs border border-gray-200 rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-[#00674F]"
+                                                        >
+                                                            <option value="Pending">Pending</option>
+                                                            <option value="Approved">Approved</option>
+                                                            <option value="Rejected">Rejected</option>
+                                                        </select>
+                                                        <button 
+                                                            onClick={() => setSelectedWholesaleApp(app)}
+                                                            className="text-[#00674F] hover:text-[#005440] text-sm font-black uppercase tracking-tighter"
+                                                        >
+                                                            Details
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
             </main>
+
 
             {/* Order Details Modal */}
             {selectedOrder && (
@@ -2062,7 +2170,138 @@ const AdminDashboard = () => {
                     </div>
                 </div>
             )}
+            {/* Wholesale Application Details Modal */}
+            {selectedWholesaleApp && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
+                    <div className="bg-white rounded-[2rem] shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-gray-100 animate-in fade-in zoom-in duration-300">
+                        {/* Header */}
+                        <div className="bg-[#00674F] p-8 text-white flex justify-between items-center relative overflow-hidden">
+                            {/* Decorative background circle */}
+                            <div className="absolute top-[-50%] right-[-10%] w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+                            
+                            <div className="relative z-10">
+                                <span className="inline-block px-3 py-1 bg-amber-400 text-[#00674F] text-[10px] font-black uppercase tracking-widest rounded-full mb-2">
+                                    Partnership Request
+                                </span>
+                                <h3 className="text-2xl font-black font-heading tracking-tight">Wholesale Application Details</h3>
+                                <p className="text-xs text-white/60 mt-1 font-bold uppercase tracking-[0.2em]">Application Ref: #{selectedWholesaleApp.id}</p>
+                            </div>
+                            <button 
+                                onClick={() => setSelectedWholesaleApp(null)}
+                                className="relative z-10 bg-white/10 hover:bg-white/20 p-3 rounded-2xl transition-all active:scale-90"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex-1 overflow-y-auto p-10 space-y-10 custom-scrollbar">
+                            {/* Section 1: Applicant & Company */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="block text-[10px] font-black text-[#00674F] uppercase tracking-widest mb-3">Applicant Name</label>
+                                        <p className="text-xl font-black text-gray-900 leading-none">{selectedWholesaleApp.first_name} {selectedWholesaleApp.last_name}</p>
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-black text-[#00674F] uppercase tracking-widest mb-3">Email Contact</label>
+                                        <p className="text-sm font-bold text-blue-600 hover:underline cursor-pointer">{selectedWholesaleApp.email}</p>
+                                    </div>
+                                </div>
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="block text-[10px] font-black text-[#00674F] uppercase tracking-widest mb-3">Business / Entity</label>
+                                        <p className="text-xl font-black text-gray-900 leading-none">{selectedWholesaleApp.business_name || 'Individual Enterprise'}</p>
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-black text-[#00674F] uppercase tracking-widest mb-3">Direct Phone</label>
+                                        <p className="text-sm font-bold text-gray-800">{selectedWholesaleApp.phone_number || 'No Phone Provided'}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Section 2: Logistics */}
+                            <div className="space-y-6">
+                                <h4 className="text-[11px] font-black text-gray-900 uppercase tracking-[0.3em] border-b-2 border-gray-100 pb-2">Logistical Infrastructure</h4>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="bg-gray-50 p-6 rounded-[1.5rem] border border-gray-100 group hover:border-[#00674F]/30 transition-colors">
+                                        <div className="flex items-center gap-2 mb-4">
+                                            <span className="p-1.5 bg-white rounded-lg shadow-sm text-xs">📄</span>
+                                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Invoicing Address</label>
+                                        </div>
+                                        <p className="text-sm text-gray-700 leading-relaxed font-medium italic">
+                                            {selectedWholesaleApp.invoicing_address}
+                                        </p>
+                                    </div>
+                                    <div className="bg-gray-50 p-6 rounded-[1.5rem] border border-gray-100 group hover:border-[#00674F]/30 transition-colors">
+                                        <div className="flex items-center gap-2 mb-4">
+                                            <span className="p-1.5 bg-white rounded-lg shadow-sm text-xs">🚚</span>
+                                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Delivery Destination</label>
+                                        </div>
+                                        <p className="text-sm text-gray-700 leading-relaxed font-medium italic">
+                                            {selectedWholesaleApp.delivery_address}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Section 3: Notes */}
+                            <div className="bg-[#FAF9F6] p-8 rounded-[2rem] border-2 border-dashed border-gray-100 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+                                    <svg className="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017V14H17.017C14.8079 14 13.017 12.2091 13.017 10V7C13.017 5.89543 13.9124 5 15.017 5H19.017C20.1216 5 21.017 5.89543 21.017 7V10C21.017 11.1046 20.1216 12 19.017 12H17.017V14H19.017C21.2261 14 23.017 15.7909 23.017 18V21H14.017ZM3 21L3 18C3 16.8954 3.89543 16 5 16H8V14H6C3.79086 14 2 12.2091 2 10V7C2 5.89543 2.89543 5 4 5H8C9.10457 5 10 5.89543 10 7V10C10 11.1046 9.10457 12 8 12H6V14H8C10.2091 14 12 15.7909 12 18V21H3Z" />
+                                    </svg>
+                                </div>
+                                <label className="block text-[10px] font-black text-amber-600 uppercase mb-4 tracking-[0.2em] flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></span>
+                                    Applicant Notes & Strategy
+                                </label>
+                                <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-line font-medium relative z-10">
+                                    {selectedWholesaleApp.notes || 'The applicant did not provide any additional strategic notes or specific requirements.'}
+                                </p>
+                            </div>
+
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-6 border-t border-gray-50">
+                                <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                    Received: {new Date(selectedWholesaleApp.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Current Status:</span>
+                                    <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em] text-white shadow-sm ${
+                                        selectedWholesaleApp.status === 'Pending' ? 'bg-amber-400' : 
+                                        selectedWholesaleApp.status === 'Approved' ? 'bg-[#00674F]' : 'bg-red-500'
+                                    }`}>
+                                        {selectedWholesaleApp.status}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Footer Actions */}
+                        <div className="p-8 bg-gray-50 border-t border-gray-100 flex justify-end gap-4">
+                            <button 
+                                onClick={() => setSelectedWholesaleApp(null)}
+                                className="px-8 py-4 bg-white border border-gray-200 text-gray-500 font-black uppercase text-[10px] tracking-widest rounded-2xl hover:bg-gray-100 transition-all active:scale-95"
+                            >
+                                Close Dashboard View
+                            </button>
+                            <button 
+                                onClick={() => window.print()}
+                                className="px-10 py-4 bg-[#033025] text-white font-black uppercase text-[10px] tracking-[0.2em] rounded-2xl hover:bg-[#00674F] transition-all shadow-xl shadow-[#00674F]/20 active:scale-95 flex items-center gap-2"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                </svg>
+                                Print Dossier
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
+
     );
 };
 
