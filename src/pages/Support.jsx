@@ -144,7 +144,7 @@ const Support = () => {
                 <div className="text-center">
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">Please Login</h2>
                     <p className="text-gray-600 mb-4">You need to login to access customer support.</p>
-                    <Link to="/login" className="bg-violet-600 text-white px-6 py-2 rounded-full font-bold hover:bg-violet-700">
+                    <Link to="/login" className="bg-[#00674F] text-white px-6 py-2 rounded-full font-bold hover:bg-[#004938]">
                         Login
                     </Link>
                 </div>
@@ -165,7 +165,7 @@ const Support = () => {
                 {/* Quick Contact Options */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                     <div className="bg-white p-6 rounded-xl shadow-sm text-center hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveTab('help')}>
-                        <div className="w-12 h-12 bg-violet-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="w-12 h-12 bg-[#00674F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg className="w-6 h-6 text-[#00674F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -199,13 +199,13 @@ const Support = () => {
                 <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                     <div className="flex border-b">
                         <button
-                            className={`flex-1 py-4 px-6 font-medium ${activeTab === 'help' ? 'bg-violet-50 text-violet-600 border-b-2 border-violet-600' : 'text-gray-500 hover:text-gray-700'}`}
+                            className={`flex-1 py-4 px-6 font-medium ${activeTab === 'help' ? 'bg-[#00674F]/10 text-[#00674F] border-b-2 border-[#00674F]' : 'text-gray-500 hover:text-gray-700'}`}
                             onClick={() => setActiveTab('help')}
                         >
                             Help Center (FAQs)
                         </button>
                         <button
-                            className={`flex-1 py-4 px-6 font-medium ${activeTab === 'support' ? 'bg-violet-50 text-violet-600 border-b-2 border-violet-600' : 'text-gray-500 hover:text-gray-700'}`}
+                            className={`flex-1 py-4 px-6 font-medium ${activeTab === 'support' ? 'bg-[#00674F]/10 text-[#00674F] border-b-2 border-[#00674F]' : 'text-gray-500 hover:text-gray-700'}`}
                             onClick={() => setActiveTab('support')}
                         >
                             My Tickets
@@ -228,7 +228,7 @@ const Support = () => {
 
                                 {loading ? (
                                     <div className="text-center py-8">
-                                        <div className="inline-block w-8 h-8 border-4 border-violet-600 border-t-transparent rounded-full animate-spin"></div>
+                                        <div className="inline-block w-8 h-8 border-4 border-[#00674F] border-t-transparent rounded-full animate-spin"></div>
                                     </div>
                                 ) : (
                                     <div className="space-y-6">
@@ -269,7 +269,7 @@ const Support = () => {
 
                                 {/* New Ticket Form */}
                                 {showNewTicket && (
-                                    <div className="bg-violet-50 rounded-xl p-6 mb-6">
+                                    <div className="bg-[#00674F]/5 rounded-xl p-6 mb-6">
                                         <h3 className="font-bold text-gray-800 mb-4">Create New Ticket</h3>
                                         <form onSubmit={handleCreateTicket} className="space-y-4">
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -370,7 +370,7 @@ const Support = () => {
                                         <p className="text-gray-500 mb-4">You haven't created any support tickets.</p>
                                         <button
                                             onClick={() => setShowNewTicket(true)}
-                                            className="text-violet-600 font-medium hover:underline"
+                                            className="text-[#00674F] font-medium hover:underline"
                                         >
                                             Create your first ticket
                                         </button>
@@ -392,7 +392,7 @@ const Support = () => {
                                                     </div>
                                                     <button
                                                         onClick={() => setSelectedTicket(selectedTicket?.ticket_id === ticket.ticket_id ? null : ticket)}
-                                                        className="text-violet-600 font-medium text-sm hover:underline"
+                                                        className="text-[#00674F] font-medium text-sm hover:underline"
                                                     >
                                                         {selectedTicket?.ticket_id === ticket.ticket_id ? 'Hide' : 'View'}
                                                     </button>
@@ -412,7 +412,7 @@ const Support = () => {
                                                         {ticket.replies && ticket.replies.length > 0 && (
                                                             <div className="space-y-3 mb-4">
                                                                 {ticket.replies.map((reply, idx) => (
-                                                                    <div key={idx} className={`p-3 rounded-lg ${reply.is_admin_reply ? 'bg-violet-50 ml-8' : 'bg-gray-100 mr-8'}`}>
+                                                                    <div key={idx} className={`p-3 rounded-lg ${reply.is_admin_reply ? 'bg-[#00674F]/10 ml-8' : 'bg-gray-100 mr-8'}`}>
                                                                         <p className="text-sm text-gray-700">{reply.message}</p>
                                                                         <p className="text-xs text-gray-500 mt-1">
                                                                             {reply.user_name || 'Support'} • {new Date(reply.created_at).toLocaleString()}
@@ -452,7 +452,7 @@ const Support = () => {
                 </div>
 
                 {/* Contact Info */}
-                <div className="mt-8 bg-gradient-to-r from-[#00674F] to-[#0A3C30] rounded-xl p-6 text-white text-center">
+                <div className="mt-8 bg-linear-to-r from-[#00674F] to-[#0A3C30] rounded-xl p-6 text-white text-center">
                     <h3 className="font-bold text-xl mb-2">Still Need Help?</h3>
                     <p className="mb-4">Our customer support team is available 24/7</p>
                     <div className="flex justify-center gap-6">

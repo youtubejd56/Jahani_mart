@@ -28,7 +28,7 @@ const Login = () => {
             return;
         }
         if (password.length < 8) {
-            setError('Password must be at least 8 characters long.');
+            setError('Password must be at least 8 characters, please enter a valid password.');
             setLoading(false);
             return;
         }
@@ -37,88 +37,92 @@ const Login = () => {
             await login(mobile, password);
             navigate('/');
         } catch (err) {
-            setError(err.message || 'Login failed. Please try again.');
+            setError(err.response?.data?.detail || err.response?.data?.error || 'Login failed. Please try again.');
+        } finally {
             setLoading(false);
         }
     };
 
     return (
-        <>
-            <SEO
-                title="Login - Jahani Mart"
-                description="Login to your Jahani Mart account for a personalized shopping experience. Access your orders, wishlist, and exclusive offers."
-                keywords="login, sign in, account, jahani mart, online shopping india"
-                url="https://jahani-mart.onrender.com/login"
-                type="website"
-            />
-            
-            <div className="min-h-screen bg-gradient-to-br from-purple-500 to-blue-600 text-white flex items-center justify-center py-12 px-4">
-                <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-                    <div className="text-6xl mb-4">🛒</div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Welcome Back!</h2>
-                    <p className="text-gray-500 mb-6">Login to your Jahani Mart account</p>
-                    
-                    {error && (
-                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-                            {error}
-                        </div>
-                    )}
-
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <input
-                                type="tel"
-                                value={mobile}
-                                onChange={(e) => setMobile(e.target.value.replace(/[^0-9]/g, ''))}
-                                placeholder="Mobile Number"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                maxLength={10}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Password"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                required
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors disabled:opacity-50"
-                        >
-                            {loading ? 'Logging in...' : 'Login'}
-                        </button>
-                    </form>
-
-                    <div className="mt-6 text-sm text-gray-600">
-                        <p className="mb-2">
-                            New to Jahani Mart?{' '}
-                            <Link to="/register" className="text-purple-600 hover:text-purple-700 font-medium">
-                                Create an account
-                            </Link>
-                        </p>
-                        <p>
-                            <Link to="/forgot-password" className="text-purple-600 hover:text-purple-700 font-medium">
-                                Forgot Password?
-                            </Link>
-                        </p>
-                    </div>
-
-                    <div className="mt-6 pt-6 border-t border-gray-200">
-                        <p className="text-sm text-gray-500">
-                            By continuing, you agree to our{' '}
-                            <Link to="/terms" className="text-purple-600 hover:text-purple-700">Terms of Service</Link> and{' '}
-                            <Link to="/privacy" className="text-purple-600 hover:text-purple-700">Privacy Policy</Link>
-                        </p>
-                    </div>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
+            <SEO noindex title="Login" />
+            <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
+                <div className="text-center mb-8">
+                    <h1 className="text-3xl font-bold text-[#00674F]">Welcome Back</h1>
+                    <p className="text-gray-500 mt-2">Sign in to your account</p>
                 </div>
+
+
+                {error && (
+                    <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-6 text-center">
+                        {error}
+                    </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div>
+                        <label htmlFor="mobile" className="block text-sm font-medium text-gray-700 mb-2">
+                            Mobile Number
+                        </label>
+                        <input
+                            id="mobile"
+                            type="tel"
+                            value={mobile}
+                            onChange={(e) => setMobile(e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00674F] focus:border-transparent"
+                            placeholder="Enter your mobile number"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                            Password
+                        </label>
+                        <input
+                            id="password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00674F] focus:border-transparent"
+                            placeholder="Enter your password"
+                        />
+                    </div>
+
+                    {/* Forgot Password */}
+                    <div className="flex justify-end -mt-2">
+                        <Link
+                            to="/forgot-password"
+                            className="text-sm text-[#00674F] hover:text-[#005040] font-medium hover:underline transition-colors"
+                        >
+                            Forgot password?
+                        </Link>
+                    </div>
+
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-[#00674F] cursor-pointer hover:bg-[#0A3C30] text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {loading ? 'Signing in...' : 'Login'}
+                    </button>
+                </form>
+
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                    <p className="text-center text-gray-600 text-sm mb-4">
+                        Don't have an account?
+                    </p>
+                    <Link
+                        to="/register"
+                        className="block w-full text-center bg-amber-400 hover:bg-amber-500 text-black font-bold py-3 px-4 rounded-lg transition-colors"
+                    >
+                        Create Account
+                    </Link>
+                </div>
+
+                {/* Demo Credentials */}
+
             </div>
-        </>
+        </div>
     );
 };
 

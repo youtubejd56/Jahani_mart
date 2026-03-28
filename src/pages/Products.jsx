@@ -234,7 +234,7 @@ const Products = () => {
                                 {(selectedPriceRanges.length > 0 || priceRange.min || priceRange.max) && (
                                     <button
                                         onClick={clearPriceFilters}
-                                        className="text-sm text-violet-600 hover:text-violet-700 font-medium"
+                                        className="text-sm text-[#00674F] hover:text-[#004938] font-medium"
                                     >
                                         Clear
                                     </button>
@@ -250,7 +250,7 @@ const Products = () => {
                                             placeholder="Min"
                                             value={priceRange.min}
                                             onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
-                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00674F]"
                                         />
                                     </div>
                                     <span className="text-gray-400">-</span>
@@ -260,7 +260,7 @@ const Products = () => {
                                             placeholder="Max"
                                             value={priceRange.max}
                                             onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
-                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00674F]"
                                         />
                                     </div>
                                 </div>
@@ -271,14 +271,14 @@ const Products = () => {
                                 {priceRanges.map(range => (
                                     <label
                                         key={range.id}
-                                        className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-50 ${selectedPriceRanges.includes(range.id) ? 'bg-violet-50' : ''
+                                        className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-50 ${selectedPriceRanges.includes(range.id) ? 'bg-[#00674F]/10' : ''
                                             }`}
                                     >
                                         <input
                                             type="checkbox"
                                             checked={selectedPriceRanges.includes(range.id)}
                                             onChange={() => togglePriceRange(range.id)}
-                                            className="w-4 h-4 text-violet-600 rounded focus:ring-violet-500"
+                                            className="w-4 h-4 text-[#00674F] rounded focus:ring-[#00674F]"
                                         />
                                         <span className="text-gray-700 font-medium">{range.label}</span>
                                     </label>
@@ -298,7 +298,7 @@ const Products = () => {
                                         placeholder="Search products..."
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+                                        className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00674F] focus:border-transparent"
                                     />
                                     <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -307,7 +307,7 @@ const Products = () => {
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent bg-white"
+                                    className="px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00674F] focus:border-transparent bg-white"
                                 >
                                     <option value="default">Sort by: Featured</option>
                                     <option value="price-low">Price: Low to High</option>
@@ -330,7 +330,7 @@ const Products = () => {
                         {/* Products Grid */}
                         {loading ? (
                             <div className="text-center py-20 text-lg text-gray-500 font-medium">
-                                <div className="inline-block w-8 h-8 border-4 border-violet-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+                                <div className="inline-block w-8 h-8 border-4 border-[#00674F] border-t-transparent rounded-full animate-spin mb-4"></div>
                                 <p>Loading products...</p>
                             </div>
                         ) : filteredByPrice.length === 0 ? (
@@ -341,7 +341,7 @@ const Products = () => {
                                 <p className="text-gray-500 font-medium">No products found</p>
                                 <button
                                     onClick={() => { setSelectedCategory('all'); setSearchQuery(''); clearPriceFilters(); }}
-                                    className="mt-4 text-violet-600 hover:text-violet-700 font-medium"
+                                    className="mt-4 text-[#00674F] hover:text-[#004938] font-medium"
                                 >
                                     Clear filters
                                 </button>

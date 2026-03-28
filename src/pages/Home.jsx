@@ -120,7 +120,7 @@ const Home = () => {
             title: "New Arrivals",
             subtitle: "Trending Now",
             description: "Check out the latest collection",
-            bgGradient: "from-violet-500 via-purple-600 to-indigo-500",
+            bgGradient: "from-emerald-500 via-[#00674F] to-cyan-600",
             icon: (
                 <svg className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
