@@ -2172,8 +2172,8 @@ const AdminDashboard = () => {
             )}
             {/* Wholesale Application Details Modal */}
             {selectedWholesaleApp && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
-                    <div className="bg-white rounded-[2rem] shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-gray-100 animate-in fade-in zoom-in duration-300">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-60 p-4">
+                    <div className="bg-white rounded-4xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-gray-100 animate-in fade-in zoom-in duration-300">
                         {/* Header */}
                         <div className="bg-[#00674F] p-8 text-white flex justify-between items-center relative overflow-hidden">
                             {/* Decorative background circle */}
@@ -2226,7 +2226,7 @@ const AdminDashboard = () => {
                             <div className="space-y-6">
                                 <h4 className="text-[11px] font-black text-gray-900 uppercase tracking-[0.3em] border-b-2 border-gray-100 pb-2">Logistical Infrastructure</h4>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="bg-gray-50 p-6 rounded-[1.5rem] border border-gray-100 group hover:border-[#00674F]/30 transition-colors">
+                                    <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100 group hover:border-[#00674F]/30 transition-colors">
                                         <div className="flex items-center gap-2 mb-4">
                                             <span className="p-1.5 bg-white rounded-lg shadow-sm text-xs">📄</span>
                                             <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Invoicing Address</label>
@@ -2235,7 +2235,7 @@ const AdminDashboard = () => {
                                             {selectedWholesaleApp.invoicing_address}
                                         </p>
                                     </div>
-                                    <div className="bg-gray-50 p-6 rounded-[1.5rem] border border-gray-100 group hover:border-[#00674F]/30 transition-colors">
+                                    <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100 group hover:border-[#00674F]/30 transition-colors">
                                         <div className="flex items-center gap-2 mb-4">
                                             <span className="p-1.5 bg-white rounded-lg shadow-sm text-xs">🚚</span>
                                             <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Delivery Destination</label>
@@ -2248,13 +2248,13 @@ const AdminDashboard = () => {
                             </div>
 
                             {/* Section 3: Notes */}
-                            <div className="bg-[#FAF9F6] p-8 rounded-[2rem] border-2 border-dashed border-gray-100 relative overflow-hidden">
+                            <div className="bg-[#FAF9F6] p-8 rounded-4xl border-2 border-dashed border-gray-100 relative overflow-hidden">
                                 <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
                                     <svg className="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017V14H17.017C14.8079 14 13.017 12.2091 13.017 10V7C13.017 5.89543 13.9124 5 15.017 5H19.017C20.1216 5 21.017 5.89543 21.017 7V10C21.017 11.1046 20.1216 12 19.017 12H17.017V14H19.017C21.2261 14 23.017 15.7909 23.017 18V21H14.017ZM3 21L3 18C3 16.8954 3.89543 16 5 16H8V14H6C3.79086 14 2 12.2091 2 10V7C2 5.89543 2.89543 5 4 5H8C9.10457 5 10 5.89543 10 7V10C10 11.1046 9.10457 12 8 12H6V14H8C10.2091 14 12 15.7909 12 18V21H3Z" />
                                     </svg>
                                 </div>
-                                <label className="block text-[10px] font-black text-amber-600 uppercase mb-4 tracking-[0.2em] flex items-center gap-2">
+                                <label className="text-[10px] font-black text-amber-600 uppercase mb-4 tracking-[0.2em] flex items-center gap-2">
                                     <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></span>
                                     Applicant Notes & Strategy
                                 </label>
@@ -2269,7 +2269,7 @@ const AdminDashboard = () => {
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Current Status:</span>
-                                    <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em] text-white shadow-sm ${
+                                    <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-white shadow-sm ${
                                         selectedWholesaleApp.status === 'Pending' ? 'bg-amber-400' : 
                                         selectedWholesaleApp.status === 'Approved' ? 'bg-[#00674F]' : 'bg-red-500'
                                     }`}>

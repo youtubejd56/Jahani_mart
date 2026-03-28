@@ -1,193 +1,159 @@
-import React, { useState } from 'react';
+import React from 'react';
 import SEO from '../components/SEO';
+import { Link } from 'react-router-dom';
 
 const OurStory = () => {
-    const [expandedSections, setExpandedSections] = useState({});
-
-    const toggleSection = (sectionId) => {
-        setExpandedSections(prev => ({
-            ...prev,
-            [sectionId]: !prev[sectionId]
-        }));
-    };
-
     return (
-        <div className="bg-[#fdf9f0] min-h-screen text-[#2c1d12] font-sans pb-20">
-            <SEO title="Our Story" description="Learn about Jahani Mart - Our mission to deliver premium quality products at the best prices across India." url="https://jahani-mart.onrender.com/our-story" />
-            {/* Header / Title Section */}
-            <div className="py-16 text-center">
-                <h1 className="text-4xl md:text-5xl font-serif font-bold tracking-tight uppercase text-[#013528]">ABOUT US</h1>
+        <div className="min-h-screen bg-[#FDFCFB] selection:bg-[#00674F] selection:text-white">
+            <SEO 
+                title="Our Story - Jahani International" 
+                description="The journey of Jahani International. From humble beginnings to a leading B2B marketplace for Fashion, Electronics, and Home Essentials." 
+                url="https://jahani-mart.onrender.com/our-story" 
+            />
+
+            {/* Premium Hero Header */}
+            <div className="bg-[#00674F] pt-40 pb-32 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-full h-full opacity-10 pointer-events-none">
+                    <div className="absolute top-[-20%] right-[-10%] w-[40%] h-[80%] bg-white rounded-full blur-[120px]"></div>
+                </div>
+                
+                <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+                    <nav className="flex justify-center items-center gap-2 mb-10 text-[10px] font-black uppercase tracking-[0.3em] text-white/50">
+                        <Link to="/" className="hover:text-amber-400 transition-colors">Home</Link>
+                        <span>/</span>
+                        <span className="text-amber-400">About Us</span>
+                    </nav>
+                    <h1 className="text-5xl md:text-8xl font-black text-white mb-8 font-heading tracking-tighter leading-none">
+                        Our <span className="text-amber-400">Heritage</span>
+                    </h1>
+                    <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto font-medium leading-relaxed">
+                        A legacy of excellence in global trade, bridging the gap between quality manufacturing and modern enterprise.
+                    </p>
+                </div>
             </div>
 
-            <div className="max-w-[1280px] mx-auto px-6 space-y-24">
+            {/* Vision & Values Grid */}
+            <div className="max-w-7xl mx-auto px-6 -mt-16 relative z-20">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {[
+                        { title: 'Global Reach', desc: 'Connecting manufacturers across continents with reliable logistics.', icon: '🌐' },
+                        { title: 'Quality First', desc: 'Every product in our catalog undergoes rigorous quality auditing.', icon: '💎' },
+                        { title: 'B2B Integrity', desc: 'Building long-term partnerships through transparent trade.', icon: '🤝' },
+                    ].map((val, i) => (
+                        <div key={i} className="bg-white p-10 rounded-[2.5rem] shadow-2xl shadow-gray-200/50 border border-gray-100 hover:-translate-y-2 transition-transform duration-500">
+                            <span className="text-4xl mb-6 block">{val.icon}</span>
+                            <h3 className="text-xl font-black text-gray-900 mb-4 tracking-tight uppercase">{val.title}</h3>
+                            <p className="text-gray-500 font-medium leading-relaxed">{val.desc}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Detailed Narrative Sections */}
+            <div className="max-w-7xl mx-auto px-6 py-32 space-y-32">
                 
-                {/* Section 1: Introduction */}
-                <div className="flex flex-col md:flex-row gap-12 items-center">
-                    <div className="w-full md:w-1/2">
+                {/* Founding Narrative */}
+                <div className="flex flex-col lg:flex-row gap-20 items-center">
+                    <div className="w-full lg:w-1/2 relative group">
+                        <div className="absolute inset-0 bg-amber-400 rounded-3xl rotate-3 group-hover:rotate-0 transition-transform duration-700 opacity-20"></div>
                         <img 
                             src="/img3.png" 
-                            alt="Our Founding Story" 
-                            className="w-full h-auto object-cover shadow-xl rounded-sm"
+                            alt="Jahani Foundations" 
+                            className="w-full h-auto object-cover rounded-3xl shadow-2xl relative z-10 grayscale-50 hover:grayscale-0 transition-all duration-700"
                         />
                     </div>
-                    <div className="w-full md:w-1/2 space-y-4">
-                        <h2 className="text-3xl font-serif font-bold text-[#321d10]">Our story</h2>
-                        <div className="text-lg leading-relaxed space-y-4">
+                    <div className="w-full lg:w-1/2">
+                        <span className="text-[10px] font-black text-amber-500 uppercase tracking-[0.4em] mb-4 block">The Genesis</span>
+                        <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-8 tracking-tighter uppercase leading-none">
+                            Founded on <br /><span className="text-[#00674F]">Principle.</span>
+                        </h2>
+                        <div className="text-lg text-gray-600 leading-relaxed font-medium space-y-6">
                             <p>
-                                We are a family-run spice company founded in 2012 by mother and son duo Shashi and Sanjay Aggarwal. 
-                                Everything we do is rooted in Shashi’s deep knowledge of spices and Indian Masalas and is powered by 
-                                Sanjay’s love of cooking with flavours from around the world.
+                                Jahani International began with a singular vision: to democratize high-end manufacturing for businesses of all sizes. Founded over a decade ago, our journey started in the heart of global trade centers, identifying the inefficiencies that kept quality goods from the businesses that needed them most.
                             </p>
-                            
-                            {expandedSections['story1'] && (
-                                <div className="animate-fadeIn space-y-4">
-                                    <p>
-                                        Sanjay says: "The idea that became Spice Kitchen was born on Christmas Day 2012, as mum (Shashi Aggarwal) 
-                                        and I chatted about how nice it would be to create a spice-filled masia dabba for people to gift to their 
-                                        food-loving family and friends."
-                                    </p>
-                                    <p className="font-bold border-l-4 border-amber-400 pl-4">
-                                        Started with our Indian Spice Tin, packed with essential spices and mum's (now multi-award winning!) garam masala.
-                                    </p>
-                                </div>
-                            )}
-
-                            <button 
-                                onClick={() => toggleSection('story1')}
-                                className="text-[#00674F] font-bold text-sm border-b-2 border-[#00674F] uppercase tracking-wider pb-1 mt-4 block hover:opacity-75 transition-opacity"
-                            >
-                                {expandedSections['story1'] ? 'READ LESS' : 'READ MORE'}
-                            </button>
+                            <p className="border-l-4 border-amber-400 pl-6 text-gray-900 font-bold italic bg-amber-50 py-4 rounded-r-2xl">
+                                "Trade is not just about transactions; it's about the trust that sustains the global supply chain."
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                {/* Section 2: Mamma Spice's Story - Reversed */}
-                <div className="flex flex-col md:flex-row-reverse gap-12 items-center">
-                    <div className="w-full md:w-1/2">
+                {/* Evolution Section */}
+                <div className="flex flex-col lg:flex-row-reverse gap-20 items-center">
+                    <div className="w-full lg:w-1/2 relative group">
+                        <div className="absolute inset-0 bg-[#00674F] rounded-3xl -rotate-3 group-hover:rotate-0 transition-transform duration-700 opacity-10"></div>
                         <img 
                             src="/img4.png" 
-                            alt="Tradition and Detail" 
-                            className="w-full h-auto object-cover shadow-xl rounded-sm"
+                            alt="Logistics Evolution" 
+                            className="w-full h-auto object-cover rounded-3xl shadow-2xl relative z-10"
                         />
                     </div>
-                    <div className="w-full md:w-1/2 space-y-4">
-                        <h2 className="text-3xl font-serif font-bold text-[#321d10]">Mamma Spice’s story</h2>
-                        <div className="text-lg leading-relaxed space-y-4">
+                    <div className="w-full lg:w-1/2">
+                        <span className="text-[10px] font-black text-[#00674F] uppercase tracking-[0.4em] mb-4 block">The Evolution</span>
+                        <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-8 tracking-tighter uppercase leading-none">
+                            Scaling New <br /><span className="text-amber-500">Frontiers.</span>
+                        </h2>
+                        <div className="text-lg text-gray-600 leading-relaxed font-medium space-y-6">
                             <p>
-                                We have become pretty famous for our signature Spice Tin, and right at the beginning of our journey 
-                                Mum decided to use recycled silk saris to 'dress' the tins beautifully.
+                                What started as a focused fashion procurement entity has matured into a multi-vertical powerhouse. Today, Jahani Mart serves as the premier digital gateway for Electronics, Home Essentials, and Premium Fashion, powered by proprietary logistics and a dedicated partner network.
                             </p>
-                            
-                            {expandedSections['story2'] && (
-                                <div className="animate-fadeIn space-y-4">
-                                    <p>
-                                        To this day, our customers tell us that this detail makes our products super special. Mum now employs 
-                                        a team of seamstresses who help her make the saris, and she's always conscious of hiring people 
-                                        who might struggle to find work elsewhere.
-                                    </p>
-                                    <p>
-                                        Shashi says: "Food has always been at the heart of my life, serving as a means of expressing love 
-                                        to my family. These seasonings were prepared with a lovingly prepared family meal in mind."
-                                    </p>
+                            <div className="grid grid-cols-2 gap-8 pt-6">
+                                <div>
+                                    <p className="text-3xl font-black text-gray-900 leading-none">500+</p>
+                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2">Vendors Partnered</p>
                                 </div>
-                            )}
-
-                            <button 
-                                onClick={() => toggleSection('story2')}
-                                className="text-[#00674F] font-bold text-sm border-b-2 border-[#00674F] uppercase tracking-wider pb-1 mt-4 block hover:opacity-75 transition-opacity"
-                            >
-                                {expandedSections['story2'] ? 'READ LESS' : 'READ MORE'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Section 3: Starting Out */}
-                <div className="flex flex-col md:flex-row gap-12 items-center">
-                    <div className="w-full md:w-1/2">
-                        <img 
-                            src="/img2.png" 
-                            alt="Beginnings" 
-                            className="w-full h-auto object-cover shadow-xl rounded-sm"
-                        />
-                    </div>
-                    <div className="w-full md:w-1/2 space-y-4">
-                        <h2 className="text-3xl font-serif font-bold text-[#321d10]">Starting out</h2>
-                        <div className="text-lg leading-relaxed space-y-4">
-                            <p>
-                                When we were just starting out, I started small and pitched up at Altrincham Market with a 
-                                makeshift sign and some wooden tables, selling tins and serving mulled wine, often in 
-                                freezing conditions.
-                            </p>
-                            
-                            {expandedSections['story3'] && (
-                                <div className="animate-fadeIn space-y-4">
-                                    <p>
-                                        We began to push further afield, attending the BBC Good Food Show and were approached to 
-                                        appear on The Hairy Bikers in 2017. Me and mum were asked to cook for the CEO of eBay 
-                                        and his team, and from there, things just mushroomed!
-                                    </p>
+                                <div>
+                                    <p className="text-3xl font-black text-gray-900 leading-none">12M+</p>
+                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2">Products Shipped</p>
                                 </div>
-                            )}
-
-                            <button 
-                                onClick={() => toggleSection('story3')}
-                                className="text-[#00674F] font-bold text-sm border-b-2 border-[#00674F] uppercase tracking-wider pb-1 mt-4 block hover:opacity-75 transition-opacity"
-                            >
-                                {expandedSections['story3'] ? 'READ LESS' : 'READ MORE'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Section 4: Growing - Reversed */}
-                <div className="flex flex-col md:flex-row-reverse gap-12 items-center">
-                    <div className="w-full md:w-1/2">
-                        <img 
-                            src="/img1.png" 
-                            alt="The Vision" 
-                            className="w-full h-auto object-cover shadow-xl rounded-sm"
-                        />
-                    </div>
-                    <div className="w-full md:w-1/2 space-y-4">
-                        <h2 className="text-3xl font-serif font-bold text-[#321d10]">Growing</h2>
-                        <div className="text-lg leading-relaxed space-y-4">
-                            <p>
-                                Then, as things started to really take off, we found our first little manufacturing space in Cheshire. 
-                                We expanded our product range from our flagship Indian Spice Tin into World Spices and Gin collections.
-                            </p>
-                            
-                            {expandedSections['story4'] && (
-                                <div className="animate-fadeIn space-y-4">
-                                    <p>
-                                        I even created a special range of spice blends for babies and children after seeing how well 
-                                        my young daughter Sara responded to new flavours. Spice Kitchen has always been about sharing 
-                                        mine and my mother's passion for food with people from all corners of the world.
-                                    </p>
-                                </div>
-                            )}
-
-                            <button 
-                                onClick={() => toggleSection('story4')}
-                                className="text-[#00674F] font-bold text-sm border-b-2 border-[#00674F] uppercase tracking-wider pb-1 mt-4 block hover:opacity-75 transition-opacity"
-                            >
-                                {expandedSections['story4'] ? 'READ LESS' : 'READ MORE'}
-                            </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <style jsx="true">{`
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(10px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .animate-fadeIn {
-                    animation: fadeIn 0.4s ease-out forwards;
-                }
-            `}</style>
+            {/* Achievement Timeline */}
+            <div className="bg-[#FAF9F6] py-32">
+                <div className="max-w-7xl mx-auto px-6">
+                    <div className="text-center mb-24">
+                        <h2 className="text-4xl font-black text-gray-900 uppercase tracking-tighter mb-4">The Road to Excellence</h2>
+                        <p className="text-gray-500 font-bold uppercase text-[10px] tracking-[0.3em]">Key Milestones and Achievements</p>
+                    </div>
+
+                    <div className="relative">
+                        <div className="absolute top-1/2 left-0 w-full h-px bg-gray-200 -translate-y-1/2 hidden md:block"></div>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
+                            {[
+                                { year: '2012', event: 'Founding in New Delhi', desc: 'Established as a fashion procurement firm.' },
+                                { year: '2016', event: 'Tech Integration', desc: 'Launched first-gen digital vendor portal.' },
+                                { year: '2020', event: 'Global Expansion', desc: 'Opened international logistics hubs.' },
+                                { year: '2026', event: 'Market Leader', desc: 'Surpassed 500+ active wholesale partners.' },
+                            ].map((step, i) => (
+                                <div key={i} className="bg-white p-8 rounded-4xl shadow-xl border border-gray-100 flex flex-col items-center text-center group hover:bg-[#00674F] transition-colors duration-500">
+                                    <span className="text-amber-500 font-black text-3xl mb-4 group-hover:text-white transition-colors">{step.year}</span>
+                                    <h4 className="font-black text-gray-900 mb-2 uppercase text-sm group-hover:text-white transition-colors">{step.event}</h4>
+                                    <p className="text-xs text-gray-400 group-hover:text-white/70 transition-colors leading-relaxed">{step.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Final CTA */}
+            <div className="py-32 bg-white flex flex-col items-center px-6">
+                <div className="w-16 h-px bg-[#00674F] mb-12"></div>
+                <h3 className="text-3xl md:text-5xl font-black text-gray-900 text-center tracking-tighter mb-12 uppercase leading-none">
+                    Be Part of Our <br /><span className="text-[#00674F]">Next Chapter.</span>
+                </h3>
+                <Link 
+                    to="/wholesale" 
+                    className="group flex items-center gap-6 bg-[#00674F] px-12 py-6 rounded-2xl shadow-2xl hover:bg-amber-400 transition-all duration-500 active:scale-95"
+                >
+                    <span className="text-white group-hover:text-[#00674F] font-black uppercase text-xs tracking-widest">Join the Partnership</span>
+                    <span className="text-amber-400 group-hover:text-[#00674F] text-xl group-hover:translate-x-2 transition-transform duration-500">→</span>
+                </Link>
+            </div>
         </div>
     );
 };

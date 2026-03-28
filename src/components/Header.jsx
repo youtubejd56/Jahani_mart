@@ -81,7 +81,6 @@ const Header = () => {
                 <nav className="hidden lg:flex items-center gap-8">
                     <Link to="/" className="text-white no-underline font-medium hover:opacity-80 transition-opacity">Home</Link>
                     <Link to="/products" className="text-white no-underline font-medium hover:opacity-80 transition-opacity">Products</Link>
-                    <Link to="/support" className="text-white no-underline font-medium hover:opacity-80 transition-opacity">Support</Link>
                 </nav>
 
                 {/* Search Bar - Responsive width - Hidden on mobile when menu is open */}
@@ -196,13 +195,6 @@ const Header = () => {
                             onClick={handleMobileLinkClick}
                         >
                             Products
-                        </Link>
-                        <Link
-                            to="/support"
-                            className="text-white no-underline font-medium py-2 px-5 rounded-lg hover:bg-white/10 transition-colors"
-                            onClick={handleMobileLinkClick}
-                        >
-                            Support
                         </Link>
                         <Link
                             to="/download-app"
