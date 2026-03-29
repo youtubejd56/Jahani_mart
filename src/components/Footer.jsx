@@ -49,8 +49,8 @@ const Footer = () => {
                     <div>
                         <h3 className="text-white text-2xl font-bold mb-5 font-serif">Shop</h3>
                         <ul className="flex flex-col gap-2.5">
-                            <li><Link to="/products?category=fashion" className="hover:text-amber-400 transition-colors">Fashion Collection</Link></li>
-                            <li><Link to="/products?category=electronics" className="hover:text-amber-400 transition-colors">Electronics Hub</Link></li>
+                            <li><Link to="/products?category=fashion" className="hover:text-amber-400 transition-colors">Spices</Link></li>
+                            <li><Link to="/products?category=electronics" className="hover:text-amber-400 transition-colors">Stones</Link></li>
                             <li><Link to="/products?category=home" className="hover:text-amber-400 transition-colors">Home & Kitchen</Link></li>
                             <li><Link to="/products" className="hover:text-amber-400 transition-colors">All Products</Link></li>
                             <li><Link to="#" className="hover:text-amber-400 transition-colors">Special Offers</Link></li>
@@ -125,7 +125,7 @@ const Footer = () => {
             {/* Bottom Bar: Copyright and Payment methods */}
             <div className="max-w-[1440px] w-full mx-auto px-6 sm:px-12 py-6 flex flex-col md:flex-row justify-between items-center gap-4 border-t border-slate-800">
                 <p className="text-xs sm:text-sm text-gray-500">
-                    © {new Date().getFullYear()} Jahani Mart™ - Fashion, Electronics, Home & Essentials
+                    © {new Date().getFullYear()} Jahani Mart™ - Spices,Stones
                 </p>
                 <div className="flex flex-wrap gap-2 items-center">
                     {/* Minimalistic text-based payment logos (to match generic ecomm if no SVGs) */}
