@@ -45,7 +45,7 @@ const AdminDashboard = () => {
     // Form states
     const [showCategoryForm, setShowCategoryForm] = useState(false);
     const [editingCategory, setEditingCategory] = useState(null);
-    const [categoryForm, setCategoryForm] = useState({ name: '', icon: '', image_url: '', image: null });
+    const [categoryForm, setCategoryForm] = useState({ name: '', icon: '', image_url: '', image: null, banner_image_url: '', banner_image: null });
     const [categoryImagePreview, setCategoryImagePreview] = useState(null);
 
     const [showProductForm, setShowProductForm] = useState(false);
@@ -365,15 +365,17 @@ const AdminDashboard = () => {
     };
 
     // Category functions
-    const handleCategoryFileChange = (e) => {
+    const handleCategoryFileChange = (e, field = 'image') => {
         const file = e.target.files[0];
         if (file) {
-            setCategoryForm({ ...categoryForm, image: file });
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setCategoryImagePreview(reader.result);
-            };
-            reader.readAsDataURL(file);
+            setCategoryForm({ ...categoryForm, [field]: file });
+            if (field === 'image') {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setCategoryImagePreview(reader.result);
+                };
+                reader.readAsDataURL(file);
+            }
         }
     };
     const handleCategorySubmit = async (e) => {
@@ -383,9 +385,13 @@ const AdminDashboard = () => {
             formData.append('name', categoryForm.name);
             formData.append('icon', categoryForm.icon);
             formData.append('image_url', categoryForm.image_url);
+            formData.append('banner_image_url', categoryForm.banner_image_url || '');
 
             if (categoryForm.image) {
                 formData.append('image', categoryForm.image);
+            }
+            if (categoryForm.banner_image) {
+                formData.append('banner_image', categoryForm.banner_image);
             }
 
             const adminAxios = getAdminAxios();
@@ -402,7 +408,7 @@ const AdminDashboard = () => {
             setShowCategoryForm(false);
             setEditingCategory(null);
             setCategoryImagePreview(null);
-            setCategoryForm({ name: '', icon: '', image_url: '', image: null });
+            setCategoryForm({ name: '', icon: '', image_url: '', image: null, banner_image_url: '', banner_image: null });
         } catch (error) {
             console.error('Category save error:', error.response?.data);
             alert('Failed to save category');
@@ -415,7 +421,9 @@ const AdminDashboard = () => {
             name: category.name,
             icon: category.icon || '',
             image_url: category.image_url || '',
-            image: null
+            image: null,
+            banner_image_url: category.banner_image_url || '',
+            banner_image: null
         });
         setCategoryImagePreview(null);
         setShowCategoryForm(true);
@@ -898,6 +906,30 @@ const AdminDashboard = () => {
                                                     </div>
                                                 )}
                                             </div>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Banner Image URL (External)</label>
+                                                <input
+                                                    type="url"
+                                                    placeholder="Banner URL"
+                                                    value={categoryForm.banner_image_url}
+                                                    onChange={(e) => setCategoryForm({ ...categoryForm, banner_image_url: e.target.value })}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Or Upload Banner</label>
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={(e) => handleCategoryFileChange(e, 'banner_image')}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-white"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-2 text-sm italic text-gray-400">
+                                            <p>* Banner image will be displayed on the category product listing page.</p>
                                         </div>
                                         <div className="flex gap-2 text-sm">
                                             <button type="submit" className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-lg">

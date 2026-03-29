@@ -160,14 +160,32 @@ const Products = () => {
                 url="https://jahani-mart.onrender.com/products"
             />
             {/* Header Banner */}
-            <section className="bg-gradient-to-r from-[#00674F] to-[#0A3C30] py-40 text-center px-4">
-                <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
-                    {selectedCategory === 'all' ? 'All Products' : selectedCategory === 'sale' ? 'On Sale' : selectedCategory === 'new' ? 'New Arrivals' : selectedCategory}
-                </h1>
-                <p className="text-white/80">
-                    {selectedCategory === 'all' ? 'Browse our complete collection' : selectedCategory === 'sale' ? 'Great deals on premium products' : selectedCategory === 'new' ? 'Check out the latest additions' : `Shop in ${selectedCategory} category`}
-                </p>
-            </section>
+            {(() => {
+                const currentCat = categories.find(c => c.name === selectedCategory);
+                const bannerUrl = currentCat ? (currentCat.banner_image_url || currentCat.banner_image) : null;
+                
+                return (
+                    <section 
+                        className="relative py-40 text-center px-4 overflow-hidden"
+                        style={bannerUrl ? {
+                            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${getImageUrl(bannerUrl)})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        } : {
+                            background: 'linear-gradient(to right, #00674F, #0A3C30)'
+                        }}
+                    >
+                        <div className="relative z-10">
+                            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
+                                {selectedCategory === 'all' ? 'All Products' : selectedCategory === 'sale' ? 'On Sale' : selectedCategory === 'new' ? 'New Arrivals' : selectedCategory}
+                            </h1>
+                            <p className="text-white/80">
+                                {selectedCategory === 'all' ? 'Browse our complete collection' : selectedCategory === 'sale' ? 'Great deals on premium products' : selectedCategory === 'new' ? 'Check out the latest additions' : `Shop in ${selectedCategory} category`}
+                            </p>
+                        </div>
+                    </section>
+                );
+            })()}
 
             <div className="max-w-full mx-auto py-8 px-4 sm:px-8">
                 <div className="flex flex-col lg:flex-row gap-8">
