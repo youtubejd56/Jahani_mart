@@ -19,6 +19,8 @@ const Products = () => {
     // Price filter state
     const [priceRange, setPriceRange] = useState({ min: '', max: '' });
     const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
+    const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(window.innerWidth >= 1024);
+    const [isPriceExpanded, setIsPriceExpanded] = useState(window.innerWidth >= 1024);
 
     // Predefined price ranges (like Flipkart)
     const priceRanges = [
@@ -190,10 +192,29 @@ const Products = () => {
             <div className="max-w-full mx-auto py-8 px-4 sm:px-8">
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Sidebar - Categories */}
-                    <aside className="lg:w-64 flex-shrink-0">
-                        <div className="bg-white rounded-xl p-6 shadow-sm sticky top-4">
-                            <h3 className="text-lg font-bold text-gray-800 mb-4">Categories</h3>
-                            <div className="flex flex-col gap-2">
+                    <aside className="lg:w-64 shrink-0">
+                        <div className="bg-white rounded-xl p-6 shadow-sm sticky top-4 mb-4 lg:mb-0">
+                            <div 
+                                className="flex items-center justify-between mb-4 cursor-pointer lg:cursor-default"
+                                onClick={() => window.innerWidth < 1024 && setIsCategoriesExpanded(!isCategoriesExpanded)}
+                            >
+                                <h3 className="text-lg font-bold text-gray-800">Categories</h3>
+                                <div className="flex items-center gap-2 lg:hidden">
+                                    <span className="text-xs text-gray-400 font-medium">
+                                        {isCategoriesExpanded ? 'Hide' : 'Show'}
+                                    </span>
+                                    <svg 
+                                        className={`w-5 h-5 text-gray-500 transition-transform ${isCategoriesExpanded ? 'rotate-180' : ''}`} 
+                                        fill="none" 
+                                        stroke="currentColor" 
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <div className={`${isCategoriesExpanded ? 'flex' : 'hidden lg:flex'} flex-col gap-2 transition-all duration-300`}>
                                 <button
                                     onClick={() => setSelectedCategory('all')}
                                     className={`text-left px-4 py-2.5 rounded-lg font-medium transition-colors ${selectedCategory === 'all'
@@ -249,70 +270,90 @@ const Products = () => {
 
                         {/* Price Filter - Flipkart Style */}
                         <div className="bg-white rounded-xl p-6 shadow-sm mt-4 sticky top-4">
-                            <div className="flex items-center justify-between mb-4">
+                            <div 
+                                className="flex items-center justify-between mb-4 cursor-pointer lg:cursor-default"
+                                onClick={() => window.innerWidth < 1024 && setIsPriceExpanded(!isPriceExpanded)}
+                            >
                                 <h3 className="text-lg font-bold text-gray-800">Price</h3>
-                                {(selectedPriceRanges.length > 0 || priceRange.min || priceRange.max) && (
-                                    <button
-                                        onClick={clearPriceFilters}
-                                        className="text-sm text-[#00674F] hover:text-[#004938] font-medium"
-                                    >
-                                        Clear
-                                    </button>
-                                )}
-                            </div>
-
-                            {/* Custom Price Range Input */}
-                            <div className="mb-6">
-                                <div className="flex items-center gap-2 mb-3">
-                                    <div className="flex-1">
-                                        <input
-                                            type="number"
-                                            placeholder="Min"
-                                            value={priceRange.min}
-                                            onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
-                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00674F]"
-                                        />
-                                    </div>
-                                    <span className="text-gray-400">-</span>
-                                    <div className="flex-1">
-                                        <input
-                                            type="number"
-                                            placeholder="Max"
-                                            value={priceRange.max}
-                                            onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
-                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00674F]"
-                                        />
+                                <div className="flex items-center gap-2">
+                                    {(selectedPriceRanges.length > 0 || priceRange.min || priceRange.max) && (
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); clearPriceFilters(); }}
+                                            className="text-sm text-[#00674F] hover:text-[#004938] font-medium"
+                                        >
+                                            Clear
+                                        </button>
+                                    )}
+                                    <div className="flex items-center gap-2 lg:hidden">
+                                        <span className="text-xs text-gray-400 font-medium">
+                                            {isPriceExpanded ? 'Hide' : 'Show'}
+                                        </span>
+                                        <svg 
+                                            className={`w-5 h-5 text-gray-500 transition-transform ${isPriceExpanded ? 'rotate-180' : ''}`} 
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Predefined Price Ranges */}
-                            <div className="space-y-2">
-                                {priceRanges.map(range => (
-                                    <label
-                                        key={range.id}
-                                        className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-50 ${selectedPriceRanges.includes(range.id) ? 'bg-[#00674F]/10' : ''
-                                            }`}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedPriceRanges.includes(range.id)}
-                                            onChange={() => togglePriceRange(range.id)}
-                                            className="w-4 h-4 text-[#00674F] rounded focus:ring-[#00674F]"
-                                        />
-                                        <span className="text-gray-700 font-medium">{range.label}</span>
-                                    </label>
-                                ))}
+                            <div className={`${isPriceExpanded ? 'block' : 'hidden lg:block'} transition-all duration-300`}>
+                                {/* Custom Price Range Input */}
+                                <div className="mb-6">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <div className="flex-1">
+                                            <input
+                                                type="number"
+                                                placeholder="Min"
+                                                value={priceRange.min}
+                                                onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
+                                                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00674F]"
+                                            />
+                                        </div>
+                                        <span className="text-gray-400">-</span>
+                                        <div className="flex-1">
+                                            <input
+                                                type="number"
+                                                placeholder="Max"
+                                                value={priceRange.max}
+                                                onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
+                                                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00674F]"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Predefined Price Ranges */}
+                                <div className="space-y-2">
+                                    {priceRanges.map(range => (
+                                        <label
+                                            key={range.id}
+                                            className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-50 ${selectedPriceRanges.includes(range.id) ? 'bg-[#00674F]/10' : ''
+                                                }`}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedPriceRanges.includes(range.id)}
+                                                onChange={() => togglePriceRange(range.id)}
+                                                className="w-4 h-4 text-[#00674F] rounded focus:ring-[#00674F]"
+                                            />
+                                            <span className="text-gray-700 font-medium">{range.label}</span>
+                                        </label>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </aside>
 
                     {/* Main Content */}
-                    <div className="flex-grow">
+                    <div className="grow">
                         {/* Search and Sort Bar */}
                         <div className="bg-white rounded-xl p-4 shadow-sm mb-6">
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <div className="flex-grow relative">
+                                <div className="grow relative">
                                     <input
                                         type="text"
                                         placeholder="Search products..."
