@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import Header from './components/Header';
@@ -34,10 +34,14 @@ const AppContent = () => {
     const location = useLocation();
     const isAdminDashboard = location.pathname === '/admin/dashboard';
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location.pathname]);
+
     return (
         <div className="flex flex-col min-h-screen">
             {!isAdminDashboard && <Header />}
-            <main className={isAdminDashboard ? '' : 'flex-grow'}>
+            <main className={isAdminDashboard ? '' : 'grow'}>
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/products" element={<Products />} />
