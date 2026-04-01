@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 const SITE_URL = 'https://jahani-mart.onrender.com';
 const SITE_NAME = 'Jahani Mart';
 const DEFAULT_DESC = 'Jahani Mart - Shop premium quality spices, gemstones, and perfumes at the best prices with free delivery across India.';
-const OG_IMAGE = `${SITE_URL}/all%20product.png`;
+const OG_IMAGE = `${SITE_URL}/seo.png`;
 const SITE_ICON = `${SITE_URL}/favicon.ico`;
 const TWITTER_HANDLE = '@jahanimart';
 const CONTACT_EMAIL = 'support@jahanimart.com';
