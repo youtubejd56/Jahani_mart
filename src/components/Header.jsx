@@ -22,15 +22,15 @@ const Header = () => {
     const CountryDisplay = () => (
         <button
             onClick={() => refreshDetection()}
-            className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg backdrop-blur-sm hover:bg-white/20 transition-colors"
+            className="flex items-center gap-1.5 px-2 py-1.5 bg-white/10 rounded-lg backdrop-blur-sm hover:bg-white/20 transition-colors"
             title="Click to detect your country (for VPN users)"
         >
-            <span className="text-xl">{localeConfig.flag}</span>
-            <div className="flex flex-col">
-                <span className="text-white text-sm font-medium">
+            <span className="text-xl leading-none">{localeConfig.flag}</span>
+            <div className="flex flex-col items-start">
+                <span className="text-white text-[11px] font-bold leading-tight">
                     {localeConfig.currencySymbol} {localeConfig.currency}
                 </span>
-                <span className="text-white/60 text-[10px]">
+                <span className="text-white/60 text-[9px] leading-tight hidden xl:block">
                     {detectionMethod}
                 </span>
             </div>
@@ -55,8 +55,8 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-[#074637] text-white py-4 sticky top-0 z-[9999] shadow-lg overflow-x-hidden">
-            <div className="max-w-full mx-auto px-4 flex items-center md:justify-evenly justify-between gap-2 sm:gap-8">
+        <header className="bg-[#074637] text-white py-3 sticky top-0 z-[9999] shadow-lg overflow-x-hidden">
+            <div className="max-w-[1600px] mx-auto px-4 flex items-center justify-between gap-2 lg:gap-4">
                 {/* Logo - Prime Style */}
                 <div className="flex items-center">
                     <Link to="/" className="no-underline text-white flex items-center gap-1">
@@ -77,15 +77,21 @@ const Header = () => {
                 </div> */}
 
 
-                {/* Navigation - Hidden on mobile, shown on lg */}
-                <nav className="hidden lg:flex items-center gap-8">
-                    <Link to="/" className="text-white no-underline font-medium hover:opacity-80 transition-opacity">Home</Link>
-                    <Link to="/products" className="text-white no-underline font-medium hover:opacity-80 transition-opacity">Products</Link>
+                {/* Navigation - Hidden on tablet, shown only on xl screens */}
+                <nav className="hidden xl:flex items-center gap-6">
+                    <Link to="/" className="relative group text-white no-underline font-medium transition-colors hover:text-amber-300">
+                        Home
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
+                    </Link>
+                    <Link to="/products" className="relative group text-white no-underline font-medium transition-colors hover:text-amber-300">
+                        Products
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
+                    </Link>
                 </nav>
 
-                {/* Search Bar - Responsive width - Hidden on mobile when menu is open */}
-                <div className="hidden md:block flex-1 min-w-0 max-w-[400px]">
-                    <form onSubmit={handleSearch} className="flex">
+                {/* Search Bar - Responsive width - Visible on md+ */}
+                <div className="hidden md:block flex-1 min-w-0 max-w-[320px] lg:max-w-[400px]">
+                    <form onSubmit={handleSearch} className="flex h-10">
                         <input
                             type="text"
                             placeholder="Product search"
@@ -93,79 +99,126 @@ const Header = () => {
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
-                        <button type="submit" className="bg-amber-400 hover:bg-amber-500 py-2 px-6 rounded-r-full font-bold text-[#00674F] transition-colors whitespace-nowrap">
+                        <button type="submit" className="bg-amber-400 hover:bg-amber-500 py-2 px-5 rounded-r-full font-bold text-[#00674F] transition-colors whitespace-nowrap">
                             Search
                         </button>
                     </form>
                 </div>
 
-                {/* Mobile Menu Button - Visible on small screens */}
-                <button
-                    className="lg:hidden text-white p-2 focus:outline-none"
-                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    aria-label="Toggle menu"
-                >
-                    {mobileMenuOpen ? (
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    ) : (
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    )}
-                </button>
+                {/* Mobile Icons and Menu Button */}
+                <div className="lg:hidden flex items-center gap-3">
+                    {/* Wishlist Icon for Mobile */}
+                    <Link to="/wishlist" className="text-white relative p-1 hover:bg-white/10 rounded-full transition-colors">
+                        <Heart className="w-6 h-6" />
+                        {wishlistCount > 0 && (
+                            <span className="bg-amber-400 text-[#00674F] px-1.5 py-0.5 rounded-full text-[10px] font-bold leading-none absolute -top-1 -right-1 min-w-[18px] text-center border-2 border-[#074637]">
+                                {wishlistCount}
+                            </span>
+                        )}
+                    </Link>
 
-                {/* Auth & Cart - Hidden on mobile when menu is open */}
-                <div className={`hidden lg:flex items-center gap-4`}>
+                    {/* Cart Icon for Mobile */}
+                    <Link to="/cart" className="text-white relative p-1 hover:bg-white/10 rounded-full transition-colors">
+                        <ShoppingCart className="w-6 h-6" />
+                        {cart.total_items > 0 && (
+                            <span className="bg-amber-400 text-[#00674F] px-1.5 py-0.5 rounded-full text-[10px] font-bold leading-none absolute -top-1 -right-1 min-w-[18px] text-center border-2 border-[#074637]">
+                                {cart.total_items}
+                            </span>
+                        )}
+                    </Link>
+
+                    {/* Toggle Menu */}
+                    <button
+                        className="text-white p-1 hover:bg-white/10 rounded-full focus:outline-none transition-colors"
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        aria-label="Toggle menu"
+                    >
+                        {mobileMenuOpen ? (
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        ) : (
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        )}
+                    </button>
+                </div>
+
+                {/* Auth & Cart - Hidden on mobile, adapted for tablet/web */}
+                <div className="hidden lg:flex items-center gap-2 xl:gap-4">
                     {/* Country Display - Auto Detected */}
                     <CountryDisplay />
+
                     {isAuthenticated ? (
                         <>
-                            <Link to="/profile" className="text-white no-underline font-medium flex items-center gap-2 hover:opacity-80 transition-opacity">
+                            <Link to="/profile" className="relative group text-white no-underline font-medium flex items-center gap-1.5 transition-colors hover:text-amber-300">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
-                                <span className="hidden sm:inline">Profile</span>
+                                <span className="hidden xl:inline">Profile</span>
+                                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
                             </Link>
                             <button
                                 onClick={handleLogout}
-                                className="bg-white text-[#00674F] px-5 py-2 rounded-full no-underline font-bold text-sm hover:bg-gray-100 transition-colors"
+                                className="bg-white text-[#00674F] px-4 py-1.5 rounded-full no-underline font-bold text-xs hover:bg-gray-100 transition-colors"
                             >
                                 Logout
                             </button>
                         </>
                     ) : (
-                        <>
-                            <Link to="/login" className="bg-white text-[#00674F] px-5 py-2 rounded-full no-underline font-bold text-sm hover:bg-gray-100 transition-colors">
+                        <div className="flex items-center gap-2">
+                            <Link to="/login" className="bg-white text-[#00674F] px-4 py-1.5 rounded-full no-underline font-bold text-sm hover:bg-gray-100 transition-colors">
                                 Login
                             </Link>
-                            <Link to="/register" className="bg-amber-400 text-[#00674F] px-5 py-2 rounded-full no-underline font-bold text-sm hover:bg-amber-500 transition-colors hidden sm:inline-block">
+                            <Link to="/register" className="bg-amber-400 text-[#00674F] px-4 py-1.5 rounded-full no-underline font-bold text-sm hover:bg-amber-500 transition-colors hidden xl:inline-block">
                                 Register
                             </Link>
-                        </>
+                        </div>
                     )}
-                    <Link to="/admin/dashboard" className="text-white no-underline text-sm font-medium hover:opacity-80 transition-opacity">
+
+                    <Link to="/admin/dashboard" className="relative group text-white no-underline font-lg font-bold transition-colors hover:text-amber-300 hidden xl:block">
                         Admin
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
                     </Link>
-                    <Link to="/wishlist" className="text-white no-underline font-medium flex items-center gap-2 hover:opacity-80 transition-opacity relative">
-                        <span>Wishlist</span>
-                        <Heart />
-                        <span className="bg-amber-400 text-[#00674F] px-2 py-0.5 rounded-full text-xs font-bold leading-none absolute -top-2 -right-4">{wishlistCount}</span>
+
+                    <Link to="/wishlist" className="relative group text-white no-underline font-medium flex items-center gap-1.5 transition-colors hover:text-amber-300">
+                        <Heart className="w-5 h-5" />
+                        <span className="hidden xl:inline">Wishlist</span>
+                        <span className="bg-amber-400 text-[#00674F] px-1.5 py-0.5 rounded-full text-[10px] font-bold leading-none absolute -top-2 -right-2">{wishlistCount}</span>
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
                     </Link>
-                    <Link to="/cart" className="text-white no-underline font-medium flex items-center gap-2 hover:opacity-80 transition-opacity relative">
-                        <span>Cart</span>
-                        <ShoppingCart />
-                        <span className="bg-amber-400 text-[#00674F] px-2 py-0.5 rounded-full text-xs font-bold leading-none absolute -top-2 -right-4">{cart.total_items}</span>
+
+                    <Link to="/cart" className="relative group text-white no-underline font-medium flex items-center gap-1.5 transition-colors hover:text-amber-300">
+                        <ShoppingCart className="w-5 h-5" />
+                        <span className="hidden xl:inline">Cart</span>
+                        <span className="bg-amber-400 text-[#00674F] px-1.5 py-0.5 rounded-full text-[10px] font-bold leading-none absolute -top-2 -right-2">{cart.total_items}</span>
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
                     </Link>
                 </div>
+            </div>
+
+            {/* Mobile Search Bar - Visible only on small screens */}
+            <div className="md:hidden px-4 pt-1 pb-2">
+                <form onSubmit={handleSearch} className="flex max-w-full">
+                    <input
+                        type="text"
+                        placeholder="Search for products..."
+                        className="grow py-1.5 px-4 rounded-l-full text-gray-800 outline-none text-xs placeholder:text-gray-400 bg-white shadow-inner"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <button type="submit" className="bg-amber-400 hover:bg-amber-500 py-1.5 px-4 rounded-r-full font-bold text-[#00674F] transition-colors whitespace-nowrap text-xs shadow-sm">
+                        Search
+                    </button>
+                </form>
             </div>
 
             {/* Mobile Menu Dropdown */}
             {mobileMenuOpen && (
                 <div className="lg:hidden bg-[#005543] border-t border-white/10 mt-4 px-4 sm:px-8 py-4">
-                    {/* Mobile Search */}
-                    <div className="mb-4 mx-2">
+                    {/* Mobile Menu Search Hidden if redundant, but keeping as per user request to have search for mobile view */}
+                    {/* <div className="mb-4 mx-2">
                         <form onSubmit={handleSearch} className="flex">
                             <input
                                 type="text"
@@ -178,7 +231,7 @@ const Header = () => {
                                 Search
                             </button>
                         </form>
-                    </div>
+                    </div> */}
 
                     {/* Mobile Navigation Links */}
                     <nav className="flex flex-col gap-2 mb-4">

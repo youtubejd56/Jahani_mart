@@ -170,11 +170,15 @@ const Products = () => {
                     <section 
                         className="relative py-40 text-center px-4 overflow-hidden"
                         style={bannerUrl ? {
-                            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${getImageUrl(bannerUrl)})`,
+                            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${getImageUrl(bannerUrl)})`,
                             backgroundSize: 'cover',
-                            backgroundPosition: 'center'
+                            backgroundPosition: 'center',
+                            backgroundColor: '#074637'
                         } : {
-                            background: 'linear-gradient(to right, #00674F, #0A3C30)'
+                            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url("/all product.png")`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundColor: '#074637'
                         }}
                     >
                         <div className="relative z-10">
