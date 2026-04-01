@@ -3,8 +3,8 @@ import { useMemo } from 'react';
 
 const SITE_URL = 'https://jahani-mart.onrender.com';
 const SITE_NAME = 'Jahani Mart';
-const DEFAULT_DESC = 'Shop premium quality products at unbeatable prices. Free delivery across India. 10,000+ products, easy returns, secure payments. Trusted by millions of customers. Fast shipping and secure payments. Jahani Mart - Your trusted online shopping partner since 2020. Serving customers across 50+ cities with 24/7 customer support. Official partner of leading brands. Cash on delivery available. EMI options starting from ₹99/month. 100% genuine products guaranteed. 7-day return policy. Same-day delivery in select cities. Download our app for exclusive deals and faster checkout. Shop now and get ₹100 off on first order. Rated 4.8/5 by 50,000+ customers. 24-hour customer service available. Contact us at support@jahanimart.com or call +91-XXXXXXXXXX. Visit our stores in Delhi, Mumbai, Bangalore, Chennai, Kolkata and Hyderabad.';
-const OG_IMAGE = `${SITE_URL}/Screenshot%202026-03-26%20144234.png`;
+const DEFAULT_DESC = 'Jahani Mart - Shop premium quality spices, gemstones, and perfumes at the best prices with free delivery across India.';
+const OG_IMAGE = `${SITE_URL}/all%20product.png`;
 const SITE_ICON = `${SITE_URL}/favicon.ico`;
 const TWITTER_HANDLE = '@jahanimart';
 const CONTACT_EMAIL = 'support@jahanimart.com';
