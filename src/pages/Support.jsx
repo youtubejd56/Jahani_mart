@@ -452,17 +452,27 @@ const Support = () => {
                 </div>
 
                 {/* Contact Info */}
-                <div className="mt-8 bg-linear-to-r from-[#00674F] to-[#0A3C30] rounded-xl p-6 text-white text-center">
+                <div className="mt-8 bg-linear-to-r from-[#00674F] to-[#0A3C30] rounded-xl p-6 text-white text-left md:text-center">
                     <h3 className="font-bold text-xl mb-2">Still Need Help?</h3>
                     <p className="mb-4">Our customer support team is available 24/7</p>
-                    <div className="flex justify-center gap-6">
-                        <div>
-                            <p className="font-bold">Call</p>
-                            <p className="text-violet-200">+91 7356777557</p>
+                    <div className="flex flex-col md:flex-row justify-start md:justify-center items-start md:items-center gap-6 md:gap-12">
+                        <div className="order-2 md:order-1 text-left md:text-center">
+                            <p className="font-bold flex items-center justify-start md:justify-center">
+                                <svg className="w-5 h-5 mr-2 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                </svg>
+                                Call
+                            </p>
+                            <p className="text-violet-200 mt-1">+91 7356777557</p>
                         </div>
-                        <div>
-                            <p className="font-bold">Email</p>
-                            <p className="text-violet-200">jahaniinternational@gmail.com</p>
+                        <div className="order-1 md:order-2 text-left md:text-center">
+                            <p className="font-bold flex items-center justify-start md:justify-center">
+                                <svg className="w-5 h-5 mr-2 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                Email
+                            </p>
+                            <p className="text-violet-200 mt-1">jahaniinternational@gmail.com</p>
                         </div>
                     </div>
                 </div>

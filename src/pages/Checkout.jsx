@@ -11,6 +11,8 @@ const Checkout = () => {
     const { isAuthenticated, user } = useAuth();
     const { formatPrice } = useLocale();
     const navigate = useNavigate();
+    const [orderSuccess, setOrderSuccess] = useState(false);
+    const [placedOrderId, setPlacedOrderId] = useState('');
     const [processing, setProcessing] = useState(false);
     const [addresses, setAddresses] = useState([]);
     const [loadingAddresses, setLoadingAddresses] = useState(true);
@@ -39,6 +41,22 @@ const Checkout = () => {
     const [upiId, setUpiId] = useState('');
     const [cardErrors, setCardErrors] = useState({});
     const [upiError, setUpiError] = useState('');
+    const [codCaptchaVal, setCodCaptchaVal] = useState('');
+    const [captchaInput, setCaptchaInput] = useState('');
+    const [captchaError, setCaptchaError] = useState('');
+
+    const generateCaptcha = () => {
+        const val = Math.floor(100 + Math.random() * 900).toString();
+        setCodCaptchaVal(val);
+        setCaptchaInput('');
+        setCaptchaError('');
+    };
+
+    useEffect(() => {
+        if (formData.payment_method === 'COD') {
+            generateCaptcha();
+        }
+    }, [formData.payment_method]);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -63,6 +81,71 @@ const Checkout = () => {
             setLoadingAddresses(false);
         }
     };
+
+    if (orderSuccess) {
+        return (
+            <div className="min-h-screen bg-white flex flex-col items-center pt-24 px-4 font-sans">
+                <style>{`
+                    @keyframes popIn {
+                        0% { transform: scale(0.5); opacity: 0; }
+                        70% { transform: scale(1.05); opacity: 1; }
+                        100% { transform: scale(1); opacity: 1; }
+                    }
+                    @keyframes popTop { 0% { top: 50%; left: 50%; opacity:0; } 40% { opacity: 1; } 100% { top: -15%; left: 50%; opacity: 0; } }
+                    @keyframes popRight { 0% { top: 50%; left: 50%; opacity:0;} 40% { opacity: 1; } 100% { top: 50%; left: 115%; opacity: 0; } }
+                    @keyframes popBottom { 0% { top: 50%; left: 50%; opacity:0;} 40% { opacity: 1; } 100% { top: 115%; left: 50%; opacity: 0; } }
+                    @keyframes popLeft { 0% { top: 50%; left: 50%; opacity:0;} 40% { opacity: 1; } 100% { top: 50%; left: -15%; opacity: 0; } }
+                    @keyframes popTopRight { 0% { top: 50%; left: 50%; opacity:0;} 40% { opacity: 1; } 100% { top: 5%; left: 95%; opacity: 0; } }
+                    @keyframes popTopLeft { 0% { top: 50%; left: 50%; opacity:0;} 40% { opacity: 1; } 100% { top: 5%; left: 5%; opacity: 0; } }
+                    @keyframes popBottomRight { 0% { top: 50%; left: 50%; opacity:0;} 40% { opacity: 1; } 100% { top: 95%; left: 95%; opacity: 0; } }
+                    @keyframes popBottomLeft { 0% { top: 50%; left: 50%; opacity:0;} 40% { opacity: 1; } 100% { top: 95%; left: 5%; opacity: 0; } }
+                    
+                    .success-icon { animation: popIn 0.5s ease-out forwards; }
+                    .dot { position: absolute; width: 10px; height: 10px; border-radius: 50%; transform: translate(-50%, -50%); opacity: 0; z-index: 10; }
+                    .dot-1 { background: #34A853; animation: popTop 0.8s ease-out 0.2s forwards; }
+                    .dot-2 { background: #EA4335; animation: popTopRight 0.8s ease-out 0.2s forwards; }
+                    .dot-3 { background: #FBBC05; animation: popRight 0.8s ease-out 0.2s forwards; }
+                    .dot-4 { background: #4285F4; animation: popBottomRight 0.8s ease-out 0.2s forwards; }
+                    .dot-5 { background: #34A853; animation: popBottom 0.8s ease-out 0.2s forwards; }
+                    .dot-6 { background: #EA4335; animation: popBottomLeft 0.8s ease-out 0.2s forwards; }
+                    .dot-7 { background: #FBBC05; animation: popLeft 0.8s ease-out 0.2s forwards; }
+                    .dot-8 { background: #4285F4; animation: popTopLeft 0.8s ease-out 0.2s forwards; }
+                `}</style>
+                <div className="relative w-32 h-32 mb-6">
+                    <div className="dot dot-1"></div>
+                    <div className="dot dot-2"></div>
+                    <div className="dot dot-3"></div>
+                    <div className="dot dot-4"></div>
+                    <div className="dot dot-5"></div>
+                    <div className="dot dot-6"></div>
+                    <div className="dot dot-7"></div>
+                    <div className="dot dot-8"></div>
+                    
+                    <div className="absolute inset-0 bg-green-50 rounded-full flex items-center justify-center success-icon z-20">
+                        <div className="w-24 h-24 bg-[#1fbc21] rounded-full flex items-center justify-center shadow-xs text-white">
+                            <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 className="text-2xl sm:text-3xl font-bold text-[#1fbc21] mb-3 text-center tracking-tight">Order Placed Successfully</h2>
+                <p className="text-gray-500 text-center max-w-md mb-10 leading-relaxed">
+                    Your order <span className="font-medium text-gray-700">#{placedOrderId}</span> has been confirmed. You will receive an update shortly.
+                </p>
+                
+                <div className="w-full max-w-md flex flex-col space-y-4">
+                    <Link to="/orders?section=orders" className="w-full bg-[#24b2a3] text-white text-center py-3.5 rounded font-medium shadow-sm hover:bg-[#1e9a8d] transition-colors">
+                        View Orders
+                    </Link>
+                    <Link to="/" className="w-full bg-white text-[#24b2a3] text-center border-2 border-[#24b2a3] py-3.5 rounded font-medium hover:bg-teal-50 transition-colors">
+                        Continue Shopping
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     if (!isAuthenticated) {
         return (
@@ -259,6 +342,13 @@ const Checkout = () => {
             }
         }
 
+        if (formData.payment_method === 'COD') {
+            if (captchaInput !== codCaptchaVal) {
+                setCaptchaError('Text does not match. Please try again.');
+                return;
+            }
+        }
+
         setProcessing(true);
         try {
             const orderData = {
@@ -276,8 +366,8 @@ const Checkout = () => {
             const response = await api.post('/orders/create/', orderData);
 
             await fetchCart();
-            alert(`Order placed successfully! Order ID: ${response.data.order_id}`);
-            navigate('/orders?section=orders');
+            setPlacedOrderId(response.data.order_id);
+            setOrderSuccess(true);
         } catch (error) {
             console.error('Error placing order:', error);
             alert('Failed to place order. Please try again.');
@@ -285,6 +375,8 @@ const Checkout = () => {
             setProcessing(false);
         }
     };
+
+
 
     return (
         <div className="min-h-screen bg-gray-100 py-4">
@@ -481,6 +573,40 @@ const Checkout = () => {
                                         />
                                         <span className="ml-3 text-sm font-medium text-gray-800">Cash on Delivery (COD)</span>
                                     </label>
+                                    
+                                    {/* COD Captcha Form */}
+                                    {formData.payment_method === 'COD' && (
+                                        <div className="ml-6 mt-2 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                            <div className="space-y-3">
+                                                <p className="text-xs text-gray-600">Please enter the characters below to confirm your order</p>
+                                                <div className="flex flex-wrap items-center gap-4">
+                                                    <div className="bg-white border border-gray-300 rounded px-4 py-2 font-mono text-lg tracking-widest select-none relative overflow-hidden flex items-center justify-center min-w-[80px]">
+                                                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-gray-200 to-transparent opacity-50 transform -skew-x-12"></div>
+                                                        <span className="relative z-10 font-bold italic line-through decoration-gray-400 opacity-80 text-gray-800">{codCaptchaVal}</span>
+                                                    </div>
+                                                    <button type="button" onClick={generateCaptcha} className="text-blue-600 text-xs hover:underline bg-transparent border-none">
+                                                        ⟳ Refresh
+                                                    </button>
+                                                </div>
+                                                <div>
+                                                    <input
+                                                        type="text"
+                                                        value={captchaInput}
+                                                        onChange={(e) => {
+                                                            setCaptchaInput(e.target.value);
+                                                            setCaptchaError('');
+                                                        }}
+                                                        placeholder="Enter characters"
+                                                        className={`w-full max-w-[150px] px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 ${captchaError ? 'border-red-400' : 'border-gray-300'}`}
+                                                    />
+                                                    {captchaError && (
+                                                        <p className="text-xs text-red-500 mt-1">{captchaError}</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
                                     <label className={`flex items-center p-3 border rounded-lg cursor-pointer ${formData.payment_method === 'UPI' ? 'border-yellow-400 bg-yellow-50' : 'border-gray-200'}`}>
                                         <input
                                             type="radio"

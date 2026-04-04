@@ -95,7 +95,7 @@ const Cart = () => {
                                         </button>
                                     </div>
                                 </div>
-                                <div className="text-right">
+                                <div className="text-right hidden sm:block">
                                     <p className="font-bold text-gray-900">{formatPrice(item.quantity * parseFloat(item.product_price))}</p>
                                 </div>
                             </div>
