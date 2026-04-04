@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import api from '../services/api';
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { auth } from '../services/firebase';
 
 const ForgotPassword = () => {
     // Steps: 1 = mobile, 2 = otp, 3 = new password, 4 = success
@@ -11,10 +9,10 @@ const ForgotPassword = () => {
     const [countryCode, setCountryCode] = useState('+91');
     const [mobile, setMobile] = useState('');
     const [otp, setOtp] = useState('');
-    const [resetToken, setResetToken] = useState(''); // Will store Firebase Token
+    const [resetToken, setResetToken] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [confirmationResult, setConfirmationResult] = useState(null);
+    const [demoOtp, setDemoOtp] = useState(''); // Shows OTP in dev mode
     
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -24,17 +22,7 @@ const ForgotPassword = () => {
     // Custom Dropdown State for Country Codes
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-
-    useEffect(() => {
-        // Cleanup recaptcha on unmount
-        return () => {
-            if (window.recaptchaVerifier) {
-                window.recaptchaVerifier.clear();
-            }
-        };
-    }, []);
     
-    // Country codes truncated for brevity in instruction, use the original big array
     const countryCodes = [
         { code: '+91', country: 'India', flag: '🇮🇳' },
         { code: '+1', country: 'USA/Canada', flag: '🇺🇸' },
@@ -105,20 +93,10 @@ const ForgotPassword = () => {
 
     const getFullMobile = () => `${countryCode}${mobile.replace(/\s+/g, '')}`;
 
-    const setupRecaptcha = () => {
-        if (!window.recaptchaVerifier) {
-            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-                'size': 'invisible',
-                'callback': (response) => {
-                    // reCAPTCHA solved
-                }
-            });
-        }
-    };
-
     const handleSendOTP = async (e) => {
         e.preventDefault();
         setError('');
+        setDemoOtp('');
         
         if (!mobile.trim() || mobile.length < 8) {
             setError('Please enter a valid registered mobile number.');
@@ -127,19 +105,14 @@ const ForgotPassword = () => {
 
         setLoading(true);
         try {
-            setupRecaptcha();
-            const appVerifier = window.recaptchaVerifier;
-            const fullPhone = getFullMobile();
-            const result = await signInWithPhoneNumber(auth, fullPhone, appVerifier);
-            setConfirmationResult(result);
+            const response = await api.post('/send-otp/', { mobile: getFullMobile() });
+            // In demo mode, backend returns the OTP in response
+            if (response.data.demo_otp) {
+                setDemoOtp(response.data.demo_otp);
+            }
             setStep(2);
         } catch (err) {
-            console.error(err);
-            setError('Failed to send OTP via Firebase. Ensure your number is valid and try again.');
-            if (window.recaptchaVerifier) {
-                window.recaptchaVerifier.clear();
-                window.recaptchaVerifier = null;
-            }
+            setError(err.response?.data?.error || 'Failed to send OTP. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -156,18 +129,15 @@ const ForgotPassword = () => {
 
         setLoading(true);
         try {
-            // Verify with Firebase
-            const result = await confirmationResult.confirm(otp);
-            const user = result.user;
-            
-            // Extract the Firebase ID token
-            const idToken = await user.getIdToken();
-            setResetToken(idToken); // Pass this token to backend instead of our custom token!
-            
+            const response = await api.post('/verify-otp/', { 
+                mobile: getFullMobile(),
+                otp 
+            });
+            setResetToken(response.data.reset_token);
+            setDemoOtp('');
             setStep(3);
         } catch (err) {
-            console.error(err);
-            setError('Invalid OTP code. Please try again.');
+            setError(err.response?.data?.error || 'Invalid OTP. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -309,16 +279,29 @@ const ForgotPassword = () => {
                                 {loading ? 'Sending...' : 'Send OTP'}
                             </button>
                         </form>
-                        <div id="recaptcha-container"></div>
                     </>
                 )}
 
                 {step === 2 && (
                     <>
                         <div className="text-center mb-8">
+                            <div className="w-16 h-16 bg-[#00674F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-8 h-8 text-[#00674F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
                             <h1 className="text-3xl font-bold text-[#00674F]">Verify OTP</h1>
                             <p className="text-gray-500 mt-2 text-sm">Enter the code sent to {getFullMobile()}</p>
                         </div>
+
+                        {/* Demo OTP display - remove in production */}
+                        {demoOtp && (
+                            <div className="bg-amber-50 border border-amber-200 text-amber-700 px-4 py-3 rounded-lg mb-5 text-sm">
+                                <span className="font-bold">Demo Mode:</span> Your OTP is <span className="font-mono font-bold text-lg">{demoOtp}</span>
+                                <p className="text-xs text-amber-500 mt-1">This will be sent via SMS in production</p>
+                            </div>
+                        )}
+
                         <form onSubmit={handleVerifyOTP} className="space-y-5">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">OTP Code</label>
@@ -340,7 +323,7 @@ const ForgotPassword = () => {
                                 {loading ? 'Verifying...' : 'Verify & Continue'}
                             </button>
                             <div className="text-center">
-                                <button type="button" onClick={() => setStep(1)} className="text-sm text-[#00674F] hover:underline">
+                                <button type="button" onClick={() => { setStep(1); setDemoOtp(''); }} className="text-sm text-[#00674F] hover:underline">
                                     Change Mobile Number
                                 </button>
                             </div>
@@ -351,6 +334,11 @@ const ForgotPassword = () => {
                 {step === 3 && (
                     <>
                         <div className="text-center mb-8">
+                            <div className="w-16 h-16 bg-[#00674F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-8 h-8 text-[#00674F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
                             <h1 className="text-3xl font-bold text-[#00674F]">Set New Password</h1>
                             <p className="text-gray-500 mt-2 text-sm">Create a secure new password</p>
                         </div>
