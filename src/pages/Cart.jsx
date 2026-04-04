@@ -58,7 +58,7 @@ const Cart = () => {
                     <div className="lg:col-span-2 space-y-4">
                         {cart.items.map((item) => (
                             <div key={item.id} className="bg-white rounded-xl shadow-sm p-4 flex gap-4">
-                                <div className="w-24 h-24 flex-shrink-0 bg-gray-50 rounded-lg flex items-center justify-center">
+                                <div className="w-24 h-24 shrink-0 bg-gray-50 rounded-lg flex items-center justify-center">
                                     <img
                                         src={getImageUrl(item.product_image) || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEyIiBmaWxsPSIjOTk5Ij5JbWFnZTwvdGV4dD48L3N2Zz4='}
                                         alt={item.product_name}

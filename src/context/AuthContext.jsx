@@ -29,9 +29,15 @@ export const AuthProvider = ({ children }) => {
             const response = await api.get('/me/');
             setUser(response.data.user);
         } catch (error) {
-            localStorage.removeItem('token');
-            setToken(null);
-            setUser(null);
+            // Only clear token if it's explicitly an unauthorized error (401)
+            // This prevents logging out the user if the backend is just slow or restarting
+            if (error.response && error.response.status === 401) {
+                localStorage.removeItem('token');
+                setToken(null);
+                setUser(null);
+            } else {
+                console.warn('Network error or server unavailable, but keeping token.');
+            }
         } finally {
             setLoading(false);
         }

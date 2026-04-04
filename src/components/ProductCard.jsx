@@ -48,11 +48,15 @@ const ProductCard = ({ product }) => {
         }
 
         setAdding(true);
-        const result = await addToCart(id, 1);
-        setAdding(false);
-
-        if (result.error) {
-            alert(result.error);
+        try {
+            const result = await addToCart(id, 1);
+            if (result.error) {
+                alert(result.error);
+            }
+        } catch (error) {
+            console.error('Add to cart failed:', error);
+        } finally {
+            setAdding(false);
         }
     };
 
@@ -60,7 +64,7 @@ const ProductCard = ({ product }) => {
         <div className="group relative bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 ease-out hover:-translate-y-2 overflow-hidden border border-gray-100 hover:border-amber-200">
             {/* Premium Badge */}
             {discount > 0 && (
-                <div className="absolute top-3 left-3 z-20 bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                <div className="absolute top-3 left-3 z-20 bg-linear-to-r from-orange-500 to-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                     {discount}% OFF
                 </div>
             )}
@@ -88,7 +92,7 @@ const ProductCard = ({ product }) => {
 
             {/* Product Image Section */}
             <Link to={`/products/${id}`} className="relative block">
-                <div className="relative h-56 sm:h-64 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+                <div className="relative h-56 sm:h-64 bg-linear-to-br from-gray-50 to-gray-100 overflow-hidden">
                     <img
                         src={!imageError ? getImageUrl(image) : null}
                         alt={name}
@@ -116,7 +120,7 @@ const ProductCard = ({ product }) => {
                     )}
 
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
             </Link>
 
@@ -172,7 +176,7 @@ const ProductCard = ({ product }) => {
                     <button
                         onClick={handleAddToCart}
                         disabled={adding}
-                        className="flex-1 py-3 bg-gradient-to-r from-[#00674F] to-[#0A3C30] hover:from-[#0A3C30] hover:to-[#062820] text-white rounded-xl font-bold text-sm tracking-wide transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="flex-1 py-3 bg-linear-to-r from-[#00674F] to-[#0A3C30] hover:from-[#0A3C30] hover:to-[#062820] text-white rounded-xl font-bold text-sm tracking-wide transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                         {adding ? (
                             <>

@@ -156,7 +156,7 @@ const Home = () => {
                 url="https://jahani-mart.onrender.com"
             />
             {/* Hero Section - Redesigned */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-[#00674F] via-[#0A3C30] to-[#062820]">
+            <section className="relative overflow-hidden bg-linear-to-br from-[#00674F] via-[#0A3C30] to-[#062820]">
                 {/* Decorative elements */}
                 <div className="absolute inset-0 overflow-hidden">
                     <div className="absolute -top-40 -right-40 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl"></div>
@@ -236,7 +236,7 @@ const Home = () => {
                                 className={`absolute inset-0 transition-all duration-700 ease-in-out transform ${index === currentAd
                                     ? 'opacity-100 translate-x-0 scale-100'
                                     : 'opacity-0 translate-x-full scale-95'
-                                    } bg-gradient-to-br ${ad.bgGradient}`}
+                                    } bg-linear-to-br ${ad.bgGradient}`}
                             >
                                 {/* Decorative circles */}
                                 <div className="absolute top-0 right-0 w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-48 lg:h-48 xl:w-64 xl:h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
