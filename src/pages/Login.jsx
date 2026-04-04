@@ -255,14 +255,14 @@ const Login = () => {
                             Mobile Number
                         </label>
                         <div className="flex gap-2">
-                            <div className="relative country-selector w-32">
+                            <div className="relative country-selector w-[110px] shrink-0">
                                 <button
                                     type="button"
                                     onClick={() => setIsOpen(!isOpen)}
-                                    className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00674F] focus:border-transparent bg-white text-gray-700 text-sm font-medium flex items-center justify-between shadow-sm transition-all"
+                                    className="w-full px-2 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00674F] focus:border-transparent bg-white text-gray-700 text-sm font-medium flex items-center justify-between shadow-sm transition-all"
                                 >
                                     <span className="truncate">{selectedCountry.flag} {selectedCountry.code}</span>
-                                    <svg className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className={`w-3 h-3 text-gray-400 transition-transform duration-200 shrink-0 ml-1 ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </button>
@@ -309,7 +309,7 @@ const Login = () => {
                                 type="tel"
                                 value={mobile}
                                 onChange={(e) => setMobile(e.target.value)}
-                                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00674F] focus:border-transparent"
+                                className="flex-1 min-w-0 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00674F] focus:border-transparent"
                                 placeholder="Enter mobile number"
                             />
                         </div>
