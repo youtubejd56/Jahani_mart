@@ -16,9 +16,11 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@dataconnect/generated": "file:src/dataconnect-generated",
         "@tailwindcss/postcss": "^4.2.2",
         "@tailwindcss/vite": "^4.2.2",
         "axios": "^1.13.6",
+        "firebase": "^12.11.0",
         "lucide-react": "^1.6.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",

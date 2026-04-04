@@ -311,9 +311,9 @@ const Register = () => {
                                         </div>
                                         <div className="max-h-64 overflow-y-auto">
                                             {filteredCountries.length > 0 ? (
-                                                filteredCountries.map((c) => (
+                                                filteredCountries.map((c, idx) => (
                                                     <div
-                                                        key={`${c.code}-${c.flag}`}
+                                                        key={`${c.code}-${c.flag}-${idx}`}
                                                         onClick={() => {
                                                             setFormData({ ...formData, countryCode: c.code });
                                                             setIsOpen(false);
