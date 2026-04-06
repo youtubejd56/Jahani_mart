@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api, { getImageUrl } from '../services/api';
 import ProductCard from '../components/ProductCard';
+import CategorySkeleton from '../components/CategorySkeleton';
 import { useLocale } from '../context/LocaleContext';
 import SEO from '../components/SEO';
 
@@ -327,44 +328,51 @@ const Home = () => {
                         <div className="absolute top-0 right-0 w-64 h-64 bg-[#BBD087]/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
 
                         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 relative z-10">
-                            {categories.map((category) => (
-                                <div
-                                    key={category.id}
-                                    className="flex flex-col items-center cursor-pointer group w-32 sm:w-36 md:w-44 lg:w-48 bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-                                    onClick={() => navigate(`/products?category=${encodeURIComponent(category.name)}`)}
-                                >
-                                    {/* Image Wrapper */}
-                                    <div className="w-full aspect-4/5 relative overflow-hidden bg-gray-50">
-                                        {category.image || (category.icon && category.icon.startsWith('http')) ? (
-                                            <img
-                                                src={getImageUrl(category.image || category.icon)}
-                                                alt={category.name}
-                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                                                <span className="text-4xl sm:text-5xl group-hover:scale-110 transition-transform duration-300">
-                                                    {category.icon || category.name[0]}
-                                                </span>
-                                            </div>
-                                        )}
+                            {loading ? (
+                                // Category Loading Skeletons
+                                [...Array(5)].map((_, i) => (
+                                    <CategorySkeleton key={i} />
+                                ))
+                            ) : (
+                                categories.map((category) => (
+                                    <div
+                                        key={category.id}
+                                        className="flex flex-col items-center cursor-pointer group w-32 sm:w-36 md:w-44 lg:w-48 bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                                        onClick={() => navigate(`/products?category=${encodeURIComponent(category.name)}`)}
+                                    >
+                                        {/* Image Wrapper */}
+                                        <div className="w-full aspect-4/5 relative overflow-hidden bg-gray-50">
+                                            {category.image || (category.icon && category.icon.startsWith('http')) ? (
+                                                <img
+                                                    src={getImageUrl(category.image || category.icon)}
+                                                    alt={category.name}
+                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                                                    <span className="text-4xl sm:text-5xl group-hover:scale-110 transition-transform duration-300">
+                                                        {category.icon || category.name[0]}
+                                                    </span>
+                                                </div>
+                                            )}
 
-                                        {/* Flipkart Style Offer Tag Overlay */}
-                                        <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm py-2 px-1 text-center shadow-[0_-2px_10px_rgba(0,0,0,0.05)] border-t border-gray-100">
-                                            <p className="text-xs sm:text-sm font-bold text-gray-900 group-hover:text-[#00674F] transition-colors">
-                                                Under ₹599
-                                            </p>
+                                            {/* Flipkart Style Offer Tag Overlay */}
+                                            <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm py-2 px-1 text-center shadow-[0_-2px_10px_rgba(0,0,0,0.05)] border-t border-gray-100">
+                                                <p className="text-xs sm:text-sm font-bold text-gray-900 group-hover:text-[#00674F] transition-colors">
+                                                    Under ₹599
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Category Title below card */}
+                                        <div className="py-3 px-2 w-full text-center">
+                                            <span className="text-xs sm:text-sm font-bold text-gray-700 group-hover:text-[#00674F] transition-colors line-clamp-1">
+                                                {category.name}
+                                            </span>
                                         </div>
                                     </div>
-
-                                    {/* Category Title below card */}
-                                    <div className="py-3 px-2 w-full text-center">
-                                        <span className="text-xs sm:text-sm font-bold text-gray-700 group-hover:text-[#00674F] transition-colors line-clamp-1">
-                                            {category.name}
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
+                                ))
+                            )}
                         </div>
                     </div>
                 </div>
@@ -412,9 +420,17 @@ const Home = () => {
                     </button>
                 </div>
                 {loading ? (
-                    <div className="text-center py-20 text-lg text-gray-500 font-medium">
-                        <div className="inline-block w-8 h-8 border-4 border-[#00674F] border-t-transparent rounded-full animate-spin mb-4"></div>
-                        <p>Loading products...</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
+                        {[...Array(10)].map((_, i) => (
+                            <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm h-[320px]">
+                                <div className="w-full h-48 skeleton-bg"></div>
+                                <div className="p-4 space-y-3">
+                                    <div className="h-4 skeleton-bg rounded w-3/4"></div>
+                                    <div className="h-4 skeleton-bg rounded w-1/2"></div>
+                                    <div className="h-8 skeleton-bg rounded w-full mt-4"></div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import api, { getImageUrl } from '../services/api';
 import ProductCard from '../components/ProductCard';
+import CategorySkeleton from '../components/CategorySkeleton';
 import { useLocale } from '../context/LocaleContext';
 import SEO from '../components/SEO';
 
@@ -269,6 +270,14 @@ const Products = () => {
                                         {category.name}
                                     </button>
                                 ))}
+                                {loading && categories.length === 0 && (
+                                    <>
+                                        <CategorySkeleton variant="list" />
+                                        <CategorySkeleton variant="list" />
+                                        <CategorySkeleton variant="list" />
+                                        <CategorySkeleton variant="list" />
+                                    </>
+                                )}
                             </div>
                         </div>
 
@@ -394,9 +403,17 @@ const Products = () => {
 
                         {/* Products Grid */}
                         {loading ? (
-                            <div className="text-center py-20 text-lg text-gray-500 font-medium">
-                                <div className="inline-block w-8 h-8 border-4 border-[#00674F] border-t-transparent rounded-full animate-spin mb-4"></div>
-                                <p>Loading products...</p>
+                            <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                                {[...Array(8)].map((_, i) => (
+                                    <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm h-[320px]">
+                                        <div className="w-full h-48 skeleton-bg"></div>
+                                        <div className="p-4 space-y-3">
+                                            <div className="h-4 skeleton-bg rounded w-3/4"></div>
+                                            <div className="h-4 skeleton-bg rounded w-1/2"></div>
+                                            <div className="h-8 skeleton-bg rounded w-full mt-4"></div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         ) : filteredByPrice.length === 0 ? (
                             <div className="text-center py-20 bg-white rounded-xl">
